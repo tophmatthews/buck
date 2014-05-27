@@ -1,6 +1,9 @@
 Buck
 =====
 
-"Fork Buck" to create a new MOOSE-based application.
+Basic Uranium Carbide Kernels.
 
-For more information see: [http://mooseframework.com/create-an-app/](http://mooseframework.com/create-an-app/)
+Kernels and Material properties necessary to model uranium carbide nuclear fuel.
+
+Topher Matthews
+Oregon State University
