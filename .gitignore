@@ -157,3 +157,5 @@ peacock_*.e
 *.cpa-*
 *.cpr-*
 
+# Netbeans
+/nbproject/*
