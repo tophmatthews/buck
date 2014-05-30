@@ -24,6 +24,14 @@ include $(MOOSE_DIR)/modules/modules.mk
 ###############################################################################
 
 # dep apps
+APPLICATION_DIR    := $(HERD_TRUNK_DIR)/fox
+APPLICATION_NAME   := fox
+include            $(FRAMEWORK_DIR)/app.mk
+
+APPLICATION_DIR    := $(HERD_TRUNK_DIR)/bison
+APPLICATION_NAME   := bison
+include            $(FRAMEWORK_DIR)/app.mk
+
 APPLICATION_DIR    := $(CURRENT_DIR)
 APPLICATION_NAME   := buck
 BUILD_EXEC         := yes

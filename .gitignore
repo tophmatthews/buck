@@ -159,3 +159,6 @@ peacock_*.e
 
 # Netbeans
 /nbproject/*
+
+/problems/*
+/meshes/*
