@@ -22,7 +22,7 @@
 //#include "DensificationUC.h"
 //#include "MechUC.h"
 //#include "SifgrsUC.h"
-//#include "SolidSwellingUC.h"
+#include "VSwellingUC.h"
 
 
 template<>
@@ -74,6 +74,7 @@ BuckApp::registerObjects(Factory & factory)
 {
   registerMaterial(ThermalUC);
   registerMaterial(CreepUC);
+  registerMaterial(VSwellingUC);
 }
 
 void
