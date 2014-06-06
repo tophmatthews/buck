@@ -1,0 +1,22 @@
+[Tests]
+  [./thermal_expansion]
+    type = 'Exodiff'
+    input = 'thermal_expansion.i'
+    exodiff = 'thermal_expansion_out.e'
+  [../]
+  [./elastic_modulus]
+    type = 'Exodiff'
+    input = 'elastic_modulus_calc.i'
+    exodiff = 'elastic_modulus_calc_out.e'
+  [../]
+  [./swelling]
+    type = 'Exodiff'
+    input = 'swelling.i'
+    exodiff = 'swelling_out.e'
+  [../]
+  [./creep]
+    type = 'Exodiff'
+    input = 'creep.i'
+    exodiff = 'creep_out.e'
+  [../]
+[]

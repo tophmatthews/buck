@@ -162,17 +162,23 @@
 
 [Materials]
 
-  [./mech]
-    type = CreepUC
+    [./mech]
+    type = MechUC
     block = 1
     disp_x = disp_x
     disp_y = disp_y
     disp_z = disp_z
     temp = temp
     fission_rate = fission_rate
+    initial_porosity = 0.05
     youngs_modulus = 2.e11
     poissons_ratio = .3
     thermal_expansion = 0
+    model_thermal_expansion = false
+    model_swelling = false
+    model_gas_swelling = false
+    model_creep = true
+    calc_elastic_modulus = false
   [../]
 
   [./thermal]
@@ -218,36 +224,31 @@
 
 
 #[Postprocessors]
-#
 #  [./temperature (K)]
 #    type = ElementAverageValue
 #    block = 1
 #    variable = temp
 #  [../]
-#
 #  [./node_y]
 #    type = NodalVariableValue
 #    nodeid = 2
 #    variable = disp_y
 #  [../]
-#
 #  [./node_x]
 #    type = NodalVariableValue
 #    nodeid = 2
 #    variable = disp_x
 #  [../]
-#
 #  [./node_z]
 #    type = NodalVariableValue
 #    nodeid = 2
 #    variable = disp_z
 #  [../]
-#
 #[]
 
 
 [Outputs]
-  file_base = out
+  file_base = creep_out
   output_initial = true
   csv = false
   interval = 1

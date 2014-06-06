@@ -1,7 +1,7 @@
 [Tests]
-  [./test]
+  [./solidswelling]
     type = 'Exodiff'
     input = 'solidswelling.i'
-    exodiff = 'out.e'
+    exodiff = 'solidswelling_out.e'
   [../]
 []

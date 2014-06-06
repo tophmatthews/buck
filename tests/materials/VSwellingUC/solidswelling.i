@@ -219,7 +219,7 @@
 
 
 [Outputs]
-  file_base = out
+  file_base = solidswelling_out
   output_initial = true
   csv = false
   interval = 10
