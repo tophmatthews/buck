@@ -12,13 +12,16 @@
 #include "BisonApp.h"
 #include "BisonSyntax.h"
 
-// Materials
+// Auxkernels
+#include "TotalPorosityAuxUC.h"
 
+// Materials
 #include "ThermalUC.h"
 #include "CreepUC.h"
 #include "MechUC.h"
-//#include "SifgrsUC.h"
 #include "VSwellingUC.h"
+#include "BubblesUC.h"
+
 
 
 template<>
@@ -66,10 +69,13 @@ BuckApp::registerApps()
 void
 BuckApp::registerObjects(Factory & factory)
 {
+  registerAux(TotalPorosityAuxUC);
+  
   registerMaterial(ThermalUC);
   registerMaterial(CreepUC);
   registerMaterial(VSwellingUC);
   registerMaterial(MechUC);
+  registerMaterial(BubblesUC);
 }
 
 void

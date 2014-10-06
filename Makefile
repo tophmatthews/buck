@@ -25,7 +25,12 @@ CONTACT           := yes
 HEAT_CONDUCTION   := yes
 WATER_STEAM_EOS   := no
 MISC              := yes
+<<<<<<< HEAD
 include           $(MOOSE_DIR)/modules/modules.mk
+=======
+CHEMICAL_REACTIONS:= yes
+include $(MOOSE_DIR)/modules/modules.mk
+>>>>>>> FETCH_HEAD
 ###############################################################################
 
 # dep apps
