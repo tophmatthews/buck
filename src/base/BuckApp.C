@@ -9,9 +9,6 @@
 #include "MiscApp.h"
 #include "SolidMechanicsApp.h"
 
-#include "FoxApp.h"
-#include "FoxSyntax.h"
-
 #include "BisonApp.h"
 #include "BisonSyntax.h"
 
@@ -44,7 +41,6 @@ BuckApp::BuckApp(const std::string & name, InputParameters parameters) :
   LinearElasticityApp::registerObjects(_factory);
   MiscApp::registerObjects(_factory);
   SolidMechanicsApp::registerObjects(_factory);
-  FoxApp::registerObjects(_factory);
   BisonApp::registerObjects(_factory);
 
   Moose::associateSyntax(_syntax, _action_factory);
@@ -54,7 +50,6 @@ BuckApp::BuckApp(const std::string & name, InputParameters parameters) :
   ContactApp::associateSyntax(_syntax, _action_factory);
   HeatConductionApp::associateSyntax(_syntax, _action_factory);
   MiscApp::associateSyntax(_syntax, _action_factory);
-  Fox::associateSyntax(_syntax, _action_factory);
   Bison::associateSyntax(_syntax, _action_factory);
 }
 

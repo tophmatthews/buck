@@ -19,15 +19,16 @@ include $(FRAMEWORK_DIR)/build.mk
 include $(FRAMEWORK_DIR)/moose.mk
 
 ################################## MODULES ####################################
-ALL_MODULES := yes
-include $(MOOSE_DIR)/modules/modules.mk
+SOLID_MECHANICS   := yes
+LINEAR_ELASTICITY := yes
+CONTACT           := yes
+HEAT_CONDUCTION   := yes
+WATER_STEAM_EOS   := no
+MISC              := yes
+include           $(MOOSE_DIR)/modules/modules.mk
 ###############################################################################
 
 # dep apps
-APPLICATION_DIR    := $(HERD_TRUNK_DIR)/fox
-APPLICATION_NAME   := fox
-include            $(FRAMEWORK_DIR)/app.mk
-
 APPLICATION_DIR    := $(HERD_TRUNK_DIR)/bison
 APPLICATION_NAME   := bison
 include            $(FRAMEWORK_DIR)/app.mk
