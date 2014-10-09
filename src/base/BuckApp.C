@@ -14,6 +14,10 @@
 
 // Auxkernels
 #include "TotalPorosityAuxUC.h"
+#include "BubbleAtomicDensityAuxUC.h"
+
+// Kernels
+#include "FGSource.h"
 
 // Materials
 #include "ThermalUC.h"
@@ -21,6 +25,9 @@
 #include "MechUC.h"
 #include "VSwellingUC.h"
 #include "BubblesUC.h"
+
+// User Objects
+#include "BubbleAtomicDensityUO.h"
 
 
 
@@ -70,12 +77,17 @@ void
 BuckApp::registerObjects(Factory & factory)
 {
   registerAux(TotalPorosityAuxUC);
+  registerAux(BubbleAtomicDensityAuxUC);
+
+  registerKernel(FGSource);
   
   registerMaterial(ThermalUC);
   registerMaterial(CreepUC);
   registerMaterial(VSwellingUC);
   registerMaterial(MechUC);
   registerMaterial(BubblesUC);
+
+  registerUserObject(BubbleAtomicDensityUO);
 }
 
 void

@@ -1,4 +1,5 @@
 #include "BubblesUC.h"
+#include "MooseEnum.h"
 
 template<>
 InputParameters validParams<BubblesUC>()
@@ -25,9 +26,9 @@ BubblesUC::BubblesUC(const std::string & name, InputParameters parameters) :
     _P1_porosity(declareProperty<Real>("P1_porosity")),
     _P2_porosity(declareProperty<Real>("P2_porosity")),
     _P3_porosity(declareProperty<Real>("P3_porosity"))
+
         
 {
-  Moose::out << "*** FIXME: BubblesUC only sets initial setup of bubble populations. This will have to be changed to the integral of concentration distribution" << std::endl;
 }
 
 void

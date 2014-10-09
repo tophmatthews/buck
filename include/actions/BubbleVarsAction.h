@@ -16,6 +16,8 @@ private:
   const Real _R_min;
   const Real _R_max;
   const Real _G;
+  const Real _scale_factor;
+  Real _spacing;
 };
 
 template<>
