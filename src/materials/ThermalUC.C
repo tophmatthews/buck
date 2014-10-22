@@ -1,14 +1,5 @@
 #include "ThermalUC.h"
 
-/* This kernel computes the thermophysical material properties of UO2 found in:
-
-   1)  J. K. Fink, Thermophysical Properties of Uranium Dioxide, Journal of Nuclear
-       Materials, Vol. 279, p. 1-18, 2000.
-   2)  P. G. Lucuta et al., A Pragmatic Approach to Modeling Thermal Conductivity
-       of Irradiated UO2 Fuel: Review and Recommendations, Journal of Nuclear
-       Materials, Vol. 232, p. 166-180, 1996.
-*/
-
 template<>
 InputParameters validParams<ThermalUC>()
 {

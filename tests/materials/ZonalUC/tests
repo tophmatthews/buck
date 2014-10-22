@@ -1,0 +1,12 @@
+[Tests]
+  [./t2]
+    type = 'Exodiff'
+    input = 'zonal_t2.i'
+    exodiff = 'zonal_t2_out.e'
+  [../]
+    [./gas]
+    type = 'Exodiff'
+    input = 'zonal_gas.i'
+    exodiff = 'zonal_gas_out.e'
+  [../]
+[]

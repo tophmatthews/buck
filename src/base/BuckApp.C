@@ -25,6 +25,10 @@
 #include "MechUC.h"
 #include "VSwellingUC.h"
 #include "BubblesUC.h"
+#include "ZonalUC.h"
+
+//Postprocessors
+#include "RatioPostprocessor.h"
 
 // User Objects
 #include "BubbleAtomicDensityUO.h"
@@ -86,6 +90,9 @@ BuckApp::registerObjects(Factory & factory)
   registerMaterial(VSwellingUC);
   registerMaterial(MechUC);
   registerMaterial(BubblesUC);
+  registerMaterial(ZonalUC);
+
+  registerPostprocessor(RatioPostprocessor);
 
   registerUserObject(BubbleAtomicDensityUO);
 }

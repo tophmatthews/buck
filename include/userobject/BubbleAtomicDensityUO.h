@@ -23,6 +23,7 @@ public:
   virtual void finalize() {}
 
   Real calcVDW( Real temp, Real radius) const;
+  void setRonchiData( Real temp , std::vector<Real>& rad, std::vector<Real>& arho) const;
   Real calcRonchi( Real temp, Real radius) const;
   Real calcAtomicDensity( Real temp, Real radius ) const;
 
@@ -32,10 +33,6 @@ protected:
   MooseEnum _model;
   Real _gamma;
 
-  std::vector<Real> _volume;
-  std::vector<Real> _radius;
-
-  void getData( Real temp );
   //bool & _initialized;
 
 };

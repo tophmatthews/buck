@@ -1,4 +1,6 @@
 #include "BubbleAtomicDensityUO.h"
+#include "SplineInterpolation.h"
+#include <algorithm>
 
 template<>
 InputParameters validParams<BubbleAtomicDensityUO>()
@@ -20,7 +22,6 @@ BubbleAtomicDensityUO::BubbleAtomicDensityUO(const std::string & name, InputPara
   _gamma(getParam<Real>("gamma"))
 
 {
-
 }
 
 Real
@@ -36,13 +37,13 @@ BubbleAtomicDensityUO::calcVDW( Real temp, Real radius) const
 }
 
 void
-BubbleAtomicDensityUO::getData( Real temp )
+BubbleAtomicDensityUO::setRonchiData( Real temp , std::vector<Real>& rad, std::vector<Real>& arho) const
 {
   // Data from Ronchi, JNM Vol 96 (1981)
   // vol displays [cm^3/mol]
   // Remaining arrays display pressure in [bar] for each temperature
   // NOTE!! The first value in the arrays corresponds to their temperature! This is so the correct value can be picked later
-  Real vol_mol[] = {377.4,188.7,125.8,94.3,75.5,62.9,53.9,47.2,41.9,37.7,34.3,31.4,29,27,25.2,23.6,22.2,21,19.9,18.9};
+  double vol_mol[] = {377.4,188.7,125.8,94.3,75.5,62.9,53.9,47.2,41.9,37.7,34.3,31.4,29,27,25.2,23.6,22.2,21,19.9,18.9};
   // Real t400[] = {400,73,124,170,243,394,701,1284,2306,3995,6659,10714,16722,25467,38075,56258,82826,122880,186960,300848,544531};
   // Real t500[] = {500,100,189,286,426,662,1078,1797,2989,4888,7809,12177,18567,27780,40965,59858,87277,128220,192614,303287,524286};
   // Real t600[] = {600,126,253,400,606,929,1458,2323,3704,5846,9079,13849,20757,30640,44691,64702,93540,136179,202186,312530,521921};
@@ -58,7 +59,7 @@ BubbleAtomicDensityUO::getData( Real temp )
   // Real t1600[] = {1600,384,852,1447,2232,3298,4777,6850,9765,13852,19552,27448,38319,53218,73596,101511,139995,193723,270340,383255,558101};
   // Real t1700[] = {1700,409,910,1547,2385,3519,5082,7260,10306,14556,20457,28602,39781,55059,75899,104370,143501,197936,275194,388308,561806};
   // Real t2000[] = {2000,485,1084,1845,2841,4171,5980,8465,11889,16607,23085,31941,43993,60336,82467,112477,153390,209752,288753,402476,572758};
-  Real pres[] = {400,73,124,170,243,394,701,1284,2306,3995,6659,10714,16722,25467,38075,56258,82826,122880,186960,300848,544531, \
+  double pres[] = {400,73,124,170,243,394,701,1284,2306,3995,6659,10714,16722,25467,38075,56258,82826,122880,186960,300848,544531, \
                  500,100,189,286,426,662,1078,1797,2989,4888,7809,12177,18567,27780,40965,59858,87277,128220,192614,303287,524286, \
                  600,126,253,400,606,929,1458,2323,3704,5846,9079,13849,20757,30640,44691,64702,93540,136179,202186,312530,521921, \
                  700,153,315,511,781,1187,1826,2833,4396,6774,10312,15474,22891,33433,48337,69448,99676,143982,211651,322258,524053, \
@@ -77,48 +78,91 @@ BubbleAtomicDensityUO::getData( Real temp )
   //std::vector< std::vector<Real> > p; // vector to store data values
   //p.insert(v.end(),t400,t500,t600,t700,t800,t900,t1000,t1100,t1200,t1300,t1400,t1500,t1600,t1700,t2000));
 
-  std::vector<Real> pressure; // Pressure values to use
+  std::vector<double> pressure; // Pressure values to use
   int extra;
   int length = 21;
   int lines = 15;
   if ( temp <= 400 ) // if below limit
   {
     extra = 0;
-    mooseWarning("BubblesUC: Temperature below model temperatures for bubble atomic density calculation. Using 400K data.");
-    for (int i=0; i<length; ++i)
+    mooseWarning("Temperature below model temperatures for bubble atomic density calculation. Using 400K data.");
+    for (int i=1; i<length; ++i)
       pressure.push_back(pres[i+extra]);
   }
   else if ( temp >= 2000) // if above limit
   {
-    extra = length * lines-1;
-    mooseWarning("BubblesUC: Temperature below model temperatures for bubble atomic density calculation. Using 2000K data.");
-    for (int i=0; i<length; ++i)
+    extra = (length ) * (lines - 1);
+    mooseWarning("Temperature below model temperatures for bubble atomic density calculation. Using 2000K data.");
+    for (int i=1; i<length; ++i)
       pressure.push_back(pres[i+extra]);
   }
   else // Do linear interpolation between temperatures
   {
     for (int i=1; i<lines; ++i)
     {
-      if (pres[i*length] > temp)
+      if (pres[i*length] >= temp)
       {
-        extra = i;
+        extra = length * i;
         break;
       }
     }
-    for (int i=0; i<length; ++i)
-      pressure.push_back( (pres[i+extra] + pres[i+extra-1]) / 2.);
+
+    Real delta = pres[extra] - pres[extra - length];
+    Real upper = ( temp - pres[extra - length] ) / delta;
+    Real lower = ( pres[extra]  - temp ) / delta;
+
+    for (int i=1; i<length; ++i)
+    {
+      pressure.push_back( upper * pres[i+extra] + lower * pres[i+extra-length] );
+    }
+  }
+
+  // Start with three long range values so cubic spline works
+  double more_r [3] = {1.2e5,1.1e5,1.0e5};
+
+  for (int i=0; i<3; ++i)
+  {
+    rad.push_back(more_r[i]);
+    arho.push_back( calcVDW( more_r[i],temp));
   }
 
   // convert pressure to radius
   // radius [nm] = 2*gamma / (p[bar] * 1e5) * 1e9
   for (int i=1; i<pressure.size(); ++i)
-    _radius.push_back(2 * _gamma / pressure.at(i) * 1.e4);
+    rad.push_back(2 * _gamma / pressure.at(i) * 1.e4);
 
   
   // Convert volume to [atom/nm^3]
-  for (int i=1; i<length-1; ++i)
-    _volume.push_back(vol_mol[i] * 6.022e23 * 1.e21);
+  for (int i=0; i<length-1; ++i)
+    arho.push_back(1 / vol_mol[i] * 6.022e23 / 1.e21);
+
+  for (int i=0; i<pressure.size(); ++i)
+  {
+    std::cout << rad[i] << " " << arho[i] << std::endl;
+  }
+
 }
+
+Real
+BubbleAtomicDensityUO::calcRonchi( Real temp, Real radius) const
+{
+  std::vector<double> rad;
+  std::vector<double> arho;
+  BubbleAtomicDensityUO::setRonchiData( temp, rad, arho );
+  //std::reverse(rad.begin(), rad.end());
+  //std::reverse(arho.begin(), arho.end());
+
+  SplineInterpolation spline(rad, arho);
+
+  //void dumpSampleFile("out", "X", "Y", float xmin=0, float xmax=0, float ymin=0, float ymax=0);
+  spline.dumpSampleFile("out", "X", "Y", 0,1000,0,1e30);
+
+  double asdf = spline.sample(radius);
+
+  std::cout << "spline value " << asdf << std::endl;
+  return 0;
+}
+
 
 
 Real
@@ -139,7 +183,3 @@ BubbleAtomicDensityUO::calcAtomicDensity( Real temp, Real radius ) const
     return 0;
   }
 }
-
-// void
-// BubbleAtomicDensityUO::execute()
-// {}
