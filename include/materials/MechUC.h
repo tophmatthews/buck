@@ -3,7 +3,6 @@
 
 #include "SolidModel.h"
 #include "CreepUC.h"
-#include "VSwellingUC.h"
 
 // Forward declarations
 class MechUC;

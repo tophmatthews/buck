@@ -1,5 +1,6 @@
 #include "MechUC.h"
 #include "MaterialUC.h"
+#include "VSwellingUC.h"
 #include <ctype.h>
 #include <stdlib.h>
 
@@ -23,7 +24,7 @@ InputParameters validParams<MechUC>()
 
    params.addParam<bool>("model_creep", true, "Set true to turn on creep model");
    params.addParam<std::string>("name_swelling_model", "VSwellingUC", "name of swelling model");
-   params.addParam<std::string>("name_gas_swelling_model", "Sifgrs", "name of gaseous swelling model");
+   params.addParam<std::string>("name_gas_swelling_model", "VSwellingUC", "name of gaseous swelling model");
    
   params.addParam<bool>("calc_elastic_modulus", false, "Flag for using MaterialUC to compute Young's modulus and Poisson's ratio. If false, they will be calculated using the values given in the input file.");
 

@@ -9,10 +9,15 @@
     input = 'elastic_modulus_calc.i'
     exodiff = 'elastic_modulus_calc_out.e'
   [../]
-  [./swelling]
+  [./solid_swelling]
     type = 'Exodiff'
-    input = 'swelling.i'
-    exodiff = 'swelling_out.e'
+    input = 'solid_swelling.i'
+    exodiff = 'solid_swelling_out.e'
+  [../]
+  [./gas_swelling]
+    type = 'Exodiff'
+    input = 'gas_swelling.i'
+    exodiff = 'gas_swelling_out.e'
   [../]
   [./creep]
     type = 'Exodiff'
