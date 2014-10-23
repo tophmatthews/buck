@@ -14,6 +14,7 @@ InputParameters validParams<ZonalUC>()
   params.addParam<Real>("frac_rel_zone1", 0.70, "Sets fission gas release fraction from Zone 1");
   params.addParam<Real>("frac_rel_zone3", 0.15, "Sets fission gas release fraction from Zone 3");
   params.addParam<Real>("frac_rel_zone4", 0.10, "Sets fission gas release fraction from Zone 4");
+  params.addParam<Real>("burnup_threshold", 0.001,"Sets the burnup threshold at which release begins [FIMA]");
   params.addParam<bool>("testing", false, "Turns on/off testing output");
 
   params.addCoupledVar("temp", 0, "Coupled Temperature");
@@ -33,6 +34,7 @@ ZonalUC::ZonalUC(const std::string & name, InputParameters parameters) :
   _frac_rel_zone1(getParam<Real>("frac_rel_zone1")),
   _frac_rel_zone3(getParam<Real>("frac_rel_zone3")),
   _frac_rel_zone4(getParam<Real>("frac_rel_zone4")),
+  _burnup_threshold(getParam<Real>("burnup_threshold")),
 
   _fission_rate(coupledValue("fission_rate")),  // fission rate [1/(m**3*s)]
   _fission_rate_old(coupledValueOld("fission_rate")),
@@ -172,7 +174,7 @@ ZonalUC::computeProperties()
       _gas_gen[qp] = 0.;
     }
 
-    if ( _burnup[qp] < 0.01 ) // if burnup is less than threshold, then produce but don't release gas
+    if ( _burnup[qp] < _burnup_threshold ) // if burnup is less than threshold, then produce but don't release gas
     {
       _gas_rel[qp] = 0;
     }

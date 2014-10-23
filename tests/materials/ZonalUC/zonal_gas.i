@@ -146,6 +146,7 @@
     frac_rel_zone1 = 0.7
     frac_rel_zone3 = 0.15
     frac_rel_zone4 = 0.1
+    burnup_threshold = 0.001
   [../]
 []
 

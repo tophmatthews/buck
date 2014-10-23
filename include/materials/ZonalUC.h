@@ -31,6 +31,7 @@ protected:
   const Real _frac_rel_zone1;
   const Real _frac_rel_zone3;
   const Real _frac_rel_zone4;
+  const Real _burnup_threshold;
 
   bool _has_fission_rate;
   VariableValue & _fission_rate;
