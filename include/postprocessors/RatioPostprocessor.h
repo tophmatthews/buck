@@ -30,4 +30,4 @@ protected:
 };
 
 
-#endif /* RATIoPOSTPROCESSOR_H */
+#endif /* RATIOPOSTPROCESSOR_H */

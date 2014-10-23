@@ -64,6 +64,12 @@ traceout*.txt
 *.vtu
 .depend
 
+# dont allow .e files in test directories
+tests/*.e
+tests/*/*.e
+tests/*/*/*.e
+tests/*/*/*/*.e
+
 # Allow .e files in gold directories (7 levels)
 !/gold/*.e
 !/*/gold/*.e

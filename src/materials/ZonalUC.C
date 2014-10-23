@@ -124,8 +124,6 @@ ZonalUC::computeProperties()
       _gas_gen_old[qp] = 0.;
       _gas_rel_old[qp] = 0.;
       _zone_old[qp] = 4;
-
-      _fission_rate_old[qp] = _fission_rate[qp];
     }
     return;
   }
@@ -155,7 +153,11 @@ ZonalUC::computeProperties()
     // Generate fission gas
     const Real yield = _frac_yield / _avogadros_num;  // yield of fission gas (Xe + Kr) [mol]
     const Real gas_gen_rate     = _fission_rate[qp]     * yield;
-    const Real gas_gen_rate_old = _fission_rate_old[qp] * yield;
+    Real old_fsnrate = _fission_rate_old[qp];
+    if( _t_step == 1)
+      old_fsnrate = _fission_rate[qp];
+
+    const Real gas_gen_rate_old = old_fsnrate * yield;
     const Real av_gas_gen_rate = ( gas_gen_rate + gas_gen_rate_old ) * 0.5;  // average gas generation rate in the time step [mol/(m**3*s)]
     const Real dgas_gen = av_gas_gen_rate * _dt;
 
@@ -168,10 +170,9 @@ ZonalUC::computeProperties()
     if ( _gas_gen[qp] < 0. )
     {
       _gas_gen[qp] = 0.;
-      std::cout << "BAAAAAADDDDDD" << std::endl;
     }
 
-    if ( _burnup[qp] < 0.001 ) // if burnup is less than threshold, then produce but don't release gas
+    if ( _burnup[qp] < 0.01 ) // if burnup is less than threshold, then produce but don't release gas
     {
       _gas_rel[qp] = 0;
     }
