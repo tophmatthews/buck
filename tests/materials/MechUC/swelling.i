@@ -166,7 +166,8 @@
     burnup = burnup
     temp = temp
     save_solid_swell = true
-    #solid_factor = 0.5
+    solid_factor = 0.5
+    calculate_gas_swelling = false
   [../]
 
   [./thermal]
@@ -182,6 +183,20 @@
     disp_x = disp_x
     disp_y = disp_y
     disp_z = disp_z
+  [../]
+
+  [./zone_mat] # Required for VSwellingUC
+    type = ZonalUC
+    block = 1
+    temp = temp
+    fission_rate = fission_rate
+    burnup = burnup
+    testing = false
+    nitrogen_fraction = 0.5
+    frac_rel_zone1 = 0.7
+    frac_rel_zone3 = 0.15
+    frac_rel_zone4 = 0.1
+    burnup_threshold = 0.001
   [../]
 
 []

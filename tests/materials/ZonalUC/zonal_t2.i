@@ -161,28 +161,28 @@
   dt = 1e4
 []
 
-# [Postprocessors]
-#   [./burnup]
-#     type = ElementAverageValue
-#     block = 1
-#     variable = burnup
-#   [../]
-#   [./temperature]
-#     type = ElementAverageValue
-#     block = 1
-#     variable = temp
-#   [../]
-#   [./zone]
-#     type = PointValue
-#     point = '0 0 0'
-#     variable = zone
-#   [../]
-#   [./T2]
-#     type = PointValue
-#     point = '0 0 0'
-#     variable = T2
-#   [../]
-# []
+[Postprocessors]
+  [./burnup]
+    type = ElementAverageValue
+    block = 1
+    variable = burnup
+  [../]
+  [./temperature]
+    type = ElementAverageValue
+    block = 1
+    variable = temp
+  [../]
+  [./zone]
+    type = PointValue
+    point = '0 0 0'
+    variable = zone
+  [../]
+  [./T2]
+    type = PointValue
+    point = '0 0 0'
+    variable = T2
+  [../]
+[]
 
 [Outputs]
   file_base = zonal_t2_out

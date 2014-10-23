@@ -12,32 +12,40 @@ template<>
 InputParameters validParams<VSwellingUC>()
 {
   InputParameters params = validParams<VolumetricModel>();
-  params.addCoupledVar("burnup", "Coupled Burnup");
+  params.addCoupledVar("burnup", 0, "Coupled Burnup");
 //  params.addRequiredParam<Real>("initial_density", "Initial fuel density");
 //  params.addParam<Real>("total_densification",0.034, "The densification that will occur given as a fraction of theoretical density");
 //  params.addParam<Real>("complete_burnup",0.05, "The burnup at which densification is complete input in units of MWd/kgU");
-  params.addCoupledVar("temp", "Coupled Temperature");
-  params.addPrivateParam("solid_factor", 0.5);
+  params.addCoupledVar("temp", 0, "Coupled Temperature");
+  params.addParam<Real>("solid_factor", 0.5, "Factor multiplied against Burnup [FIMA] to determine swelling due to solid fission products");
+  params.addParam<bool>("calculate_gas_swelling", true, "Flag to calculate gas swelling");
   params.addParam<bool>("save_solid_swell", false, "Should the solid swelling be saved in a material property");
   params.addParam<bool>("save_gas_swell", false, "Should the gaseous swelling be saved in a material property");
-  params.addParam<bool>("save_densification", false, "Should the densification be saved in a material property");
+  // params.addParam<bool>("save_densification", false, "Should the densification be saved in a material property");
 
   return params;
 }
 
 VSwellingUC::VSwellingUC( const std::string & name, InputParameters parameters)
   :VolumetricModel( name, parameters ),
-   _has_burnup(isCoupled("burnup")),
 
-   _burnup(_has_burnup ? coupledValue("burnup") : _zero),
-   _burnup_old(_has_burnup ? coupledValueOld("burnup") : _zero),
+   _burnup(coupledValue("burnup")),
+   _burnup_old(coupledValueOld("burnup")),
         
-//   _density(getParam<Real>("density")),
-   _has_temp(isCoupled("temp")),
-        
-   _temperature(_has_temp ? coupledValue("temp") : _zero),
-   _temperature_old(_has_temp ? coupledValueOld("temp") : _zero),
+   _temperature(coupledValue("temp")),
+   _temperature_old(coupledValueOld("temp")),
+
    _solid_factor(parameters.get<Real>("solid_factor")),
+   _calc_gas_swell(parameters.get<bool>("calculate_gas_swelling")),
+
+   _density(getMaterialProperty<Real>("density")),
+   _density_old(getMaterialPropertyOld<Real>("density")),
+
+   _zone(getMaterialProperty<Real>("zone")),
+   _zone_old(getMaterialPropertyOld<Real>("zone")),
+   _T2(getMaterialProperty<Real>("T2")),
+   _T2_old(getMaterialPropertyOld<Real>("T2")),
+
    _solid_swell(NULL),
    _solid_swell_old(NULL),
    _gas_swell(NULL),
@@ -50,19 +58,16 @@ VSwellingUC::VSwellingUC( const std::string & name, InputParameters parameters)
     _solid_swell = &declareProperty<Real>("solid_swell");
     _solid_swell_old = &declarePropertyOld<Real>("solid_swell");
   }
-  // if (true || parameters.get<bool>("save_gas_swell"))
+  if ( parameters.get<bool>("save_gas_swell"))
   {
     _gas_swell = &declareProperty<Real>("gas_swell");
     _gas_swell_old = &declarePropertyOld<Real>("gas_swell");
   }
-  if (parameters.get<bool>("save_densification"))
-  {
-    _densification = &declareProperty<Real>("densification");
-    _densification_old = &declarePropertyOld<Real>("densification");
-  }
-  
-  if ( !_has_burnup )
-    mooseError("VSwellingUC: burnup required");
+  // if (parameters.get<bool>("save_densification"))
+  // {
+  //   _densification = &declareProperty<Real>("densification");
+  //   _densification_old = &declarePropertyOld<Real>("densification");
+  // }
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -93,15 +98,8 @@ VSwellingUC::modifyStrain(const unsigned int qp,
                            SymmTensor & strain_increment,
                            SymmTensor & dstrain_increment_dT)
 {
-  if ( _has_temp && _has_burnup && _t_step != 0 )
+  if ( _t_step != 0 )
   {
-    const Real burnup = _burnup[qp];
-    const Real burnup_old = _burnup_old[qp];
-    const Real burnup_increment = _burnup[qp] - _burnup_old[qp];
-    const Real temperature = _temperature[qp];
-    const Real temperature_old = _temperature_old[qp];
-
-    //
     // Determinant of deformation gradient is current volume over original volume:
     // det(F) = V/V0
     // If F0 is the diagonal value of F for volumetric strain,
@@ -112,27 +110,35 @@ VSwellingUC::modifyStrain(const unsigned int qp,
     // F0_n - F0_(n-1)
     //
 
-
-
     // Solid swelling
     Real ssStrainOld(0);
     Real ssStrain(0);
     Real dssStrain_dTOld(0);
     Real dssStrain_dT(0);
-    solidSwelling( _solid_factor, burnup_old, ssStrainOld, dssStrain_dTOld );
-    solidSwelling( _solid_factor, burnup,     ssStrain,    dssStrain_dT );
+    solidSwelling( _solid_factor, _burnup_old[qp], ssStrainOld, dssStrain_dTOld );
+    solidSwelling( _solid_factor, _burnup[qp], ssStrain, dssStrain_dT );
     if (_solid_swell)
     {
       (*_solid_swell)[qp] = ssStrain;
     }
 
     // Gaseous swelling
-    Real gsStrainInc(0);
-    Real dgsStrain_dT(0);
-//    gaseousSwelling( _gas_factor, _density, burnup, burnup_increment, temperature, gsStrainInc, dgsStrain_dT );
-    if (_gas_swell && _gas_swell_old)
+    Real gsStrain(0.0);
+    Real gsStrainOld(0.0);
+    Real dgsStrain_dT(0.0);
+    Real dgsStrain_dTOld(0.0);
+    if ( _calc_gas_swell )
     {
-      (*_gas_swell)[qp] = (*_gas_swell_old)[qp] + gsStrainInc;
+      if ( _zone[qp] == 3 || _zone[qp] == 4)
+      {
+        gaseousSwelling( _zone[qp], _T2[qp], _density[qp], _burnup[qp], _temperature[qp], gsStrain, dgsStrain_dT );
+        gaseousSwelling( _zone_old[qp], _T2_old[qp], _density_old[qp], _burnup_old[qp], _temperature_old[qp], gsStrainOld, dgsStrain_dTOld );
+      }
+    }
+
+    if (_gas_swell && _gas_swell_old && _calc_gas_swell)
+    {
+      (*_gas_swell)[qp] = gsStrain;
     }
 
     // Densification
@@ -149,8 +155,8 @@ VSwellingUC::modifyStrain(const unsigned int qp,
 
     // Volumetric strain increments
     const Real oneThird = 1./3.;
-    const Real VStrain = std::pow((ssStrain + (*_gas_swell)[qp] + dStrain + 1)*v0OverVOld, oneThird) - std::pow((ssStrainOld + (*_gas_swell_old)[qp] + dStrainOld + 1)*v0OverVOld, oneThird);
-    const Real dVStrain_dT = (dssStrain_dT-dssStrain_dTOld) + dgsStrain_dT + (ddStrain_dT-ddStrain_dTOld);
+    const Real VStrain = std::pow((ssStrain + gsStrain + dStrain + 1)*v0OverVOld, oneThird) - std::pow((ssStrainOld + gsStrainOld + dStrainOld + 1)*v0OverVOld, oneThird);
+    const Real dVStrain_dT = (dssStrain_dT - dssStrain_dTOld) + (dgsStrain_dT - dgsStrain_dTOld) + (ddStrain_dT - ddStrain_dTOld);
 
     strain_increment.addDiag( -VStrain );
     dstrain_increment_dT.addDiag( -dVStrain_dT/3 * v0OverVOld );
@@ -158,13 +164,13 @@ VSwellingUC::modifyStrain(const unsigned int qp,
   }
 }
 
-//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
 
 void
 VSwellingUC::solidSwelling( const Real solid_swelling_factor,
-                             const Real burnup,
-                             Real & fract_volumetric,
-                             Real & dfract_volumetric_dtemp )
+                            const Real burnup,
+                            Real & fract_volumetric,
+                            Real & dfract_volumetric_dtemp )
 {
   // This function computes the solid fission product swelling in UC according to:
   // Matzke: Science of Advanced LMFBR Fuels, pg 466
@@ -175,40 +181,78 @@ VSwellingUC::solidSwelling( const Real solid_swelling_factor,
   dfract_volumetric_dtemp = 0.;
 }
 
-// FIXME: add in gaseous swelling for UC
-//void
-//VSwellingUC::gaseousSwelling( const Real gaseous_swelling_factor,
-//                               const Real fuel_density,
-//                               const Real burnup,
-//                               const Real burnup_increment,
-//                               const Real temperature,
-//                               Real & fract_volumetric_increment,
-//                               Real & dfract_volumetric_increment_dtemp )
-//{
-//  // This function computes the gaseous fission product swelling according to:
-//  // MATPRO - A Library of Material Properties for LWR Accident Analysis, INEEL/EXT-02-00589 (2003).
-//  //
-//  // delta e_sw-g = 8.8e-56*(2800-T)^11.73*exp(-.0162*(2800-T))*exp(-8e-27*Bu)*delBu
-//  //   where T is Kelvin
-//  //         Bu is fissions/m^3
-//  //
-//  // fission | 6.023e23 atom | rho kg-UO2    fission                 fission
-//  // ------------------------------------ -> ------- = 2.23e24 * rho -------
-//  //  atom   |  .270 kg-UO2  |  m^3-UO2       atom                   m^3-UO2
-//  //
-//  // Using this to convert units, we get
-//  //
-//  // delta e_sw-g =
-//  //     1.96e-31*rho*(2800-T)^11.73*exp(-.0162*(2800-T))*exp(-1.78e-2*rho*Bu)*delBu
-//
-//  const Real gsStrainC0( gaseous_swelling_factor * fuel_density * burnup_increment * std::exp(-0.0178 * fuel_density * burnup) );
-//  const Real gsStrain_pow( std::pow(2800. - temperature, 11.73) );
-//  const Real gsStrain_exp( std::exp(-0.0162 * (2800. - temperature)) );
-//
-//  fract_volumetric_increment = gsStrainC0 * gsStrain_pow * gsStrain_exp;  // increment of fractonal volume gaseous swelling [/]
-//  dfract_volumetric_increment_dtemp = gsStrainC0 * ( -11.73 * std::pow(2800. - temperature, 10.73 ) * gsStrain_exp +
-//                                      gsStrain_pow * gsStrain_exp * 0.0162 );
-//}
+//////////////////////////////////////////////////////////////////////////////////////
+
+void
+VSwellingUC::gaseousSwelling( const Real zone,
+                              const Real T2,
+                              const Real fuel_density,
+                              const Real burnup,
+                              const Real temperature,
+                              Real & fract_volumetric,
+                              Real & dfract_volumetric_dtemp )
+{
+  // Swelling calculated from Blank, "Nonoxide Ceramic Nuclear Fuels," (1994) pg 318
+  // Swelling contribution broken into P1 and P2 bubble contributions
+  //
+  // Zones 1 and 2 contribute no swelling.
+  //
+  // P1 in Zones 3 & 4:
+  //
+  // mu1 = S1 * (F- F01)  [%]
+  //   S1 = 0.032 [% per a/o]
+  //   F01 = 1.5 [a/o]
+  //   F = Burnup [a/o]
+  //
+  // P2 in Zone 3 & 4
+  //
+  // mu2+ = (S2+) ( F - F02) [%]
+  // mu2 = (mu2+) - K2 ( F - F02 ) ( T2* - T ) [%] 
+  //   S2+ = 0.613 [% per a/o]
+  //   F02 = 0.83 [a/o]
+  //   T2* is the critical temperature calculated in ZonalUC
+  //   F = burnup [a/o]
+  // 
+  //   in zone 4: K2 = 0.0018
+  //   in zone 3: K2 = 0.014
+  //
+
+  const Real F = burnup * 100; // turns burnup from [FIMA] to [a/o]
+
+  // P1 strain
+  const Real S1( 0.032 ); // [% per a/o]
+  const Real F01( 1.5 ); // [a/o]
+  Real gsStrainP1 = S1 * (F - F01);
+
+  //gsStrainP1 = 0;
+
+  //P2 strain
+  const Real S2( 0.613 ); // [% per a/o]
+  const Real F02( 0.83 ); // [a/o]
+  const Real mu = S2 * ( F - F02 );
+
+  Real K2;
+  if ( zone == 4 )
+    K2 = 0.0018;
+  else if ( zone == 3 )
+    K2 = 0.014;
+
+  Real gsStrainP2 = mu - K2 * ( F - F02 ) * ( T2 - temperature );
+  Real dgsStrainP2 = K2 * ( F - F02 );
+
+  if ( gsStrainP1 < 0 )
+    gsStrainP1 = 0;
+  if ( gsStrainP2 < 0)
+    gsStrainP2 = 0;
+  if ( dgsStrainP2 < 0 )
+    dgsStrainP2 = 0;
+
+  fract_volumetric = ( gsStrainP1 + gsStrainP2 ) / 100.0;  // increment of fractonal volume gaseous swelling [/]
+  dfract_volumetric_dtemp = dgsStrainP2 / 100.0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+
 // FIXME: add densification for UC
 //void
 //VSwellingUC::densification( const Real total_densification,

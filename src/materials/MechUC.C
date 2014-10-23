@@ -101,29 +101,7 @@ MechUC::computeThermalStrain()
       }
 
       if (temp < 0)
-      {
-        std::stringstream msg;
-        msg << "WARNING:  In MechUC:  negative temperature!\n"
-            << "\tResetting to zero.\n"
-            << "\tqp: " << _qp << "\n"
-            << "\ttemp: " << temp  << "\n"
-            << "\telem: " << _current_elem->id() << "\n"
-            << "\tproc: " << processor_id() << "\n";
-        mooseWarning( msg.str() );
-      }
-
-      if(temp > UCThermal::TMELT_UC)
-      {
-        std::stringstream msg;
-        msg << "WARNING:  In MechUO2:  temperature exceeds the melting value!\n"
-            << "\tNot setting thermal expansion coefficient\n"
-            << "\tqp: "   << _qp << "\n"
-            << "\ttemp: " << temp << "\n"
-            << "\telem: " << _current_elem->id() << "\n"
-            << "\tproc: " << processor_id() << "\n";
-        mooseWarning( msg.str() );
-
-      }
+        mooseError("MechUC: Negative temperature on block.");
 
       alpha     = FALPHA(temp);
       alpha0    = FALPHA(temp0);

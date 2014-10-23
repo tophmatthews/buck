@@ -46,6 +46,7 @@ ZonalUC::ZonalUC(const std::string & name, InputParameters parameters) :
   _burnup_old(coupledValueOld("burnup")),
 
   _T2(declareProperty<Real>("T2")),
+  _T2_old(declarePropertyOld<Real>("T2")),
 
   _zone(declareProperty<Real>("zone")),
   _gas_gen(declareProperty<Real>("gas_gen")),  // volume concentration of gas produced [mol/m**3]
@@ -60,16 +61,7 @@ ZonalUC::ZonalUC(const std::string & name, InputParameters parameters) :
   _avogadros_num(6.022e+23),
 
   _testing(getParam<bool>("testing"))
-{
-  if ( !isCoupled("fission_rate") )
-    mooseError("From ZonalUC: coupled fission_rate needed");
-
-  if ( !isCoupled("temp") )
-    mooseError("From ZonalUC: coupled temp needed");
-
-  if ( !isCoupled("burnup") )
-    mooseError("From ZonalUC: coupled Burnup needed");
-}
+{}
 
 void
 ZonalUC::calcT2(unsigned int qp)
@@ -101,14 +93,14 @@ ZonalUC::calcT2(unsigned int qp)
 void
 ZonalUC::initQpStatefulProperties()
 {
-    _gas_gen[_qp] = 0.;
-    _gas_rel[_qp] = 0.;
-    _zone[_qp] = 4;
-    _T2[_qp] = 0;
+  _gas_gen[_qp] = 0.;
+  _gas_rel[_qp] = 0.;
+  _zone[_qp] = 4;
+  _T2[_qp] = 0;
 
-    _gas_gen_old[_qp] = 0.;
-    _gas_rel_old[_qp] = 0.;
-    _zone_old[_qp] = 4;
+  _gas_gen_old[_qp] = 0.;
+  _gas_rel_old[_qp] = 0.;
+  _zone_old[_qp] = 4;
 }
 
 void
@@ -126,6 +118,7 @@ ZonalUC::computeProperties()
       _gas_gen_old[qp] = 0.;
       _gas_rel_old[qp] = 0.;
       _zone_old[qp] = 4;
+      _T2_old[qp] = 1.0e4;
     }
     return;
   }
@@ -133,24 +126,7 @@ ZonalUC::computeProperties()
   for(unsigned int qp=0; qp<_qrule->n_points(); ++qp)
   {
     if (_temp[qp] < 0.0)
-    {
-      if (n_processors()>1)
-      {
-        std::stringstream errorMsg;
-        errorMsg << "ForMas: Negative temperature:"
-                 << "\nElement:     " <<_current_elem->id()
-                 << "\nqp:          " <<qp
-                 << "\nTemperature: " << _temp[qp];
-        mooseError(errorMsg.str());
-      }
-      else
-      {
-        std::stringstream errorMsg;
-        errorMsg << "\nForMas: Negative temperature in element: "<<_current_elem->id();
-        Moose::out<<errorMsg.str()<<std::endl<<std::endl;
-        throw MooseException();
-      }
-    }
+      mooseError("ZonalUC: Negative temperature in element.");
 
     // Generate fission gas
     const Real yield = _frac_yield / _avogadros_num;  // yield of fission gas (Xe + Kr) [mol]

@@ -4,4 +4,9 @@
     input = 'solidswelling.i'
     exodiff = 'solidswelling_out.e'
   [../]
+  [./gasswelling]
+    type = 'Exodiff'
+    input = 'gasswelling.i'
+    exodiff = 'gasswelling_out.e'
+  [../]
 []

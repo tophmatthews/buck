@@ -46,6 +46,7 @@ protected:
   VariableValue & _burnup_old;
 
   MaterialProperty<Real> & _T2;
+  MaterialProperty<Real> & _T2_old;
 
   MaterialProperty<Real> & _zone;
   MaterialProperty<Real> & _gas_gen;
