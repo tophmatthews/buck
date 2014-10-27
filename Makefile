@@ -23,7 +23,7 @@ SOLID_MECHANICS   := yes
 LINEAR_ELASTICITY := yes
 CONTACT           := yes
 HEAT_CONDUCTION   := yes
-WATER_STEAM_EOS   := no
+WATER_STEAM_EOS   := yes
 MISC              := yes
 include           $(MOOSE_DIR)/modules/modules.mk
 ###############################################################################
