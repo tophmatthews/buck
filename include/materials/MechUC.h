@@ -27,11 +27,11 @@ protected:
 
   bool _model_thermal_expansion;
   bool _model_swelling;
-  bool _model_gas_swelling;
+  // bool _model_gas_swelling;
   bool _model_creep;
 
   const std::string _name_swelling_model;
-  const std::string _name_gas_swelling_model;
+  // const std::string _name_gas_swelling_model;
   
   const bool _calc_elastic_modulus;
   
@@ -43,7 +43,7 @@ protected:
   virtual void initQpStatefulProperties();
   virtual void computeThermalStrain();
   virtual void computeSwellingStrain();
-  virtual void computeGasSwellingStrain();
+  // virtual void computeGasSwellingStrain();
   virtual void modifyStrainIncrement();
   virtual bool updateElasticityTensor(SymmElasticityTensor & tensor );
 

@@ -20,11 +20,11 @@ InputParameters validParams<MechUC>()
 
    params.addParam<bool>("model_thermal_expansion", true, "Set true to turn on thermal expansion model and calculate alpha from MechanicalUC. If false, thermal expansion will be calculated using alpha or alpha function given in input file.");
    params.addParam<bool>("model_swelling", true, "Set true to turn on swelling model");
-   params.addParam<bool>("model_gas_swelling", false, "Set true to turn on swelling model");
+   // params.addParam<bool>("model_gas_swelling", false, "Set true to turn on swelling model");
 
    params.addParam<bool>("model_creep", true, "Set true to turn on creep model");
    params.addParam<std::string>("name_swelling_model", "VSwellingUC", "name of swelling model");
-   params.addParam<std::string>("name_gas_swelling_model", "VSwellingUC", "name of gaseous swelling model");
+   // params.addParam<std::string>("name_gas_swelling_model", "VSwellingMX", "name of gaseous swelling model");
    
   params.addParam<bool>("calc_elastic_modulus", false, "Flag for using MaterialUC to compute Young's modulus and Poisson's ratio. If false, they will be calculated using the values given in the input file.");
 
@@ -39,11 +39,11 @@ MechUC::MechUC( const std::string & name, InputParameters parameters ) :
         
   _model_thermal_expansion(getParam<bool>("model_thermal_expansion")),
   _model_swelling(getParam<bool>("model_swelling")),
-  _model_gas_swelling(getParam<bool>("model_gas_swelling")),
+  // _model_gas_swelling(getParam<bool>("model_gas_swelling")),
   _model_creep(getParam<bool>("model_creep")),
         
   _name_swelling_model(getParam<std::string>("name_swelling_model")),
-  _name_gas_swelling_model(getParam<std::string>("name_gas_swelling_model")),
+  // _name_gas_swelling_model(getParam<std::string>("name_gas_swelling_model")),
         
   _calc_elastic_modulus(getParam<bool>("calc_elastic_modulus"))
 {
@@ -150,32 +150,32 @@ MechUC::computeSwellingStrain()
 
 }
 
-void
-MechUC::computeGasSwellingStrain()
-{
-  if( _model_gas_swelling)
-  {
-    const SubdomainID current_block = _current_elem->subdomain_id();
-    const std::vector<VolumetricModel*> & vm( _volumetric_models[current_block] );
-    bool bFoundGasSwellingModel(false);
+// void
+// MechUC::computeGasSwellingStrain()
+// {
+//   if( _model_gas_swelling)
+//   {
+//     const SubdomainID current_block = _current_elem->subdomain_id();
+//     const std::vector<VolumetricModel*> & vm( _volumetric_models[current_block] );
+//     bool bFoundGasSwellingModel(false);
 
-    const Real VoldV0 = element()->volumeRatioOld(_qp);
-    for (unsigned int i(0); i < vm.size(); ++i)
-    {
-      if( vm[i]->name() == _name_gas_swelling_model)
-      {
-        vm[i]->modifyStrain(_qp, 1/VoldV0, _strain_increment, _d_strain_dT);
-        bFoundGasSwellingModel = true;
-      }
-    }
+//     const Real VoldV0 = element()->volumeRatioOld(_qp);
+//     for (unsigned int i(0); i < vm.size(); ++i)
+//     {
+//       if( vm[i]->name() == _name_gas_swelling_model)
+//       {
+//         vm[i]->modifyStrain(_qp, 1/VoldV0, _strain_increment, _d_strain_dT);
+//         bFoundGasSwellingModel = true;
+//       }
+//     }
 
-    if(!bFoundGasSwellingModel)
-    {
-      mooseWarning( "No gas swelling model block defined in the input file");
-    }
-  }
+//     if(!bFoundGasSwellingModel)
+//     {
+//       mooseWarning( "No gas swelling model block defined in the input file");
+//     }
+//   }
 
-}
+// }
 
 void
 MechUC::modifyStrainIncrement()
@@ -185,7 +185,7 @@ MechUC::modifyStrainIncrement()
 
   computeSwellingStrain();
 
-  computeGasSwellingStrain();
+  // computeGasSwellingStrain();
 
 }
 

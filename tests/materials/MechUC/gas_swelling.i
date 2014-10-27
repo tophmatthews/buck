@@ -8,13 +8,14 @@
 #
 # The following is a comparison of BUCK to a excel hand calc:
 #            
-# time      zone      Vol (Buck)  Vol (Calc)  diff [%]
-# 1.00E+07  4.00E+00  1.0169E+00  1.016934666 0.000622827
-# 2.00E+07  3.00E+00  1.0739E+00  1.073859885 0.006063634
-# 3.00E+07  3.00E+00  1.1594E+00  1.159255013 0.015698591
-# 4.00E+07  3.00E+00  1.2573E+00  1.257005378 0.026063661
-# 5.00E+07  1.00E+00  1.3312E+00  
-# 6.00E+07  1.00E+00  1.3312E+00 
+# Step  zone  BUCK (m3)  Calc (m3)  diff [%]
+# 10    4     1.02E+00   1.017636   6.9847E-04
+# 20    4     1.08E+00   1.076851   6.1716E-03
+# 30    3     1.18E+00   1.175542   1.9130E-02
+# 40    3     1.29E+00   1.291589   3.3258E-02
+# 50    3     1.42E+00   1.416426   4.6295E-02
+# 60    1     1.44E+00    
+# 70    1     1.44E+00    
 
 
 [GlobalParams]
@@ -46,7 +47,7 @@
   [./temp]
     order = FIRST
     family = LAGRANGE
-    initial_condition = 1200.0
+    initial_condition = 1130.0
   [../]
 
 []
@@ -214,10 +215,10 @@
   l_max_its = 100
   nl_max_its = 100
   nl_rel_tol = 1e-4
-  nl_abs_tol = 1e-4
+  nl_abs_tol = 1e-3
   l_tol = 1e-4
   start_time = 0.0
-  num_steps = 60
+  num_steps = 70
   dt = 1e6
 
 []
@@ -248,7 +249,7 @@
 
 [Outputs]
   file_base = gas_swelling_out
-  output_initial = true
+  output_initial = false
   csv = false
   interval = 10
   [./exodus]

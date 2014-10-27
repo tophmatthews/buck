@@ -13,7 +13,7 @@
 #include "BisonSyntax.h"
 
 // Auxkernels
-#include "TotalPorosityAuxUC.h"
+#include "PorosityAuxUC.h"
 #include "BubbleAtomicDensityAuxUC.h"
 
 // Kernels
@@ -80,7 +80,7 @@ BuckApp::registerApps()
 void
 BuckApp::registerObjects(Factory & factory)
 {
-  registerAux(TotalPorosityAuxUC);
+  registerAux(PorosityAuxUC);
   registerAux(BubbleAtomicDensityAuxUC);
 
   registerKernel(FGSource);

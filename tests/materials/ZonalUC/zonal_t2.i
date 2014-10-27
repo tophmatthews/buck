@@ -4,22 +4,18 @@
 # The test is a single element unit cube with a fission rate of 1e22. The simulation is
 # run for 10 1e4 timesteps. Nitrogen content is 50%.
 #
-# The zone should start as 4. Once temperature is greater than T2, zone should go to 3.
-# Once temperature is greater than T2 + 100K, zone should go to 1.
-# At the end when temperature drops to 500K, zone should stay at 1
-#
-# time      burnup [FIMA] temperature [K] zone  BUCK T2     Analytical T2 % Diff
-# 1.00E+04  3.38E-03      1.22E+03        4     1.4656E+03  1.4656E+03    9.21E-04
-# 2.00E+04  6.77E-03      1.24E+03        4     1.3848E+03  1.3848E+03    8.22E-04
-# 3.00E+04  1.02E-02      1.26E+03        4     1.3415E+03  1.3415E+03    8.36E-04
-# 4.00E+04  1.35E-02      1.28E+03        4     1.3124E+03  1.3124E+03    8.16E-04
-# 5.00E+04  1.69E-02      1.30E+03        3     1.2907E+03  1.2907E+03    7.60E-04
-# 6.00E+04  2.03E-02      1.32E+03        3     1.2735E+03  1.2735E+03    7.63E-04
-# 7.00E+04  2.37E-02      1.34E+03        3     1.2593E+03  1.2593E+03    7.62E-04
-# 8.00E+04  2.71E-02      1.36E+03        1     1.2473E+03  1.2473E+03    7.71E-04
-# 9.00E+04  3.05E-02      1.38E+03        1     1.2368E+03  1.2368E+03    7.35E-04
-# 1.00E+05  3.38E-02      1.40E+03        1     1.2276E+03  1.2276E+03    7.30E-04
-# 1.10e+05  3.72e-02      5.00e+02        1     1.2194E+03  1.2194E+03    7.77E-04
+# Step  burnup [FIMA]  BUCK        Analytical T2  % Diff
+# 1     3.38E-03       1.7055E+03  1.7055E+03     1.86E-05
+# 2     6.77E-03       1.5331E+03  1.5331E+03     9.75E-06
+# 3     1.02E-02       1.4475E+03  1.4475E+03     2.65E-05
+# 4     1.35E-02       1.3924E+03  1.3924E+03     9.55E-06
+# 5     1.69E-02       1.3524E+03  1.3524E+03     3.23E-05
+# 6     2.03E-02       1.3214E+03  1.3214E+03     1.98E-05
+# 7     2.37E-02       1.2963E+03  1.2963E+03     1.52E-05
+# 8     2.71E-02       1.2753E+03  1.2753E+03     4.32E-06
+# 9     3.05E-02       1.2573E+03  1.2573E+03     1.23E-05
+# 10    3.38E-02       1.2417E+03  1.2417E+03     3.96E-05
+# 11    3.72E-02       1.2278E+03  1.2278E+03     1.17E-05
 
 [GlobalParams]
   density = 12267.0

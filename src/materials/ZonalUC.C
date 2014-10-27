@@ -8,8 +8,8 @@ InputParameters validParams<ZonalUC>()
   InputParameters params = validParams<Material>();
   
   params.addParam<Real>("frac_yield", 0.25, "Fraction of fissions that result in a fission gas atom");
-  params.addParam<Real>("nitrogen_fraction", 0, "Stochiometric fraction of Nitrogen");
-  params.addParam<bool>("high_oxygen", true, "Sets high oxygen fuel content:true or false");
+  // params.addParam<Real>("nitrogen_fraction", 0, "Stochiometric fraction of Nitrogen");
+  // params.addParam<bool>("high_oxygen", true, "Sets high oxygen fuel content:true or false");
   params.addParam<Real>("zone3_width", 100, "Sets temperautre width of Zone 3");
   params.addParam<Real>("frac_rel_zone1", 0.70, "Sets fission gas release fraction from Zone 1");
   params.addParam<Real>("frac_rel_zone3", 0.15, "Sets fission gas release fraction from Zone 3");
@@ -28,8 +28,8 @@ ZonalUC::ZonalUC(const std::string & name, InputParameters parameters) :
   Material(name, parameters),
         
   _frac_yield(getParam<Real>("frac_yield")),
-  _nitrogen_fraction(getParam<Real>("nitrogen_fraction")),
-  _oxygen_level(getParam<bool>("high_oxygen")),
+  // _nitrogen_fraction(getParam<Real>("nitrogen_fraction")),
+  // _oxygen_level(getParam<bool>("high_oxygen")),
   _zone3_width(getParam<Real>("zone3_width")),
   _frac_rel_zone1(getParam<Real>("frac_rel_zone1")),
   _frac_rel_zone3(getParam<Real>("frac_rel_zone3")),
@@ -37,21 +37,21 @@ ZonalUC::ZonalUC(const std::string & name, InputParameters parameters) :
   _burnup_threshold(getParam<Real>("burnup_threshold")),
 
   _fission_rate(coupledValue("fission_rate")),  // fission rate [1/(m**3*s)]
-  _fission_rate_old(coupledValueOld("fission_rate")),
-
   _temp(coupledValue("temp")),  // temperature [K]
-  _temp_old(coupledValueOld("temp")),
- 
   _burnup(coupledValue("burnup")),  // local burnup [FIMA]
+
+  _fission_rate_old(coupledValueOld("fission_rate")),
+  _temp_old(coupledValueOld("temp")),
   _burnup_old(coupledValueOld("burnup")),
 
   _T2(declareProperty<Real>("T2")),
-  _T2_old(declarePropertyOld<Real>("T2")),
-
+  _T3(declareProperty<Real>("T3")),
   _zone(declareProperty<Real>("zone")),
   _gas_gen(declareProperty<Real>("gas_gen")),  // volume concentration of gas produced [mol/m**3]
   _gas_rel(declareProperty<Real>("gas_rel")),   // volume concentration of gas released [mol/m**3]
 
+  _T2_old(declarePropertyOld<Real>("T2")),
+  _T3_old(declarePropertyOld<Real>("T3")),
   _zone_old(declarePropertyOld<Real>("zone")),
   _gas_gen_old(declarePropertyOld<Real>("gas_gen")),
   _gas_rel_old(declarePropertyOld<Real>("gas_rel")),
@@ -63,31 +63,33 @@ ZonalUC::ZonalUC(const std::string & name, InputParameters parameters) :
   _testing(getParam<bool>("testing"))
 {}
 
-void
-ZonalUC::calcT2(unsigned int qp)
+Real
+ZonalUC::calcTi(unsigned int qp, const int i, const Real burnup)
 {
   // Calculation of the critical temperature T2*
-  // Equation goes by T2 = a / ( R*ln(F/b))
+  // Equation goes by Ti = Qi / ( R*ln(F/Fi))
   // T = temperature [K]
   // R = Ideal gas constant 8.314 [k/mol/K]
   // F = Burnup [FIMA]
-  // a,b = constants
+  // Qi = Activation energy [kJ/mol]
+  // Fi = Burnup threshold [a/o]
+  Real F = burnup * 100;
+  Real Qi;
+  Real Fi;
+  if ( i == 2 )
+  {
+    Qi = 87.4;
+    Fi = 7.12e-4;
+  }
+  else if ( i == 3 )
+  {
+    Qi = 44.4;
+    Fi = 0.036;
+  }
+  else
+    mooseError("ZonalUC: Wrong value of i for ZonalUC::calcTi");
 
-  Real a;
-  Real b;
-  Real F = _burnup[qp] * 100.0; // [FIMA] to [a/o]
-
-  Real n = _nitrogen_fraction;
-  Real n2 = n * n;
-  Real n3 = n * n2;
-
-  a = -514 * n + 1.45e5;
-  b = 1.36e-9 * n3 - 4.29e-8 * n2 + 7.15e-7 * n + 2.00e-6;
-
-  _T2[qp] = a / _R / log( F / b );
-
-  if ( _testing )
-    std::cout << "Temp: " << _temp[qp] << " burnup: " << F << " a: " << a << " b: " << b << " T2: " << _T2[qp] << std::endl;
+  return Qi * 1000.0 / _R / log( F / Fi );
 }
 
 void
@@ -97,6 +99,7 @@ ZonalUC::initQpStatefulProperties()
   _gas_rel[_qp] = 0.;
   _zone[_qp] = 4;
   _T2[_qp] = 0;
+  _T3[_qp] = 0;
 
   _gas_gen_old[_qp] = 0.;
   _gas_rel_old[_qp] = 0.;
@@ -113,12 +116,14 @@ ZonalUC::computeProperties()
       _gas_gen[qp] = 0.;
       _gas_rel[qp] = 0.;
       _zone[qp] = 4.;
-      _T2[qp] = 1.0e4;
+      _T2[qp] = 1.0e5;
+      _T3[qp] = 1.0e5;
 
       _gas_gen_old[qp] = 0.;
       _gas_rel_old[qp] = 0.;
       _zone_old[qp] = 4;
-      _T2_old[qp] = 1.0e4;
+      _T2_old[qp] = 1.0e5;
+      _T3_old[qp] = 1.0e5;
     }
     return;
   }
@@ -144,30 +149,21 @@ ZonalUC::computeProperties()
     if ( _testing )
       std::cout << "qp: " << qp << " gas_gen: " << _gas_gen[qp] << " dgas_gen: " << dgas_gen << " old: " << _gas_gen_old[qp] << std::endl;
 
-
     if ( _gas_gen[qp] < 0. )
-    {
       _gas_gen[qp] = 0.;
-    }
 
     if ( _burnup[qp] < _burnup_threshold ) // if burnup is less than threshold, then produce but don't release gas
-    {
       _gas_rel[qp] = 0;
-    }
     else
     {
-      
-      calcT2(qp);
+      _T2[qp] = calcTi(qp, 2, _burnup[qp]);
+      _T3[qp] = calcTi(qp, 3, _burnup[qp]);
 
       // Ensure zone isn't something it shouldn't be
       if ( _zone[qp] != 4 && _zone[qp] != 3 && _zone[qp] != 1 )
-      {
-        std::stringstream errorMsg;
-        errorMsg << "\nZonalUC: Bad Zone designation: "<<_zone[qp];
-        Moose::out<<errorMsg.str()<<std::endl<<std::endl;
-        throw MooseException();
-      }
+        mooseError("\nZonalUC: Bad Zone designation: "<<_zone[qp]);
 
+      // Set zone
       if ( _zone[qp] == 4)
       {
         if ( _temp[qp] > _T2[qp] )
@@ -179,7 +175,8 @@ ZonalUC::computeProperties()
         if ( _temp[qp] > _T2[qp] + _zone3_width )
           _zone[qp] = 1;
       }
-
+      
+      // Set release fraction depending on zone
       Real frac_rel;
       if (_zone[qp] == 4)
         frac_rel = _frac_rel_zone4;

@@ -1,36 +1,20 @@
-# Tests material model ZonalUC for the calculation of gas production and release
+# Tests material model ZonalUC for the calculation of the critical temperature T3
 #
-# The test is a single element unit cube with a fission rate of 1e22.
-# The simulation is run for 10 1e4 timesteps. Nitrogen content is 50%.
+# The test is a single element unit cube with a fission rate of 1e22. The simulation is
+# run for 10 1e4 timesteps. Nitrogen content is 50%.
 #
-# The gas total gas release is calculated as a fraction of the total generated
-# depending on the zone. The fractions are explicity defined in the input as:
-#    In Zone 4, the fraction is 0.1,
-#    In Zone 3, the fraction is 0.15,
-#    In Zone 1, the fraction is 0.7,
-#
-# The gas_rel_rate and gas_gen_rate are calculated by taking the difference
-# between the current and previous step. The ratio of the two should give the 
-# fraction, except when the zone changes, giving an average fraction
-
-# Total mols of gas generated should be:
-#
-# gas = time * fission_rate * yield / avogadro's
-# gas = (1.1e5)(1e22)(0.25)/6.022e23 = 456.66
-# 
-#
-# time    zone  gas_gen  gas_rel  (gas_rel_rate/gas_gen_rate)
-# 10000   4     41.51    4.15     
-# 20000   4     83.03    8.30     0.10
-# 30000   4     124.54   12.45    0.10
-# 40000   4     166.06   16.61    0.10
-# 50000   3     207.57   21.80    0.13
-# 60000   3     249.09   28.02    0.15
-# 70000   3     290.60   34.25    0.15
-# 80000   1     332.12   51.89    0.42
-# 90000   1     373.63   80.95    0.70
-# 100000  1     415.14   110.01   0.70
-# 110000  1     456.66   139.07   0.70
+# Step  Burnup    T3        Analytical T3   % diff
+# 1     3.38E-03  2.38E+03  2.38E+03        1.22E-05
+# 2     6.77E-03  1.82E+03  1.82E+03        3.87E-06
+# 3     1.02E-02  1.60E+03  1.60E+03        3.23E-05
+# 4     1.35E-02  1.47E+03  1.47E+03        3.97E-06
+# 5     1.69E-02  1.39E+03  1.39E+03        3.41E-05
+# 6     2.03E-02  1.32E+03  1.32E+03        2.28E-05
+# 7     2.37E-02  1.28E+03  1.28E+03        2.01E-05
+# 8     2.71E-02  1.24E+03  1.24E+03        3.42E-05
+# 9     3.05E-02  1.20E+03  1.20E+03        2.81E-05
+# 10    3.38E-02  1.18E+03  1.18E+03        1.50E-06
+# 11    3.72E-02  1.15E+03  1.15E+03        5.48E-06
 
 [GlobalParams]
   density = 12267.0
@@ -68,6 +52,14 @@
     order = FIRST
     family = LAGRANGE
   [../]
+  [./zone]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+  [./T2]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
 []
 
 [AuxKernels]
@@ -83,6 +75,16 @@
     molecular_weight = 0.25
     block = 1
     fission_rate = fission_rate
+  [../]
+  [./zone_aux]
+    type = MaterialRealAux
+    variable = zone
+    property = zone
+  [../]
+  [./t2_aux]
+    type = MaterialRealAux
+    variable = T2
+    property = T2
   [../]
 []
 
@@ -160,23 +162,15 @@
     block = 1
     variable = burnup
   [../]
-  [./zone]
+  [./T3]
     type = PointValue
     point = '0 0 0'
-    variable = zone
-  [../]
-  [./gas_gen]
-    type = ElementIntegralMaterialProperty
-    mat_prop = gas_gen
-  [../]
-  [./gas_rel]
-    type = ElementIntegralMaterialProperty
-    mat_prop = gas_rel
+    variable = T3
   [../]
 []
 
 [Outputs]
-  file_base = zonal_gas_out
+  file_base = zonal_t3_out
   output_initial = false
   csv = false
   #interval = 10

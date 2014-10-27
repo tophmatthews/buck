@@ -38,30 +38,40 @@ VSwellingUC::VSwellingUC( const std::string & name, InputParameters parameters)
    _solid_factor(parameters.get<Real>("solid_factor")),
    _calc_gas_swell(parameters.get<bool>("calculate_gas_swelling")),
 
-   _density(getMaterialProperty<Real>("density")),
-   _density_old(getMaterialPropertyOld<Real>("density")),
+   _zone(_calc_gas_swell ? &getMaterialProperty<Real>("zone") : NULL),
+   _T2(_calc_gas_swell ? &getMaterialProperty<Real>("T2") : NULL),
+   _T3(_calc_gas_swell ? &getMaterialProperty<Real>("T3") : NULL),
 
-   _zone(getMaterialProperty<Real>("zone")),
-   _zone_old(getMaterialPropertyOld<Real>("zone")),
-   _T2(getMaterialProperty<Real>("T2")),
-   _T2_old(getMaterialPropertyOld<Real>("T2")),
+   _zone_old(_calc_gas_swell ? &getMaterialPropertyOld<Real>("zone") : NULL),
+   _T2_old(_calc_gas_swell ? &getMaterialPropertyOld<Real>("T2") : NULL),
+   _T3_old(_calc_gas_swell ? &getMaterialPropertyOld<Real>("T3") : NULL),
 
-   _solid_swell(NULL),
-   _solid_swell_old(NULL),
-   _gas_swell(NULL),
-   _gas_swell_old(NULL),
+   _solid_swelling(NULL),
+   _P1_swelling(NULL),
+   _P2_swelling(NULL),
+   _P3_swelling(NULL),
    _densification(NULL),
+
+   _solid_swelling_old(NULL),
+   _P1_swelling_old(NULL),
+   _P2_swelling_old(NULL),
+   _P3_swelling_old(NULL),
    _densification_old(NULL)
 {
   if (parameters.get<bool>("save_solid_swell"))
   {
-    _solid_swell = &declareProperty<Real>("solid_swell");
-    _solid_swell_old = &declarePropertyOld<Real>("solid_swell");
+    _solid_swelling = &declareProperty<Real>("solid_swell");
+    _solid_swelling_old = &declarePropertyOld<Real>("solid_swell");
   }
-  if ( parameters.get<bool>("save_gas_swell"))
+  if ( parameters.get<bool>("save_gas_swell") && _calc_gas_swell )
   {
-    _gas_swell = &declareProperty<Real>("gas_swell");
-    _gas_swell_old = &declarePropertyOld<Real>("gas_swell");
+    _P1_swelling = &declareProperty<Real>("P1_swelling");
+    _P2_swelling = &declareProperty<Real>("P2_swelling");
+    _P3_swelling = &declareProperty<Real>("P3_swelling");
+
+    _P1_swelling_old = &declarePropertyOld<Real>("P1_swelling");
+    _P2_swelling_old = &declarePropertyOld<Real>("P2_swelling");
+    _P3_swelling_old = &declarePropertyOld<Real>("P3_swelling");
   }
   // if (parameters.get<bool>("save_densification"))
   // {
@@ -77,14 +87,26 @@ VSwellingUC::initStatefulProperties(unsigned n_points)
 {
   for (unsigned qp(0); qp < n_points; ++qp)
   {
-    if (_solid_swell)
-      (*_solid_swell)[qp] = 0.;
-    if (_solid_swell_old)
-      (*_solid_swell_old)[qp] = 0.;
-    if (_gas_swell)
-      (*_gas_swell)[qp] = 0.;
-    if (_gas_swell_old)
-      (*_gas_swell_old)[qp] = 0.;
+    if (_solid_swelling)
+      (*_solid_swelling)[qp] = 0.;
+    if (_solid_swelling_old)
+      (*_solid_swelling_old)[qp] = 0.;
+
+    if (_P1_swelling)
+      (*_P1_swelling)[qp] = 0.;
+    if (_P1_swelling_old)
+      (*_P1_swelling_old)[qp] = 0.;
+
+    if (_P2_swelling)
+      (*_P2_swelling)[qp] = 0.;
+    if (_P2_swelling_old)
+      (*_P2_swelling_old)[qp] = 0.;
+
+    if (_P3_swelling)
+      (*_P3_swelling)[qp] = 0.;
+    if (_P3_swelling_old)
+      (*_P3_swelling_old)[qp] = 0.;
+
     if (_densification)
       (*_densification)[qp] = 0.;
     if (_densification_old)
@@ -116,29 +138,69 @@ VSwellingUC::modifyStrain(const unsigned int qp,
     Real dssStrain_dTOld(0);
     Real dssStrain_dT(0);
     solidSwelling( _solid_factor, _burnup_old[qp], ssStrainOld, dssStrain_dTOld );
-    solidSwelling( _solid_factor, _burnup[qp], ssStrain, dssStrain_dT );
-    if (_solid_swell)
+    solidSwelling( _solid_factor, _burnup[qp],     ssStrain,    dssStrain_dT );
+
+    if (_solid_swelling)
     {
-      (*_solid_swell)[qp] = ssStrain;
+      (*_solid_swelling)[qp] = ssStrain;
     }
 
-    // Gaseous swelling
-    Real gsStrain(0.0);
-    Real gsStrainOld(0.0);
-    Real dgsStrain_dT(0.0);
-    Real dgsStrain_dTOld(0.0);
+    // P1 swelling
+    Real P1Strain(0.0);
+    Real P1StrainOld(0.0);
+    Real dP1Strain_dT(0.0);
+    Real dP1Strain_dTOld(0.0);
     if ( _calc_gas_swell )
     {
-      if ( _zone[qp] == 3 || _zone[qp] == 4)
+      if ( (*_zone)[qp] == 3 || (*_zone)[qp] == 4 )
       {
-        gaseousSwelling( _zone[qp], _T2[qp], _density[qp], _burnup[qp], _temperature[qp], gsStrain, dgsStrain_dT );
-        gaseousSwelling( _zone_old[qp], _T2_old[qp], _density_old[qp], _burnup_old[qp], _temperature_old[qp], gsStrainOld, dgsStrain_dTOld );
+        calcP1Swelling( _burnup[qp],     P1Strain,    dP1Strain_dT );
+        calcP1Swelling( _burnup_old[qp], P1StrainOld, dP1Strain_dTOld );
+        if ( _P1_swelling)
+          (*_P1_swelling)[qp] = P1Strain;
       }
     }
 
-    if (_gas_swell && _gas_swell_old && _calc_gas_swell)
+    // P2 swelling
+    Real P2Strain(0.0);
+    Real P2StrainOld(0.0);
+    Real dP2Strain_dT(0.0);
+    Real dP2Strain_dTOld(0.0);
+    if ( _calc_gas_swell )
     {
-      (*_gas_swell)[qp] = gsStrain;
+      if ( (*_zone)[qp] == 3 || (*_zone)[qp] == 4 )
+      {
+        calcP2Swelling( _burnup[qp],     _temperature[qp],     (*_zone)[qp],     (*_T2)[qp],     P2Strain,    dP2Strain_dT );
+        calcP2Swelling( _burnup_old[qp], _temperature_old[qp], (*_zone_old)[qp], (*_T2_old)[qp], P2StrainOld, dP2Strain_dTOld );
+        if ( _P2_swelling)
+          (*_P2_swelling)[qp] = P2Strain;
+      }
+    }
+
+    // P3 swelling
+    Real P3Strain(0.0);
+    Real P3StrainOld(0.0);
+    Real dP3Strain_dT(0.0);
+    Real dP3Strain_dTOld(0.0);
+    if ( _calc_gas_swell )
+    {
+      if ( (*_zone)[qp] == 3 || (*_zone)[qp] == 4 )
+      {
+        calcP3Swelling( _temperature[qp],     (*_T3)[qp],     _burnup[qp],     P3Strain,    dP3Strain_dT );
+        calcP3Swelling( _temperature_old[qp], (*_T3_old)[qp], _burnup_old[qp], P3StrainOld, dP3Strain_dTOld );
+        if ( _P3_swelling)
+          (*_P3_swelling)[qp] = P3Strain;
+      }
+    }
+
+    if ( _t_step == 1 )
+    {
+      P1StrainOld = 0;
+      P2StrainOld = 0;
+      P3StrainOld = 0;
+      dP1Strain_dTOld = 0;
+      dP2Strain_dTOld = 0;
+      dP3Strain_dTOld = 0;
     }
 
     // Densification
@@ -155,12 +217,19 @@ VSwellingUC::modifyStrain(const unsigned int qp,
 
     // Volumetric strain increments
     const Real oneThird = 1./3.;
-    const Real VStrain = std::pow((ssStrain + gsStrain + dStrain + 1)*v0OverVOld, oneThird) - std::pow((ssStrainOld + gsStrainOld + dStrainOld + 1)*v0OverVOld, oneThird);
-    const Real dVStrain_dT = (dssStrain_dT - dssStrain_dTOld) + (dgsStrain_dT - dgsStrain_dTOld) + (ddStrain_dT - ddStrain_dTOld);
+    const Real VStrain = std::pow((ssStrain +    P1Strain +    P2Strain +    P3Strain +    dStrain +    1)*v0OverVOld, oneThird) - \
+                         std::pow((ssStrainOld + P1StrainOld + P2StrainOld + P3StrainOld + dStrainOld + 1)*v0OverVOld, oneThird);
+    const Real dVStrain_dT = (dssStrain_dT - dssStrain_dTOld) + \
+                             (dP1Strain_dT - dP1Strain_dTOld) + \
+                             (dP2Strain_dT - dP2Strain_dTOld) + \
+                             (dP3Strain_dT - dP3Strain_dTOld) + \
+                             (ddStrain_dT  - ddStrain_dTOld);
 
     strain_increment.addDiag( -VStrain );
     dstrain_increment_dT.addDiag( -dVStrain_dT/3 * v0OverVOld );
-
+    // std::cout << _t_step << std::endl;
+    // std::cout << "P1_incr " << P1Strain - P1StrainOld << " P2_incr " << P2Strain - P2StrainOld << " P3_incr " << P3Strain - P3StrainOld << std::endl;
+    // std::cout << "P1_swell " << P1Strain << " P2_swell " << P2Strain << " P3_swell " << P3Strain << std::endl;
   }
 }
 
@@ -176,7 +245,7 @@ VSwellingUC::solidSwelling( const Real solid_swelling_factor,
   // Matzke: Science of Advanced LMFBR Fuels, pg 466
   //
   // dV/V = 0.5 * Bu (FIMA)
-  //
+  
   fract_volumetric = solid_swelling_factor * burnup;
   dfract_volumetric_dtemp = 0.;
 }
@@ -184,28 +253,41 @@ VSwellingUC::solidSwelling( const Real solid_swelling_factor,
 //////////////////////////////////////////////////////////////////////////////////////
 
 void
-VSwellingUC::gaseousSwelling( const Real zone,
-                              const Real T2,
-                              const Real fuel_density,
-                              const Real burnup,
-                              const Real temperature,
-                              Real & fract_volumetric,
-                              Real & dfract_volumetric_dtemp )
+VSwellingUC::calcP1Swelling( const Real burnup,
+                             Real & fract_volumetric,
+                             Real & dfract_volumetric_dtemp )
 {
   // Swelling calculated from Blank, "Nonoxide Ceramic Nuclear Fuels," (1994) pg 318
   // Swelling contribution broken into P1 and P2 bubble contributions
   //
   // Zones 1 and 2 contribute no swelling.
-  //
   // P1 in Zones 3 & 4:
   //
   // mu1 = S1 * (F- F01)  [%]
   //   S1 = 0.032 [% per a/o]
   //   F01 = 1.5 [a/o]
   //   F = Burnup [a/o]
-  //
-  // P2 in Zone 3 & 4
-  //
+  
+  const Real F = burnup * 100; // turns burnup from [FIMA] to [a/o]
+  const Real S1( 0.032 ); // [% per a/o]
+  const Real F01( 1.5 ); // [a/o]
+  
+  fract_volumetric = ( S1 * (F - F01) ) / 100.0;
+  dfract_volumetric_dtemp = 0;
+
+  if ( fract_volumetric < 0 )
+    fract_volumetric = 0;
+}
+
+void
+VSwellingUC::calcP2Swelling( const Real burnup,
+                             const Real temp,
+                             const Real zone,
+                             const Real T2,
+                             Real & fract_volumetric,
+                             Real & dfract_volumetric_dtemp)
+{
+  // Swelling calculated from Blank, "Nonoxide Ceramic Nuclear Fuels," (1994) pg 318
   // mu2+ = (S2+) ( F - F02) [%]
   // mu2 = (mu2+) - K2 ( F - F02 ) ( T2* - T ) [%] 
   //   S2+ = 0.613 [% per a/o]
@@ -215,41 +297,62 @@ VSwellingUC::gaseousSwelling( const Real zone,
   // 
   //   in zone 4: K2 = 0.0018
   //   in zone 3: K2 = 0.014
-  //
 
-  const Real F = burnup * 100; // turns burnup from [FIMA] to [a/o]
+  if ( burnup > 0.0083 )
+  {
+    const Real F = burnup * 100; // turns burnup from [FIMA] to [a/o]
+    const Real S2( 0.613 ); // [% per a/o]
+    const Real F02( 0.83 ); // [a/o]
+    const Real mu = S2 * ( F - F02 );
 
-  // P1 strain
-  const Real S1( 0.032 ); // [% per a/o]
-  const Real F01( 1.5 ); // [a/o]
-  Real gsStrainP1 = S1 * (F - F01);
+    Real K2;
+    if ( zone == 4 )
+      K2 = 0.0018;
+    else if ( zone == 3 )
+      K2 = 0.014;
 
-  //gsStrainP1 = 0;
+    fract_volumetric = ( mu - K2 * ( F - F02 ) * ( T2 - temp ) ) / 100.0;
+    dfract_volumetric_dtemp = ( K2 * ( F - F02 ) ) / 100.0;
+    
+    if ( fract_volumetric < 0)
+      fract_volumetric = 0;
+    if ( dfract_volumetric_dtemp < 0 )
+      dfract_volumetric_dtemp = 0;
+  }
 
-  //P2 strain
-  const Real S2( 0.613 ); // [% per a/o]
-  const Real F02( 0.83 ); // [a/o]
-  const Real mu = S2 * ( F - F02 );
-
-  Real K2;
-  if ( zone == 4 )
-    K2 = 0.0018;
-  else if ( zone == 3 )
-    K2 = 0.014;
-
-  Real gsStrainP2 = mu - K2 * ( F - F02 ) * ( T2 - temperature );
-  Real dgsStrainP2 = K2 * ( F - F02 );
-
-  if ( gsStrainP1 < 0 )
-    gsStrainP1 = 0;
-  if ( gsStrainP2 < 0)
-    gsStrainP2 = 0;
-  if ( dgsStrainP2 < 0 )
-    dgsStrainP2 = 0;
-
-  fract_volumetric = ( gsStrainP1 + gsStrainP2 ) / 100.0;  // increment of fractonal volume gaseous swelling [/]
-  dfract_volumetric_dtemp = dgsStrainP2 / 100.0;
+  // std::cout << "T2: " << T2 << " temp: " << temp << " fract: " << fract_volumetric << " dfract: " << dfract_volumetric_dtemp << std::endl;
 }
+
+void
+VSwellingUC::calcP3Swelling( const Real temp,
+                             const Real T3,
+                             const Real burnup,
+                             Real & fract_volumetric,
+                             Real & dfract_volumetric_dtemp )
+{
+// Swelling calculated from Blank, "Nonoxide Ceramic Nuclear Fuels," (1994) pg 318
+  if ( burnup > 0.01 )
+  {
+    const Real b( 0.5 ); // [% per a/o]
+    
+    Real m;
+    if ( temp < T3 )
+      m = 0.001;
+    else
+      m = 0.025;
+
+    fract_volumetric = ( b - m * ( T3 - temp) ) / 100.0;
+    dfract_volumetric_dtemp = m / 100.0;
+
+    if ( fract_volumetric < 0 )
+      fract_volumetric = 0;
+    if ( dfract_volumetric_dtemp < 0 )
+      dfract_volumetric_dtemp = 0;
+
+    // std::cout << "T3: " << T3 << " temp: " << temp << " fract: " << fract_volumetric << " dfract: " << dfract_volumetric_dtemp << std::endl;
+  }
+}
+
 
 //////////////////////////////////////////////////////////////////////////////////////
 

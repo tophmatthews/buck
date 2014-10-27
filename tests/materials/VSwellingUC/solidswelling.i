@@ -151,7 +151,7 @@
     thermal_expansion = 0
   [../]
 
-  [./VSwellingUC]
+  [./VSwellingMX]
     type = VSwellingUC
     block = 1
     burnup = burnup
