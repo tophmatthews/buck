@@ -155,7 +155,7 @@ VSwellingUC::modifyStrain(const unsigned int qp,
     Real dP1Strain_dTOld(0.0);
     if ( _calc_gas_swell )
     {
-      if ( _allow_central_swelling || (*_zone)[qp] == 3 || (*_zone)[qp] == 4 )
+      if ( _allow_central_swelling || (*_zone_old)[qp] == 3 || (*_zone_old)[qp] == 4 )
       {
         calcP1Swelling( _burnup[qp],     P1Strain,    dP1Strain_dT );
         calcP1Swelling( _burnup_old[qp], P1StrainOld, dP1Strain_dTOld );
@@ -171,7 +171,7 @@ VSwellingUC::modifyStrain(const unsigned int qp,
     Real dP2Strain_dTOld(0.0);
     if ( _calc_gas_swell )
     {
-      if ( _allow_central_swelling || (*_zone)[qp] == 3 || (*_zone)[qp] == 4 )
+      if ( _allow_central_swelling || (*_zone_old)[qp] == 3 || (*_zone_old)[qp] == 4 )
       {
         calcP2Swelling( _burnup[qp],     _temperature[qp],     (*_zone)[qp],     (*_T2)[qp],     P2Strain,    dP2Strain_dT );
         calcP2Swelling( _burnup_old[qp], _temperature_old[qp], (*_zone_old)[qp], (*_T2_old)[qp], P2StrainOld, dP2Strain_dTOld );
@@ -187,7 +187,7 @@ VSwellingUC::modifyStrain(const unsigned int qp,
     Real dP3Strain_dTOld(0.0);
     if ( _calc_gas_swell )
     {
-      if ( _allow_central_swelling || (*_zone)[qp] == 3 || (*_zone)[qp] == 4 )
+      if ( _allow_central_swelling || (*_zone_old)[qp] == 3 || (*_zone_old)[qp] == 4 )
       {
         calcP3Swelling( _temperature[qp],     (*_T3)[qp],     _burnup[qp],     P3Strain,    dP3Strain_dT );
         calcP3Swelling( _temperature_old[qp], (*_T3_old)[qp], _burnup_old[qp], P3StrainOld, dP3Strain_dTOld );
