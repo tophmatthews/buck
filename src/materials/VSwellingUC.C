@@ -21,6 +21,7 @@ InputParameters validParams<VSwellingUC>()
   params.addParam<bool>("save_solid_swell", false, "Should the solid swelling be saved in a material property");
   params.addParam<bool>("save_gas_swell", false, "Should the gaseous swelling be saved in a material property");
   params.addParam<bool>("save_densification", false, "Should the densification be saved in a material property");
+  params.addParam<bool>("allow_central_swelling", false, "Should swelling occur in zones 1 and 2");
 
   return params;
 }
@@ -38,6 +39,7 @@ VSwellingUC::VSwellingUC( const std::string & name, InputParameters parameters)
    _burnup_constant(parameters.get<Real>("burnup_constant")),
    _solid_factor(parameters.get<Real>("solid_factor")),
    _calc_gas_swell(parameters.get<bool>("calculate_gas_swelling")),
+   _allow_central_swelling(parameters.get<bool>("allow_central_swelling")),
 
    _zone(_calc_gas_swell ? &getMaterialProperty<Real>("zone") : NULL),
    _T2(_calc_gas_swell ? &getMaterialProperty<Real>("T2") : NULL),
@@ -153,7 +155,7 @@ VSwellingUC::modifyStrain(const unsigned int qp,
     Real dP1Strain_dTOld(0.0);
     if ( _calc_gas_swell )
     {
-      if ( (*_zone)[qp] == 3 || (*_zone)[qp] == 4 )
+      if ( _allow_central_swelling || (*_zone)[qp] == 3 || (*_zone)[qp] == 4 )
       {
         calcP1Swelling( _burnup[qp],     P1Strain,    dP1Strain_dT );
         calcP1Swelling( _burnup_old[qp], P1StrainOld, dP1Strain_dTOld );
@@ -169,7 +171,7 @@ VSwellingUC::modifyStrain(const unsigned int qp,
     Real dP2Strain_dTOld(0.0);
     if ( _calc_gas_swell )
     {
-      if ( (*_zone)[qp] == 3 || (*_zone)[qp] == 4 )
+      if ( _allow_central_swelling || (*_zone)[qp] == 3 || (*_zone)[qp] == 4 )
       {
         calcP2Swelling( _burnup[qp],     _temperature[qp],     (*_zone)[qp],     (*_T2)[qp],     P2Strain,    dP2Strain_dT );
         calcP2Swelling( _burnup_old[qp], _temperature_old[qp], (*_zone_old)[qp], (*_T2_old)[qp], P2StrainOld, dP2Strain_dTOld );
@@ -185,7 +187,7 @@ VSwellingUC::modifyStrain(const unsigned int qp,
     Real dP3Strain_dTOld(0.0);
     if ( _calc_gas_swell )
     {
-      if ( (*_zone)[qp] == 3 || (*_zone)[qp] == 4 )
+      if ( _allow_central_swelling || (*_zone)[qp] == 3 || (*_zone)[qp] == 4 )
       {
         calcP3Swelling( _temperature[qp],     (*_T3)[qp],     _burnup[qp],     P3Strain,    dP3Strain_dT );
         calcP3Swelling( _temperature_old[qp], (*_T3_old)[qp], _burnup_old[qp], P3StrainOld, dP3Strain_dTOld );
@@ -309,7 +311,7 @@ VSwellingUC::calcP2Swelling( const Real burnup,
     Real K2;
     if ( zone == 4 )
       K2 = 0.0018;
-    else if ( zone == 3 )
+    else
       K2 = 0.014;
 
     fract_volumetric = ( mu - K2 * ( F - F02 ) * ( T2 - temp ) ) / 100.0;

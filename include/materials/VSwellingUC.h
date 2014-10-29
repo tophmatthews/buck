@@ -60,6 +60,7 @@ private:
   const Real _burnup_constant;
   const Real _solid_factor;
   const Real _calc_gas_swell;
+  const Real _allow_central_swelling;
 
   MaterialProperty<Real> * _zone;
   MaterialProperty<Real> * _T2;
