@@ -165,6 +165,7 @@
     temp = temp
     calculate_gas_swelling = true
     solid_factor = 0
+    total_densification = 0
   [../]
 
   [./thermal]

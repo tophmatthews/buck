@@ -19,6 +19,7 @@ class PorosityAuxUC : public AuxKernel
     MaterialProperty<Real> & _P1_swelling;
     MaterialProperty<Real> & _P2_swelling;
     MaterialProperty<Real> & _P3_swelling;
+    MaterialProperty<Real> & _densification;
 };
 
 template<>

@@ -6,14 +6,14 @@
 
 # The porosity should equal the (volume - 1 ) + 0.05
 #
-#| time           | burnup         | porosity_pp    | volume         |
-#|   1.000000e+06 |   3.654370e-03 |   5.000000e-02 |   1.000000e+00 |
-#|   2.000000e+06 |   7.308740e-03 |   5.000000e-02 |   1.000000e+00 |
-#|   3.000000e+06 |   1.096311e-02 |   5.085066e-02 |   1.000851e+00 |
-#|   4.000000e+06 |   1.461748e-02 |   5.293067e-02 |   1.002931e+00 |
-#|   5.000000e+06 |   1.827185e-02 |   5.516473e-02 |   1.005165e+00 |
-#|   6.000000e+06 |   2.192622e-02 |   5.749509e-02 |   1.007495e+00 |
-#|   7.000000e+06 |   2.558059e-02 |   5.991290e-02 |   1.009913e+00 |
+# Step  BUCK vol  EXCEL vol % Diff
+# 10  0.984495  0.984491  4.1951E-04
+# 20  0.976062  0.976057  5.4505E-04
+# 30  0.972326  0.972320  5.7638E-04
+# 40  0.971911  0.971905  5.7845E-04
+# 50  0.972788  0.972783  5.8521E-04
+# 60  0.974381  0.974375  5.9206E-04
+# 70  0.976397  0.976391  5.9281E-04
 
 [GlobalParams]
   density = 12267.0
@@ -137,9 +137,12 @@
     block = 1
     burnup = burnup
     temp = temp
+    outputs = all
     calculate_gas_swelling = true
     solid_factor = 0
     save_gas_swell = true
+    #total_densification = 0
+    save_densification = true
   [../]
   [./thermal]
     type = HeatConductionMaterial
@@ -208,6 +211,26 @@
     type = ElementAverageValue
     block = 1
     variable = porosity
+  [../]
+  [./densification]
+    type = ElementAverageValue
+    block = 1
+    variable = densification
+  [../]
+  [./p1]
+    type = ElementAverageValue
+    block = 1
+    variable = P1_swelling
+  [../]
+  [./p2]
+    type = ElementAverageValue
+    block = 1
+    variable = P2_swelling
+  [../]
+  [./p3]
+    type = ElementAverageValue
+    block = 1
+    variable = P3_swelling
   [../]
 []
 

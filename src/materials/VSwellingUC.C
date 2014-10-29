@@ -13,15 +13,14 @@ InputParameters validParams<VSwellingUC>()
 {
   InputParameters params = validParams<VolumetricModel>();
   params.addCoupledVar("burnup", 0, "Coupled Burnup");
-//  params.addRequiredParam<Real>("initial_density", "Initial fuel density");
-//  params.addParam<Real>("total_densification",0.034, "The densification that will occur given as a fraction of theoretical density");
-//  params.addParam<Real>("complete_burnup",0.05, "The burnup at which densification is complete input in units of MWd/kgU");
+  params.addParam<Real>("total_densification",0.034, "The total fractional densification that can occur");
+  params.addParam<Real>("burnup_constant",0.006, "Constant that divides burnup in Densifcation equation in units of FIMA");
   params.addCoupledVar("temp", 0, "Coupled Temperature");
   params.addParam<Real>("solid_factor", 0.5, "Factor multiplied against Burnup [FIMA] to determine swelling due to solid fission products");
   params.addParam<bool>("calculate_gas_swelling", true, "Flag to calculate gas swelling");
   params.addParam<bool>("save_solid_swell", false, "Should the solid swelling be saved in a material property");
   params.addParam<bool>("save_gas_swell", false, "Should the gaseous swelling be saved in a material property");
-  // params.addParam<bool>("save_densification", false, "Should the densification be saved in a material property");
+  params.addParam<bool>("save_densification", false, "Should the densification be saved in a material property");
 
   return params;
 }
@@ -35,6 +34,8 @@ VSwellingUC::VSwellingUC( const std::string & name, InputParameters parameters)
    _temperature(coupledValue("temp")),
    _temperature_old(coupledValueOld("temp")),
 
+   _total_densification(parameters.get<Real>("total_densification")),
+   _burnup_constant(parameters.get<Real>("burnup_constant")),
    _solid_factor(parameters.get<Real>("solid_factor")),
    _calc_gas_swell(parameters.get<bool>("calculate_gas_swelling")),
 
@@ -73,11 +74,11 @@ VSwellingUC::VSwellingUC( const std::string & name, InputParameters parameters)
     _P2_swelling_old = &declarePropertyOld<Real>("P2_swelling");
     _P3_swelling_old = &declarePropertyOld<Real>("P3_swelling");
   }
-  // if (parameters.get<bool>("save_densification"))
-  // {
-  //   _densification = &declareProperty<Real>("densification");
-  //   _densification_old = &declarePropertyOld<Real>("densification");
-  // }
+  if (parameters.get<bool>("save_densification"))
+  {
+    _densification = &declareProperty<Real>("densification");
+    _densification_old = &declarePropertyOld<Real>("densification");
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -208,8 +209,8 @@ VSwellingUC::modifyStrain(const unsigned int qp,
     Real dStrain(0);
     Real ddStrain_dTOld(0);
     Real ddStrain_dT(0);
-//    densification( _total_densification, _complete_burnup, _constant_dens_c_d, temperature_old, burnup_old, dStrainOld, ddStrain_dTOld );
-//    densification( _total_densification, _complete_burnup, _constant_dens_c_d, temperature,     burnup,     dStrain,    ddStrain_dT );
+    densification( _total_densification, _burnup_constant, _burnup_old[qp], dStrainOld, ddStrain_dTOld );
+    densification( _total_densification, _burnup_constant, _burnup[qp],     dStrain,    ddStrain_dT );
     if (_densification && _densification_old)
     {
       (*_densification)[qp] = dStrain;
@@ -357,32 +358,16 @@ VSwellingUC::calcP3Swelling( const Real temp,
 //////////////////////////////////////////////////////////////////////////////////////
 
 // FIXME: add densification for UC
-//void
-//VSwellingUC::densification( const Real total_densification,
-//                            const Real complete_densification_burnup,
-//                            const Real density_ratio,
-//                            const Real burnup,
-//                            const Real burnup_old,
-//                            Real & fract_volumetric,
-//                            Real & dfract_volumetric_dtemp )
-//{
-//  // Taken from W. Dienst, JNM 124 (1984) 153-158
-//  // densification porosity: p = p_total * (1 - exp( -burnup / 0.6 at% ) )
-//  // dp = p_total * ( exp( -burnup_old / 0.6 ) - exp( -burnup / 0.6 ) )
-//  
-//  if (burnup_old >= complete_densification_burnup)
-//  {
-//    fract_volumetric = 0;
-//    dfract_volumentric_dtemp = 0;
-//  }
-//  else
-//  {
-//    const Real C(0.6);
-//    const Real Ex(std::exp( -burnup / C ));
-//    const Real Ex_old(std::exp( -burnup_old / C ));
-//
-//    // increment of fractonal volume gaseous swelling [/]
-//    fract_volumetric = - total_densification * (exp_old - exp) * density_ratio;
-//    dfract_volumetric_dtemp = 0;
-//  }
-//}
+void
+VSwellingUC::densification( const Real total_densification,
+                            const Real burnup_constant,
+                            const Real burnup,
+                            Real & fract_volumetric,
+                            Real & dfract_volumetric_dtemp )
+{
+  // Taken from W. Dienst, JNM 124 (1984) 153-158
+  // densification porosity: p = p_total * (1 - exp( -burnup / 0.6 at% ) )
+  
+  fract_volumetric = - total_densification * ( 1 - exp( - burnup / burnup_constant ) );
+  dfract_volumetric_dtemp = 0;
+}

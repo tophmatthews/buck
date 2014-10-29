@@ -9,4 +9,9 @@
     input = 'gasswelling.i'
     exodiff = 'gasswelling_out.e'
   [../]
+  [./densification]
+    type = 'Exodiff'
+    input = 'densification.i'
+    exodiff = 'densification_out.e'
+  [../]
 []

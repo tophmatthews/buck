@@ -42,14 +42,12 @@ public:
                               const Real burnup,
                               Real & fract_volumetric_increment,
                               Real & dfract_volumetric_increment_dtemp);
-//
-//  static void densification(const Real total_densification,
-//                            const Real complete_densification_burnup,
-//                            const bool constant_c_d,
-//                            const Real temperature,
-//                            const Real burnup,
-//                            Real & fract_volumetric_increment,
-//                            Real & dfract_volumetric_increment_dtemp);
+
+ static void densification(const Real total_densification,
+                           const Real complete_densification_burnup,
+                           const Real burnup,
+                           Real & fract_volumetric_increment,
+                           Real & dfract_volumetric_increment_dtemp);
 
 private:
   VariableValue & _burnup;
@@ -58,6 +56,8 @@ private:
   VariableValue & _temperature;
   VariableValue & _temperature_old;
 
+  const Real _total_densification;
+  const Real _burnup_constant;
   const Real _solid_factor;
   const Real _calc_gas_swell;
 
