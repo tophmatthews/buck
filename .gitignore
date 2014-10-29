@@ -1,3 +1,4 @@
+~$*
 .libs
 *.la
 *.lo
@@ -63,8 +64,6 @@ traceout*.txt
 *.vtk
 *.vtu
 .depend
-
-# dont allow .e files in test directories
 
 # Allow .e files in gold directories (7 levels)
 !/gold/*.e
@@ -156,10 +155,3 @@ peacock_*.e
 *.cpr
 *.cpa-*
 *.cpr-*
-
-# Netbeans
-/nbproject/*
-
-
-#/problems/*
-#/meshes/*

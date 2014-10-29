@@ -14,4 +14,14 @@
     input = 'densification.i'
     exodiff = 'densification_out.e'
   [../]
+  [./rz]
+    type = 'Exodiff'
+    input = 'rz.i'
+    exodiff = 'rz_out.e'
+  [../]
+  [./constraint]
+    type = 'Exodiff'
+    input = 'constraint.i'
+    exodiff = 'constraint_out.e'
+  [../]
 []
