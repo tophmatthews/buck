@@ -34,7 +34,10 @@ RatioPostprocessor::execute()
 PostprocessorValue
 RatioPostprocessor::getValue()
 {
-  return _top / _bottom;
+  if ( _top * _bottom == 0 )
+  	return 0;
+  else
+    return _top / _bottom;
 }
 
 void

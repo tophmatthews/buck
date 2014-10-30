@@ -14,7 +14,8 @@ InputParameters validParams<ZonalUC>()
   params.addParam<Real>("frac_rel_zone1", 0.70, "Sets fission gas release fraction from Zone 1");
   params.addParam<Real>("frac_rel_zone3", 0.15, "Sets fission gas release fraction from Zone 3");
   params.addParam<Real>("frac_rel_zone4", 0.10, "Sets fission gas release fraction from Zone 4");
-  params.addParam<Real>("burnup_threshold", 0.001,"Sets the burnup threshold at which release begins [FIMA]");
+  params.addParam<Real>("burnup_threshold_rel", 0.001,"Sets the burnup threshold at which release begins [FIMA]");
+  params.addParam<Real>("burnup_threshold_zone", 0.015,"Sets the burnup threshold at which zones are allowed to change [FIMA]");
   params.addParam<bool>("testing", false, "Turns on/off testing output");
 
   params.addCoupledVar("temp", 0, "Coupled Temperature");
@@ -34,7 +35,8 @@ ZonalUC::ZonalUC(const std::string & name, InputParameters parameters) :
   _frac_rel_zone1(getParam<Real>("frac_rel_zone1")),
   _frac_rel_zone3(getParam<Real>("frac_rel_zone3")),
   _frac_rel_zone4(getParam<Real>("frac_rel_zone4")),
-  _burnup_threshold(getParam<Real>("burnup_threshold")),
+  _burnup_threshold_rel(getParam<Real>("burnup_threshold_rel")),
+  _burnup_threshold_zone(getParam<Real>("burnup_threshold_zone")),
 
   _fission_rate(coupledValue("fission_rate")),  // fission rate [1/(m**3*s)]
   _temp(coupledValue("temp")),  // temperature [K]
@@ -152,7 +154,7 @@ ZonalUC::computeProperties()
     if ( _gas_gen[qp] < 0. )
       _gas_gen[qp] = 0.;
 
-    if ( _burnup[qp] < _burnup_threshold ) // if burnup is less than threshold, then produce but don't release gas
+    if ( _burnup[qp] < _burnup_threshold_rel ) // if burnup is less than threshold, then produce but don't release gas
       _gas_rel[qp] = 0;
     else
     {
@@ -164,16 +166,19 @@ ZonalUC::computeProperties()
         mooseError("\nZonalUC: Bad Zone designation: "<<_zone[qp]);
 
       // Set zone
-      if ( _zone[qp] == 4)
+      if ( _burnup[qp] >= _burnup_threshold_zone )
       {
-        if ( _temp[qp] > _T2[qp] )
-          _zone[qp] = 3;
-      }
+        if ( _zone[qp] == 4)
+        {
+          if ( _temp[qp] > _T2[qp] )
+            _zone[qp] = 3;
+        }
 
-      if ( _zone[qp] == 3)
-      {
-        if ( _temp[qp] > _T2[qp] + _zone3_width )
-          _zone[qp] = 1;
+        if ( _zone[qp] == 3)
+        {
+          if ( _temp[qp] > _T2[qp] + _zone3_width )
+            _zone[qp] = 1;
+        }
       }
       
       // Set release fraction depending on zone
