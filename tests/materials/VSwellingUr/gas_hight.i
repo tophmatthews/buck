@@ -2,19 +2,19 @@
 #  solid fission products
 #
 # The mesh is a cube with 7 blocks.
-#
-# burnup  BUCK vol  EXCEL vol   % Diff
-# 0       1.00000   1.00000     0.00000
-# 0.01    0.97255   0.97242     0.01268
-# 0.02    0.96734   0.96721     0.01318
-# 0.03    0.96636   0.96623     0.01321
-# 0.04    0.96617   0.96604     0.01320
-# 0.05    0.96614   0.96601     0.01320
-# 0.06    0.96613   0.96600     0.01320
-# 0.07    0.96613   0.96600     0.01320
-# 0.08    0.96613   0.96600     0.01320
-# 0.09    0.96613   0.96600     0.01321
-# 0.1     0.96613   0.96600     0.01321
+
+# Burnup  temp [K]  BUCK vol  Excel vol   % diff
+# 0.00    873       1.0000    1.0000      0.0000
+# 0.01    923       1.0192    1.0190      0.0196
+# 0.02    973       1.0388    1.0384      0.0387
+# 0.03    1023      1.0597    1.0590      0.0582
+# 0.04    1073      1.0856    1.0848      0.0819
+# 0.05    1123      1.1235    1.1222      0.1174
+# 0.06    1173      1.1751    1.1681      0.6023
+# 0.07    1223      1.2289    1.2158      1.0701
+# 0.08    1273      1.2848    1.2656      1.5149
+# 0.09    1323      1.3428    1.3174      1.9320
+# 0.10    1373      1.4030    1.3713      2.3163
 
 [GlobalParams]
   density = 10000.0
@@ -37,7 +37,7 @@
   [../]
 
   [./temp]
-    initial_condition = 500.0
+    initial_condition = 873.0
   [../]
 []
 
@@ -56,10 +56,6 @@
     type = HeatConduction
     variable = temp
   [../]
-  [./heat_ie]
-    type = HeatConductionTimeDerivative
-    variable = temp
-  [../]
 []
 
 [AuxKernels]
@@ -76,6 +72,11 @@
     type = PiecewiseLinear
     x = '0 100'
     y = '0 .1'
+  [../]
+  [./temp_ramp]
+    type = PiecewiseLinear
+    x = '0 100'
+    y = '873 1373'
   [../]
 []
 
@@ -98,27 +99,34 @@
     boundary = 14
     value = 0.0
   [../]
+  [./temp]
+    type = FunctionDirichletBC
+    boundary = '1 2 3 4 5 6'
+    function = temp_ramp
+    variable = temp
+  [../]
 []
 
 [Materials]
   [./mechUC]
     type = Elastic
     block = '1 2 3 4 5 6 7'
-    youngs_modulus = 2.
+    youngs_modulus = 2.0
     poissons_ratio = .3
     thermal_expansion = 0
   [../]
 
   [./VSwelling]
-    type = VSwellingUC
+    type = VSwellingUr
     block = '1 2 3 4 5 6 7'
     burnup = burnup
     temp = temp
-    save_solid_swell = false
-    solid_factor = 0.
-    calculate_gas_swelling = false
-    save_densification = true
-    total_densification = 0.034
+    save_solid_swell = true
+    save_gas_swell = true
+    solid_factor = 0.0
+    calculate_gas_swelling = true
+    porosity = 0.04
+    total_densification = 0
   [../]
 
   [./thermal]
@@ -153,7 +161,6 @@
   nl_abs_tol = 1e-10
   l_tol = 1e-5
   start_time = 0.0
-  #num_steps = 50
   end_time = 100
   dt = 10
 
@@ -165,18 +172,22 @@
     type = ElementAverageValue
     block = 1
     variable = burnup
-    execute_on = timestep
-    use_displaced_mesh = true
   [../]
   [./volume]
     type = VolumePostprocessor
     use_displaced_mesh = true
+    execute_on = timestep
+  [../]
+  [./temp]
+    type = ElementAverageValue
+    blcok = 1
+    variable = temp
   [../]
 []
 
 
 [Outputs]
-  file_base = densification_out
+  file_base = gas_hight_out
   output_initial = true
   csv = false
   interval = 1

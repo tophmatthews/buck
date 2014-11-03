@@ -1,159 +1,105 @@
 # Tests material model SolidSwellingUC for the calculation of swelling due to 
 #  solid fission products
 #
-# The test is a single element unit cube with a fission rate of 1e20. The simulation is
-#  run for 50 1e6 timesteps. The accuracy of the simulation diverges at increasing burnup,
-#  but stays below a percent up to 20% FIMA.
-#
-# V = (1 + solid_swelling * Bu [FIMA]) * V0
-#
-#
-# The following is a comparison of BUCK to a excel hand calc:
-#
-# Burnup  Volume                % diff
-#         Buck     Analytical	
-# 0.0365  1.0183   1.0183       5.06E-04
-# 0.0731  1.0366   1.0365       1.09E-03
-# 0.1096  1.0548   1.0548       1.56E-03
-# 0.1462  1.0731   1.0731       2.01E-03
-# 0.1827  1.0914   1.0914       2.54E-03
-
+# The mesh is a cube with 7 blocks. Total volume at end of simulation should equal
+# 1 + solid_factor(0.5) * burnup(0.1) = 1.05
 
 [GlobalParams]
-  density = 12267.0
+  density = 10000.0
+  disp_x = disp_x
+  disp_y = disp_y
+  disp_z = disp_z
 []
 
 [Mesh]
-  file = cube.e
+  file = patch.e
   displacements = 'disp_x disp_y disp_z'
 []
 
 [Variables]
-
   [./disp_x]
-    order = FIRST
-    family = LAGRANGE
   [../]
-
   [./disp_y]
-    order = FIRST
-    family = LAGRANGE
   [../]
-
   [./disp_z]
-    order = FIRST
-    family = LAGRANGE
   [../]
 
   [./temp]
-    order = FIRST
-    family = LAGRANGE
     initial_condition = 500.0
   [../]
-
 []
-
 
 [AuxVariables]
-
-  [./fission_rate]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
   [./burnup]
-    order = FIRST
-    family = LAGRANGE
   [../]
-
 []
-
 
 [SolidMechanics]
   [./solid]
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
   [../]
 []
 
-
 [Kernels]
-
   [./heat]
     type = HeatConduction
     variable = temp
   [../]
-
   [./heat_ie]
     type = HeatConductionTimeDerivative
     variable = temp
   [../]
-
 []
-
 
 [AuxKernels]
-
-  [./fsnrt]
-    type = FissionRateAux
-    block = 1
-    variable = fission_rate
-    value = 1e20
-  [../]
-
   [./burnup]
-    type = BurnupAux
+    type = FunctionAux
     variable = burnup
-    block = 1
-    fission_rate = fission_rate
+    block = '1 2 3 4 5 6 7'
+    function = burnup_fcn
   [../]
-
 []
 
+[Functions]
+  [./burnup_fcn]
+    type = PiecewiseLinear
+    x = '0 100'
+    y = '0 .1'
+  [../]
+[]
 
 [BCs]
-
-  [./bottom_fix_y]
+  [./bottom_fix_x]
     type = DirichletBC
-    variable = disp_y
-    boundary = 4
+    variable = disp_x
+    boundary = 10
     value = 0.0
   [../]
-
+  [./fix_y]
+    type = DirichletBC
+    variable = disp_y
+    boundary = 9
+    value = 0.0
+  [../]
   [./fix_z]
     type = DirichletBC
     variable = disp_z
-    boundary = '5'
+    boundary = 14
     value = 0.0
   [../]
-
-  [./fix_x]
-    type = DirichletBC
-    variable = disp_x
-    boundary = '1'
-    value = 0.0
-  [../]
-
 []
 
-
 [Materials]
-
   [./mechUC]
     type = Elastic
-    block = 1
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
-    youngs_modulus = 2.e11
+    block = '1 2 3 4 5 6 7'
+    youngs_modulus = 2.0
     poissons_ratio = .3
     thermal_expansion = 0
   [../]
 
-  [./VSwellingMX]
+  [./VSwelling]
     type = VSwellingUC
-    block = 1
+    block = '1 2 3 4 5 6 7'
     burnup = burnup
     temp = temp
     save_solid_swell = true
@@ -164,33 +110,15 @@
 
   [./thermal]
     type = HeatConductionMaterial
-    block = 1
+    block = '1 2 3 4 5 6 7'
     specific_heat = 1.0
     thermal_conductivity = 100.
   [../]
 
   [./density]
     type = Density
-    block = 1
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
+    block = '1 2 3 4 5 6 7'
   [../]
-
-  [./zone_mat] # required for VSwellingUC
-    type = ZonalUC
-    block = 1
-    temp = temp
-    fission_rate = fission_rate
-    burnup = burnup
-    testing = false
-    nitrogen_fraction = 0.5
-    frac_rel_zone1 = 0.7
-    frac_rel_zone3 = 0.15
-    frac_rel_zone4 = 0.1
-    burnup_threshold = 0.001
-  [../]
-
 []
 
 
@@ -212,33 +140,33 @@
   nl_abs_tol = 1e-10
   l_tol = 1e-5
   start_time = 0.0
-  num_steps = 50
-  dt = 1e6
+  #num_steps = 50
+  end_time = 100
+  dt = 10
 
 []
 
 
-#[Postprocessors]
-#
-#  [./burnup]
-#    type = ElementAverageValue
-#    block = 1
-#    variable = burnup
-#  [../]
-#
-#  [./volume]
-#    type = VolumePostprocessor
-#    use_displaced_mesh = true
-#  [../]
-#
-#[]
+[Postprocessors]
+  [./burnup]
+    type = ElementAverageValue
+    block = 1
+    variable = burnup
+    execute_on = timestep
+    use_displaced_mesh = true
+  [../]
+  [./volume]
+    type = VolumePostprocessor
+    use_displaced_mesh = true
+  [../]
+[]
 
 
 [Outputs]
   file_base = solidswelling_out
   output_initial = true
   csv = false
-  interval = 10
+  interval = 1
   [./exodus]
     type = Exodus
     elemental_as_nodal = true

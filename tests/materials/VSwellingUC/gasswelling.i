@@ -7,41 +7,39 @@
 #
 # The following is a comparison of BUCK to a excel hand calc:
 #            
-# Step  zone  BUCK (m3)  Calc (m3)  diff [%]
-# 10    4     1.02E+00   1.017636   6.9847E-04
-# 20    4     1.08E+00   1.076851   6.1716E-03
-# 30    3     1.18E+00   1.175542   1.9130E-02
-# 40    3     1.29E+00   1.291589   3.3258E-02
-# 50    3     1.42E+00   1.416426   4.6295E-02
-# 60    1     1.44E+00    
-# 70    1     1.44E+00    
+# burnup  zone  volume  total diff [%]
+# 0.03  4 1.0130  1.012947  0.00279
+# 0.06  4 1.0570  1.056598  0.03371
+# 0.09  3 1.1186  1.117567  0.08860
+# 0.12  3 1.2098  1.207461  0.19457
+# 0.15  3 1.3082  1.304277  0.29717
+# 0.18  3 1.4124    
+# 0.21  1 1.5217    
+# 0.24  1 1.5217    
+# 0.27  1 1.5217    
+# 0.30  1 1.5217      
 
 
 [GlobalParams]
   density = 12267.0
+  disp_x = disp_x
+  disp_y = disp_y
+  disp_z = disp_z
 []
 
 [Mesh]
-  file = cube.e
+  file = patch.e
   displacements = 'disp_x disp_y disp_z'
 []
 
 [Variables]
   [./disp_x]
-    order = FIRST
-    family = LAGRANGE
   [../]
   [./disp_y]
-    order = FIRST
-    family = LAGRANGE
   [../]
   [./disp_z]
-    order = FIRST
-    family = LAGRANGE
   [../]
   [./temp]
-    order = FIRST
-    family = LAGRANGE
     initial_condition = 1130.0
   [../]
 []
@@ -59,55 +57,50 @@
 
 [AuxVariables]
   [./fission_rate]
-    order = FIRST
-    family = LAGRANGE
   [../]
   [./burnup]
-    order = FIRST
-    family = LAGRANGE
   [../]
 []
 
 [SolidMechanics]
   [./solid]
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
   [../]
 []
 
 [AuxKernels]
-  [./fsnrt]
-    type = FissionRateAux
-    block = 1
-    variable = fission_rate
-    value = 1e20
-  [../]
   [./burnup]
-    type = BurnupAux
+    type = FunctionAux
     variable = burnup
-    block = 1
-    fission_rate = fission_rate
+    block = '1 2 3 4 5 6 7'
+    function = burnup_fcn
+  [../]
+[]
+
+[Functions]
+  [./burnup_fcn]
+    type = PiecewiseLinear
+    x = '0 100'
+    y = '0 .3'
   [../]
 []
 
 [BCs]
-  [./bottom_fix_y]
+  [./bottom_fix_x]
+    type = DirichletBC
+    variable = disp_x
+    boundary = 10
+    value = 0.0
+  [../]
+  [./fix_y]
     type = DirichletBC
     variable = disp_y
-    boundary = 4
+    boundary = 9
     value = 0.0
   [../]
   [./fix_z]
     type = DirichletBC
     variable = disp_z
-    boundary = '5'
-    value = 0.0
-  [../]
-  [./fix_x]
-    type = DirichletBC
-    variable = disp_x
-    boundary = '1'
+    boundary = 14
     value = 0.0
   [../]
 []
@@ -115,17 +108,14 @@
 [Materials]
   [./mechUC]
     type = Elastic
-    block = 1
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
+    block = '1 2 3 4 5 6 7'
     youngs_modulus = 2.e11
     poissons_ratio = .3
     thermal_expansion = 0
   [../]
   [./VSwelling]
     type = VSwellingUC
-    block = 1
+    block = '1 2 3 4 5 6 7'
     burnup = burnup
     temp = temp
     calculate_gas_swelling = true
@@ -134,20 +124,17 @@
   [../]
   [./thermal]
     type = HeatConductionMaterial
-    block = 1
+    block = '1 2 3 4 5 6 7'
     specific_heat = 1.0
     thermal_conductivity = 100.
   [../]
   [./density]
     type = Density
-    block = 1
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
+    block = '1 2 3 4 5 6 7'
   [../]
   [./zone_mat]
     type = ZonalUC
-    block = 1
+    block = '1 2 3 4 5 6 7'
     temp = temp
     fission_rate = fission_rate
     burnup = burnup
@@ -179,8 +166,8 @@
   nl_abs_tol = 1e-4
   l_tol = 1e-5
   start_time = 0.0
-  num_steps = 70
-  dt = 1e6
+  num_steps = 10
+  dt = 10
 
 []
 
@@ -222,7 +209,7 @@
   file_base = gasswelling_out
   output_initial = false
   csv = false
-  interval = 10
+  interval = 1
   [./exodus]
     type = Exodus
     elemental_as_nodal = true

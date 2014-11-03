@@ -2,19 +2,19 @@
 #  solid fission products
 #
 # The mesh is a cube with 7 blocks.
-#
-# burnup  BUCK vol  EXCEL vol   % Diff
-# 0       1.00000   1.00000     0.00000
-# 0.01    0.97255   0.97242     0.01268
-# 0.02    0.96734   0.96721     0.01318
-# 0.03    0.96636   0.96623     0.01321
-# 0.04    0.96617   0.96604     0.01320
-# 0.05    0.96614   0.96601     0.01320
-# 0.06    0.96613   0.96600     0.01320
-# 0.07    0.96613   0.96600     0.01320
-# 0.08    0.96613   0.96600     0.01320
-# 0.09    0.96613   0.96600     0.01321
-# 0.1     0.96613   0.96600     0.01321
+
+# Burnup  Stress  BUCK vol  Excel vol % diff
+# 0.000000  0.00E+00  1.000000  1.00000 0
+# 0.025000  2.00E+05  1.048309  1.04791 0.03827
+# 0.050000  4.00E+05  1.098891  1.09712 0.16169
+# 0.075000  6.00E+05  1.151772  1.14762 0.36207
+# 0.100000  8.00E+05  1.206974  1.19940 0.63190
+# 0.125000  1.00E+06  1.264511  1.25244 0.96397
+# 0.150000  1.20E+06  1.324391  1.30673 1.35156
+# 0.175000  1.40E+06  1.386619  1.36225 1.78862
+# 0.200000  1.60E+06  1.451191  1.41899 2.26927
+# 0.225000  1.80E+06  1.518104  1.47692 2.78852
+# 0.250000  2.00E+06  1.587348  1.53602 3.34159
 
 [GlobalParams]
   density = 10000.0
@@ -37,12 +37,14 @@
   [../]
 
   [./temp]
-    initial_condition = 500.0
+    initial_condition = 873.0
   [../]
 []
 
 [AuxVariables]
   [./burnup]
+  [../]
+  [./contact_pressure]
   [../]
 []
 
@@ -56,10 +58,6 @@
     type = HeatConduction
     variable = temp
   [../]
-  [./heat_ie]
-    type = HeatConductionTimeDerivative
-    variable = temp
-  [../]
 []
 
 [AuxKernels]
@@ -69,13 +67,24 @@
     block = '1 2 3 4 5 6 7'
     function = burnup_fcn
   [../]
+  [./contact]
+    type = FunctionAux
+    variable = contact_pressure
+    block = '1 2 3 4 5 6 7'
+    function = contact_fcn
+  [../]
 []
 
 [Functions]
   [./burnup_fcn]
     type = PiecewiseLinear
     x = '0 100'
-    y = '0 .1'
+    y = '0 .25'
+  [../]
+  [./contact_fcn]
+    type = PiecewiseLinear
+    x = '0 100'
+    y = '0 2e6'
   [../]
 []
 
@@ -104,21 +113,22 @@
   [./mechUC]
     type = Elastic
     block = '1 2 3 4 5 6 7'
-    youngs_modulus = 2.
+    youngs_modulus = 2.0
     poissons_ratio = .3
     thermal_expansion = 0
   [../]
 
   [./VSwelling]
-    type = VSwellingUC
+    type = VSwellingUr
     block = '1 2 3 4 5 6 7'
     burnup = burnup
     temp = temp
-    save_solid_swell = false
-    solid_factor = 0.
-    calculate_gas_swelling = false
-    save_densification = true
-    total_densification = 0.034
+    save_solid_swell = true
+    solid_factor = 0.0
+    calculate_gas_swelling = true
+    porosity = 0.04
+    total_densification = 0
+    contact_pressure = contact_pressure
   [../]
 
   [./thermal]
@@ -153,7 +163,6 @@
   nl_abs_tol = 1e-10
   l_tol = 1e-5
   start_time = 0.0
-  #num_steps = 50
   end_time = 100
   dt = 10
 
@@ -165,18 +174,22 @@
     type = ElementAverageValue
     block = 1
     variable = burnup
-    execute_on = timestep
-    use_displaced_mesh = true
   [../]
   [./volume]
     type = VolumePostprocessor
     use_displaced_mesh = true
+    execute_on = timestep
+  [../]
+  [./contact]
+    type = ElementAverageValue
+    blcok = 1
+    variable = contact_pressure
   [../]
 []
 
 
 [Outputs]
-  file_base = densification_out
+  file_base = gas_contact_out
   output_initial = true
   csv = false
   interval = 1

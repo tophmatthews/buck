@@ -4,10 +4,20 @@
     input = 'solidswelling.i'
     exodiff = 'solidswelling_out.e'
   [../]
-  [./gasswelling]
+  [./gas_por]
     type = 'Exodiff'
-    input = 'gasswelling.i'
-    exodiff = 'gasswelling_out.e'
+    input = 'gas_por.i'
+    exodiff = 'gas_por_out.e'
+  [../]
+  [./gas_hight]
+    type = 'Exodiff'
+    input = 'gas_hight.i'
+    exodiff = 'gas_hight_out.e'
+  [../]
+  [./gas_contact]
+    type = 'Exodiff'
+    input = 'gas_contact.i'
+    exodiff = 'gas_contact_out.e'
   [../]
   [./densification]
     type = 'Exodiff'

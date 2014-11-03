@@ -109,8 +109,8 @@
     thermal_expansion = 0
   [../]
 
-  [./VSwelling]
-    type = VSwellingUC
+  [./VSwellingMC]
+    type = VSwellingUr
     block = '1 2 3 4 5 6 7'
     burnup = burnup
     temp = temp

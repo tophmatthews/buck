@@ -1,20 +1,8 @@
 # Tests material model SolidSwellingUC for the calculation of swelling due to 
 #  solid fission products
 #
-# The mesh is a cube with 7 blocks.
-#
-# burnup  BUCK vol  EXCEL vol   % Diff
-# 0       1.00000   1.00000     0.00000
-# 0.01    0.97255   0.97242     0.01268
-# 0.02    0.96734   0.96721     0.01318
-# 0.03    0.96636   0.96623     0.01321
-# 0.04    0.96617   0.96604     0.01320
-# 0.05    0.96614   0.96601     0.01320
-# 0.06    0.96613   0.96600     0.01320
-# 0.07    0.96613   0.96600     0.01320
-# 0.08    0.96613   0.96600     0.01320
-# 0.09    0.96613   0.96600     0.01321
-# 0.1     0.96613   0.96600     0.01321
+# The mesh is a cube with 7 blocks. Total volume at end of simulation should equal
+# 1 + solid_factor(0.5) * burnup(0.1) = 1.05
 
 [GlobalParams]
   density = 10000.0
@@ -104,21 +92,20 @@
   [./mechUC]
     type = Elastic
     block = '1 2 3 4 5 6 7'
-    youngs_modulus = 2.
+    youngs_modulus = 2.0
     poissons_ratio = .3
     thermal_expansion = 0
   [../]
 
-  [./VSwelling]
-    type = VSwellingUC
+  [./VSwellingMC]
+    type = VSwellingUr
     block = '1 2 3 4 5 6 7'
     burnup = burnup
     temp = temp
-    save_solid_swell = false
-    solid_factor = 0.
+    save_solid_swell = true
+    solid_factor = 0.5
     calculate_gas_swelling = false
-    save_densification = true
-    total_densification = 0.034
+    total_densification = 0
   [../]
 
   [./thermal]
@@ -176,7 +163,7 @@
 
 
 [Outputs]
-  file_base = densification_out
+  file_base = solidswelling_out
   output_initial = true
   csv = false
   interval = 1

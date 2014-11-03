@@ -24,6 +24,7 @@
 #include "CreepUC.h"
 #include "MechUC.h"
 #include "VSwellingUC.h"
+#include "VSwellingUr.h"
 #include "BubblesUC.h"
 #include "ZonalUC.h"
 
@@ -88,6 +89,7 @@ BuckApp::registerObjects(Factory & factory)
   registerMaterial(ThermalUC);
   registerMaterial(CreepUC);
   registerMaterial(VSwellingUC);
+  registerMaterial(VSwellingUr);
   registerMaterial(MechUC);
   registerMaterial(BubblesUC);
   registerMaterial(ZonalUC);
