@@ -14,6 +14,7 @@
 
 // Auxkernels
 #include "PorosityAuxUC.h"
+#include "PorosityAuxUr.h"
 #include "BubbleAtomicDensityAuxUC.h"
 
 // Kernels
@@ -82,6 +83,7 @@ void
 BuckApp::registerObjects(Factory & factory)
 {
   registerAux(PorosityAuxUC);
+  registerAux(PorosityAuxUr);
   registerAux(BubbleAtomicDensityAuxUC);
 
   registerKernel(FGSource);
