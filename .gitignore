@@ -1,3 +1,5 @@
+/syntax/*
+*_out.e
 ~$*
 .libs
 *.la
