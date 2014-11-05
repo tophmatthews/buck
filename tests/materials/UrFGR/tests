@@ -1,0 +1,7 @@
+[Tests]
+  [./fgr]
+    type = 'Exodiff'
+    input = 'fgr_test.i'
+    exodiff = 'fgr_test_out.e'
+  [../]
+[]

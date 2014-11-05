@@ -28,6 +28,7 @@
 #include "VSwellingUr.h"
 #include "BubblesUC.h"
 #include "ZonalUC.h"
+#include "UrFGR.h"
 
 //Postprocessors
 #include "RatioPostprocessor.h"
@@ -95,6 +96,7 @@ BuckApp::registerObjects(Factory & factory)
   registerMaterial(MechUC);
   registerMaterial(BubblesUC);
   registerMaterial(ZonalUC);
+  registerMaterial(UrFGR);
 
   registerPostprocessor(RatioPostprocessor);
 
