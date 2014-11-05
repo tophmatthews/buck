@@ -219,7 +219,10 @@ VSwellingUr::calcGasSwelling( const Real burnup,
   dfract_volumetric_dtemp = dcorr_temp * corr_burnup * corr_por * corr_stress;
 
   if ( fract_volumetric > limit )
+  {
     fract_volumetric = limit;
+    dfract_volumetric_dtemp = 0; // I think?
+  }
   if ( fract_volumetric < 0 )
     fract_volumetric = 0;
 
