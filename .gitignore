@@ -1,5 +1,5 @@
 /syntax/*
-*_out.e
+*out.e
 ~$*
 .libs
 *.la

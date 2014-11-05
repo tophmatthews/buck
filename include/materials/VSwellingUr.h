@@ -45,8 +45,9 @@ private:
   VariableValue & _burnup_old;
 
   VariableValue & _temperature;
-  VariableValue & _contact_pressure;
   VariableValue & _porosity;
+
+  PostprocessorValue & _contact_pressure;
   
   const Real _total_densification;
   const Real _burnup_constant;

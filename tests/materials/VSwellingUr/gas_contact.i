@@ -3,18 +3,18 @@
 #
 # The mesh is a cube with 7 blocks.
 
-# Burnup  Stress  BUCK vol  Excel vol % diff
+# Burnup    cont_pres BUCK vol  Excel vol % diff
 # 0.000000  0.00E+00  1.000000  1.00000 0
-# 0.025000  2.00E+05  1.048309  1.04791 0.03827
-# 0.050000  4.00E+05  1.098891  1.09712 0.16169
-# 0.075000  6.00E+05  1.151772  1.14762 0.36207
-# 0.100000  8.00E+05  1.206974  1.19940 0.63190
-# 0.125000  1.00E+06  1.264511  1.25244 0.96397
-# 0.150000  1.20E+06  1.324391  1.30673 1.35156
-# 0.175000  1.40E+06  1.386619  1.36225 1.78862
-# 0.200000  1.60E+06  1.451191  1.41899 2.26927
-# 0.225000  1.80E+06  1.518104  1.47692 2.78852
-# 0.250000  2.00E+06  1.587348  1.53602 3.34159
+# 0.025000  2.00E+05  1.047344  1.04791 0.05382
+# 0.050000  4.00E+05  1.095884  1.09712 0.11239
+# 0.075000  6.00E+05  1.145535  1.14762 0.18141
+# 0.100000  8.00E+05  1.196213  1.19940 0.26531
+# 0.125000  1.00E+06  1.247830  1.25244 0.36792
+# 0.150000  1.20E+06  1.300299  1.30673 0.49213
+# 0.175000  1.40E+06  1.353534  1.36225 0.64008
+# 0.200000  1.60E+06  1.407447  1.41899 0.81349
+# 0.225000  1.80E+06  1.461957  1.47692 1.01311
+# 0.250000  2.00E+06  1.516982  1.53602 1.23947
 
 [GlobalParams]
   density = 10000.0
@@ -44,7 +44,7 @@
 [AuxVariables]
   [./burnup]
   [../]
-  [./contact_pressure]
+  [./contact_pressure_aux]
   [../]
 []
 
@@ -69,7 +69,7 @@
   [../]
   [./contact]
     type = FunctionAux
-    variable = contact_pressure
+    variable = contact_pressure_aux
     block = '1 2 3 4 5 6 7'
     function = contact_fcn
   [../]
@@ -180,10 +180,10 @@
     use_displaced_mesh = true
     execute_on = timestep
   [../]
-  [./contact]
+  [./contact_pressure]
     type = ElementAverageValue
-    blcok = 1
-    variable = contact_pressure
+    variable = contact_pressure_aux
+    execute_on = timestep_begin
   [../]
 []
 

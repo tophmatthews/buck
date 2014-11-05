@@ -14,8 +14,8 @@ InputParameters validParams<VSwellingUr>()
   InputParameters params = validParams<VolumetricModel>();
   params.addCoupledVar("burnup", 0, "Coupled Burnup");
   params.addCoupledVar("temp", 0, "Coupled Temperature");
-  params.addCoupledVar("contact_pressure", 0, "Coupled contact pressure");
   params.addCoupledVar("porosity", 0.1, "Coupled porosity");
+  params.addParam<PostprocessorName>("contact_pressure", 0, "Postpressor for contact_pressure average");
   params.addParam<Real>("total_densification",0.034, "The total fractional densification that can occur");
   params.addParam<Real>("burnup_constant",0.006, "Constant that divides burnup in Densifcation equation in units of FIMA");
   params.addParam<Real>("solid_factor", 0.417, "Factor multiplied against Burnup [FIMA] to determine swelling due to solid fission products");
@@ -33,8 +33,9 @@ VSwellingUr::VSwellingUr( const std::string & name, InputParameters parameters)
    _burnup_old(coupledValueOld("burnup")),
         
    _temperature(coupledValue("temp")),
-   _contact_pressure(coupledValue("contact_pressure")),
    _porosity(coupledValue("porosity")),
+
+   _contact_pressure(getPostprocessorValue("contact_pressure")),
 
    _total_densification(parameters.get<Real>("total_densification")),
    _burnup_constant(parameters.get<Real>("burnup_constant")),
@@ -124,7 +125,7 @@ VSwellingUr::modifyStrain(const unsigned int qp,
     
     Real gsStrainRate(0);
     Real dgsStrainRate_dT(0);
-    calcGasSwelling( _burnup[qp], _burnup_old[qp], _temperature[qp], _porosity[qp], _contact_pressure[qp], gsStrainRate, dgsStrainRate_dT );
+    calcGasSwelling( _burnup[qp], _burnup_old[qp], _temperature[qp], _porosity[qp], _contact_pressure, gsStrainRate, dgsStrainRate_dT );
     if ( _calc_gas_swell )
     {
       (*_gas_swelling)[qp] =  (*_gas_swelling_old)[qp] + gsStrainRate;
@@ -150,7 +151,7 @@ VSwellingUr::modifyStrain(const unsigned int qp,
 
     strain_increment.addDiag( -VStrain );
     dstrain_increment_dT.addDiag( -dVStrain_dT/3 * v0OverVOld );
-    // std::cout << "step: " << _t_step << " strain: " << gsStrainRate << " v0OverVOld: " << v0OverVOld << " contact_pressure: " << _contact_pressure[qp] << std::endl;
+    // std::cout << "step: " << _t_step << " strain: " << gsStrainRate << " v0OverVOld: " << v0OverVOld << " contact_pressure: " << _contact_pressure << std::endl;
   }
 }
 
