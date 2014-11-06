@@ -119,7 +119,6 @@
     disp_y = disp_y
     disp_z = disp_z
     temp = temp
-    initial_porosity = 0.0
     youngs_modulus = 2.e11
     poissons_ratio = .3
     thermal_expansion = 10e-6

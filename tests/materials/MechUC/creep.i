@@ -170,7 +170,6 @@
     disp_z = disp_z
     temp = temp
     fission_rate = fission_rate
-    initial_porosity = 0.05
     youngs_modulus = 2.e11
     poissons_ratio = .3
     thermal_expansion = 0
