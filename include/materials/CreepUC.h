@@ -1,5 +1,5 @@
-#ifndef CREEPUC_H
-#define CREEPUC_H
+#ifndef CREEPUC
+#define CREEPUC
 
 #include "SolidModel.h"
 
@@ -38,7 +38,6 @@ protected:
   const bool _output_iteration_info;
   const PostprocessorValue * _output;
 
-  bool _has_fission_rate;
   VariableValue  & _fission_rate;
 
   MaterialProperty<SymmTensor> & _creep_strain;
@@ -51,9 +50,6 @@ protected:
 
   /// Compute the stress (sigma += deltaSigma)
   virtual void computeStress();
-
-private:
-
 };
 
-#endif //CREEPUC_H
+#endif //CREEPUC

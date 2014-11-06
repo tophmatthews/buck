@@ -14,7 +14,7 @@ InputParameters validParams<CreepUC>()
   params.addParam<bool>("output_iteration_info", false, "Set true to output sub-newton iteration information");
   params.addParam<PostprocessorName>("output", "", "The reporting postprocessor to use for the max_iterations value.");
 
-  params.addCoupledVar("fission_rate", "Coupled fission rate");
+  params.addCoupledVar("fission_rate", 0, "Coupled fission rate");
 
   return params;
 }
@@ -30,8 +30,7 @@ CreepUC::CreepUC( const std::string & name,
    _output_iteration_info(getParam<bool>("output_iteration_info")),
    _output( getParam<PostprocessorName>("output") != "" ? &getPostprocessorValue("output") : NULL ),
 
-   _has_fission_rate(isCoupled("fission_rate")),
-   _fission_rate(_has_fission_rate ? coupledValue("fission_rate") : _zero),
+   _fission_rate(coupledValue("fission_rate")),
 
    _creep_strain(declareProperty<SymmTensor>("creep_strain")),
    _creep_strain_old(declarePropertyOld<SymmTensor>("creep_strain")),
