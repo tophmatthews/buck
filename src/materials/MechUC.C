@@ -6,18 +6,15 @@
 
 #include "SymmIsotropicElasticityTensor.h"
 #include "Element.h"
-using namespace UCMechanical;
+// using namespace UCMechanical;
 
 template<>
 InputParameters validParams<MechUC>()
 {
    InputParameters params = validParams<CreepUC>();
 
-   params.addCoupledVar("porosity", "Coupled Porosity");
+   params.addCoupledVar("porosity", 0, "Coupled Porosity");
    
-   // if coupled porosity is not provided, the initial value is used
-   params.addParam<Real>("initial_porosity", 0.05, "Initial porosity");
-
    params.addParam<bool>("model_thermal_expansion", true, "Set true to turn on thermal expansion model and calculate alpha from MechanicalUC. If false, thermal expansion will be calculated using alpha or alpha function given in input file.");
    params.addParam<bool>("model_swelling", true, "Set true to turn on swelling model");
    // params.addParam<bool>("model_gas_swelling", false, "Set true to turn on swelling model");
@@ -33,9 +30,7 @@ InputParameters validParams<MechUC>()
 
 MechUC::MechUC( const std::string & name, InputParameters parameters ) :
   CreepUC( name, parameters ),
-  _has_porosity(isCoupled("porosity")),
-  _porosity(_has_porosity ? coupledValue("porosity") : _zero),
-  _initial_porosity(getParam<Real>("initial_porosity")),
+  _porosity(coupledValue("porosity")),
         
   _model_thermal_expansion(getParam<bool>("model_thermal_expansion")),
   _model_swelling(getParam<bool>("model_swelling")),
@@ -47,17 +42,6 @@ MechUC::MechUC( const std::string & name, InputParameters parameters ) :
         
   _calc_elastic_modulus(getParam<bool>("calc_elastic_modulus"))
 {
-  // overwritten later if coupled density exists
-  porosity = _initial_porosity;
-  
-  // set placeholders if moduli are to be calculated later
-  if( _calc_elastic_modulus )
-  {
-    _youngs_modulus = 2e11;
-    _poissons_ratio = 0.3;
-    _youngs_modulus_set = 1;
-    _poissons_ratio_set = 1;
-  }
 }
 
 MechUC::~MechUC()
@@ -74,7 +58,6 @@ MechUC::computeStress()
   }
   else
   {
-
     if(_t_step == 0)
     {
       return;
@@ -104,11 +87,11 @@ MechUC::computeThermalStrain()
       if (temp < 0)
         mooseError("MechUC: Negative temperature on block.");
 
-      alpha     = FALPHA(temp);
-      alpha0    = FALPHA(temp0);
-      alpha_bar = ( alpha + alpha0)/2.0;
+      alpha     = UCMechanical::FALPHA(temp);
+      alpha0    = UCMechanical::FALPHA(temp0);
+      alpha_bar = ( alpha + alpha0 )/2.0;
 
-      _strain_increment.addDiag( -alpha_bar * ( temp - temp0) );
+      _strain_increment.addDiag( -alpha_bar * ( temp - temp0 ) );
 
       _d_strain_dT.zero();
       _d_strain_dT.addDiag(-alpha_bar);
@@ -142,10 +125,7 @@ MechUC::computeSwellingStrain()
     }
 
     if(!bFoundSwellingModel)
-    {
       mooseWarning( "No swelling model block defined in the input file");
-    }
-
   }
 
 }
@@ -200,8 +180,7 @@ MechUC::updateElasticityTensor(SymmElasticityTensor & tensor)
 { 
   if( _calc_elastic_modulus )
   {
-    if ( _has_porosity )
-      porosity = _porosity[_qp];
+    Real porosity = _porosity[_qp];
     Real YM(0.0);
     Real PR(0.0);
     SymmIsotropicElasticityTensor * t = dynamic_cast<SymmIsotropicElasticityTensor*>(&tensor);
@@ -211,8 +190,8 @@ MechUC::updateElasticityTensor(SymmElasticityTensor & tensor)
     }
     t->unsetConstants();
 
-    YM = YOUNGS(_temperature[_qp], porosity );
-    PR = POISSONS(porosity);
+    YM = UCMechanical::YOUNGS(_temperature[_qp], porosity );
+    PR = UCMechanical::POISSONS(porosity);
     
     //std::cout << "temp: " << _temperature[_qp] << " por: " << porosity << " YM: " << YM << " PR: " << PR << std::endl;
 

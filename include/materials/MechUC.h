@@ -1,5 +1,5 @@
-#ifndef MECHUC_H
-#define MECHUC_H
+#ifndef MECHUC
+#define MECHUC
 
 #include "SolidModel.h"
 #include "CreepUC.h"
@@ -20,11 +20,8 @@ public:
 
 protected:
 
-  bool _has_porosity;
   VariableValue & _porosity;
   
-  Real _initial_porosity;
-
   bool _model_thermal_expansion;
   bool _model_swelling;
   // bool _model_gas_swelling;
@@ -34,9 +31,7 @@ protected:
   // const std::string _name_gas_swelling_model;
   
   const bool _calc_elastic_modulus;
-  
-  Real porosity;
-  
+    
   /// Compute the stress (sigma += deltaSigma)
 
   virtual void computeStress();
@@ -47,7 +42,6 @@ protected:
   virtual void modifyStrainIncrement();
   virtual bool updateElasticityTensor(SymmElasticityTensor & tensor );
 
-
 };
 
-#endif //MECHUC_H_
+#endif //MECHUC
