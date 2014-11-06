@@ -5,11 +5,10 @@ InputParameters validParams<ThermalUC>()
 {
   InputParameters params = validParams<Material>();
 
-  params.addCoupledVar("temp", "Coupled Temperature");
-  params.addCoupledVar("burnup", "Coupled Burnup Rate");
-  params.addCoupledVar("porosity", "Coupled Porosity");
+  params.addCoupledVar("temp", 0, "Coupled Temperature");
+  params.addCoupledVar("burnup", 0, "Coupled Burnup Rate");
+  params.addCoupledVar("porosity", 0, "Coupled Porosity");
 
-  params.addParam<Real>("initial_porosity", 0.0, "The initial porosity");
   return params;
 }
 
@@ -17,21 +16,17 @@ ThermalUC::ThermalUC(const std::string & name,
                        InputParameters parameters) :
   Material(name, parameters),
 
-  _has_temp(isCoupled("temp")),
-  _temp(_has_temp ? coupledValue("temp") : _zero),
-  _grad_temp(_has_temp ? coupledGradient("temp") : _grad_zero),
+  _temp(coupledValue("temp")),
+  _grad_temp(coupledGradient("temp")),
 
-  _has_burnup(isCoupled("burnup")),
-  _burnup(_has_burnup ? coupledValue("burnup") : _zero),
+  _burnup(coupledValue("burnup")),
 
-  _has_porosity(isCoupled("porosity")),
-  _porosity(_has_porosity ? coupledValue("porosity") : _zero),       
+  _porosity(coupledValue("porosity")),       
         
   _thermal_conductivity(declareProperty<Real>("thermal_conductivity")),
   _thermal_conductivity_dT(declareProperty<Real>("thermal_conductivity_dT")),
-  _specific_heat(declareProperty<Real>("specific_heat")),
+  _specific_heat(declareProperty<Real>("specific_heat"))
 
-  _initial_porosity(getParam<Real>("initial_porosity"))
 {}
 
 Real
@@ -93,27 +88,7 @@ ThermalUC::computeProperties()
   {
     Real temp1 = _temp[_qp];
     if (temp1 < 0)
-    {
-      if (n_processors()>1)
-      {
-        std::stringstream msg;
-        msg << "WARNING:  In ThermalUO2:  negative temperature!\n"
-            << "\tResetting to zero.\n"
-            << "\t_qp: " << _qp << "\n"
-            << "\ttemp: " << _temp[_qp] << "\n"
-            << "\telem: " << _current_elem->id() << "\n"
-            << "\tproc: " << processor_id() << "\n";
-        mooseWarning( msg.str() );
-        temp1 = 0;
-      }
-      else
-      {
-        std::stringstream errorMsg;
-        errorMsg << "\nThermalUO2: Negative temperature in element: "<<_current_elem->id();
-        std::cout<<errorMsg.str()<<std::endl<<std::endl;
-        throw MooseException();
-      }
-    }
+      mooseError("\nThermalUO2: Negative temperature in element: " << _current_elem->id());
 
     //Calculate unirradiated thermal conductivity
     Real cond0, cond0_dT;
