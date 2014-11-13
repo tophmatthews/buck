@@ -1,4 +1,7 @@
 /syntax/*
+doc/doxygen/html/*
+latex/*
+html/*
 *out.e
 ~$*
 .libs

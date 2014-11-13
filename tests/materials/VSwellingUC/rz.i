@@ -56,7 +56,7 @@
   [./burnup]
     type = FunctionAux
     variable = burnup
-    block = '1 2 3 4 5 6 7'
+    block = 1
     function = burnup_fcn
   [../]
 []
