@@ -1,7 +1,12 @@
 [Tests]
-  [./test]
+  [./creep]
     type = 'Exodiff'
-    input = 'CreepUC_test.i'
-    exodiff = 'out.e'
+    input = 'creep.i'
+    exodiff = 'creep_out.e'
+  [../]
+  [./calc_elastic_modulus]
+    type = 'Exodiff'
+    input = 'calc_elastic_modulus.i'
+    exodiff = 'calc_elastic_modulus_out.e'
   [../]
 []

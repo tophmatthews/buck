@@ -1,8 +1,9 @@
-#ifndef MECHUC
-#define MECHUC
+#ifndef MECHUC_H
+#define MECHUC_H
 
 #include "SolidModel.h"
 #include "CreepUC.h"
+#include "VSwellingUC.h"
 
 // Forward declarations
 class MechUC;
@@ -20,18 +21,16 @@ public:
 
 protected:
 
-  VariableValue & _porosity;
-  
-  bool _model_thermal_expansion;
+  // bool _model_thermal_expansion;
   bool _model_swelling;
+  bool _calc_alpha;
   // bool _model_gas_swelling;
-  bool _model_creep;
+  // bool _model_relocation;
 
   const std::string _name_swelling_model;
   // const std::string _name_gas_swelling_model;
-  
-  const bool _calc_elastic_modulus;
-    
+  // const std::string _name_relocation_model;
+
   /// Compute the stress (sigma += deltaSigma)
 
   virtual void computeStress();
@@ -39,9 +38,10 @@ protected:
   virtual void computeThermalStrain();
   virtual void computeSwellingStrain();
   // virtual void computeGasSwellingStrain();
+  // virtual void computeRelocationStrain();
   virtual void modifyStrainIncrement();
-  virtual bool updateElasticityTensor(SymmElasticityTensor & tensor );
+
 
 };
 
-#endif //MECHUC
+#endif //MECHUC_H_

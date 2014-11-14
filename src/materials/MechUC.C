@@ -1,46 +1,39 @@
 #include "MechUC.h"
 #include "MaterialUC.h"
-#include "VSwellingUC.h"
 #include <ctype.h>
 #include <stdlib.h>
 
 #include "SymmIsotropicElasticityTensor.h"
 #include "Element.h"
-// using namespace UCMechanical;
 
 template<>
 InputParameters validParams<MechUC>()
 {
    InputParameters params = validParams<CreepUC>();
 
-   params.addCoupledVar("porosity", 0, "Coupled Porosity");
-   
-   params.addParam<bool>("model_thermal_expansion", true, "Set true to turn on thermal expansion model and calculate alpha from MechanicalUC. If false, thermal expansion will be calculated using alpha or alpha function given in input file.");
+   // params.addParam<bool>("model_thermal_expansion", true, "Set true to turn on thermal expansion model");
    params.addParam<bool>("model_swelling", true, "Set true to turn on swelling model");
+   params.addParam<bool>("calc_alpha", true, "Flag to calculate alpha or use constant");
    // params.addParam<bool>("model_gas_swelling", false, "Set true to turn on swelling model");
+   // params.addParam<bool>("model_relocation", true, "Set true to turn on relocation model");
 
-   params.addParam<bool>("model_creep", true, "Set true to turn on creep model");
    params.addParam<std::string>("name_swelling_model", "VSwellingUC", "name of swelling model");
-   // params.addParam<std::string>("name_gas_swelling_model", "VSwellingMX", "name of gaseous swelling model");
-   
-  params.addParam<bool>("calc_elastic_modulus", false, "Flag for using MaterialUC to compute Young's modulus and Poisson's ratio. If false, they will be calculated using the values given in the input file.");
+   // params.addParam<std::string>("name_relocation_model", "RelocationUC", "name of relocation model");
+   // params.addParam<std::string>("name_gas_swelling_model", "Sifgrs", "name of gaseous swelling model");
 
   return params;
 }
 
 MechUC::MechUC( const std::string & name, InputParameters parameters ) :
   CreepUC( name, parameters ),
-  _porosity(coupledValue("porosity")),
-        
-  _model_thermal_expansion(getParam<bool>("model_thermal_expansion")),
+  // _model_thermal_expansion(getParam<bool>("model_thermal_expansion")),
   _model_swelling(getParam<bool>("model_swelling")),
+  _calc_alpha(getParam<bool>("calc_alpha")),
   // _model_gas_swelling(getParam<bool>("model_gas_swelling")),
-  _model_creep(getParam<bool>("model_creep")),
-        
-  _name_swelling_model(getParam<std::string>("name_swelling_model")),
+  // _model_relocation(getParam<bool>("model_relocation")),
+  _name_swelling_model(getParam<std::string>("name_swelling_model"))
   // _name_gas_swelling_model(getParam<std::string>("name_gas_swelling_model")),
-        
-  _calc_elastic_modulus(getParam<bool>("calc_elastic_modulus"))
+  // _name_relocation_model(getParam<std::string>("name_relocation_model"))
 {
 }
 
@@ -58,6 +51,7 @@ MechUC::computeStress()
   }
   else
   {
+
     if(_t_step == 0)
     {
       return;
@@ -71,7 +65,7 @@ MechUC::computeStress()
 void
 MechUC::computeThermalStrain()
 {
-  if( _model_thermal_expansion )
+  if ( _calc_alpha )
   {
     if( _has_temp && _t_step != 0)
     {
@@ -95,14 +89,12 @@ MechUC::computeThermalStrain()
 
       _d_strain_dT.zero();
       _d_strain_dT.addDiag(-alpha_bar);
-
     }
   }
   else
   {
-    applyThermalStrain();
+    SolidModel::applyThermalStrain();
   }
-
 }
 
 void
@@ -125,7 +117,10 @@ MechUC::computeSwellingStrain()
     }
 
     if(!bFoundSwellingModel)
+    {
       mooseWarning( "No swelling model block defined in the input file");
+    }
+
   }
 
 }
@@ -133,7 +128,7 @@ MechUC::computeSwellingStrain()
 // void
 // MechUC::computeGasSwellingStrain()
 // {
-//   if( _model_gas_swelling)
+//   if( _model_gas_swelling )
 //   {
 //     const SubdomainID current_block = _current_elem->subdomain_id();
 //     const std::vector<VolumetricModel*> & vm( _volumetric_models[current_block] );
@@ -157,11 +152,40 @@ MechUC::computeSwellingStrain()
 
 // }
 
+// void
+// MechUC::computeRelocationStrain()
+// {
+//   if( _model_relocation )
+//   {
+//     const SubdomainID current_block = _current_elem->subdomain_id();
+//     const std::vector<VolumetricModel*> & vm( _volumetric_models[current_block] );
+//     bool bFoundRelocationModel(false);
+
+//     const Real VoldV0 = element()->volumeRatioOld(_qp);
+//     for (unsigned int i(0); i < vm.size(); ++i)
+//     {
+//       if( vm[i]->name() == _name_relocation_model)
+//       {
+//         vm[i]->modifyStrain(_qp, 1/VoldV0, _strain_increment, _d_strain_dT);
+//         bFoundRelocationModel = true;
+//       }
+//     }
+
+//     if(!bFoundRelocationModel)
+//     {
+//       mooseWarning( "No relocation model block defined in the input file");
+//     }
+//   }
+
+// }
+
 void
 MechUC::modifyStrainIncrement()
 {
 
   computeThermalStrain();
+
+  // computeRelocationStrain();
 
   computeSwellingStrain();
 
@@ -173,38 +197,4 @@ void
 MechUC::initQpStatefulProperties()
 {
   CreepUC::initQpStatefulProperties();
-}
-
-bool
-MechUC::updateElasticityTensor(SymmElasticityTensor & tensor)
-{ 
-  if( _calc_elastic_modulus )
-  {
-    Real porosity = _porosity[_qp];
-    Real YM(0.0);
-    Real PR(0.0);
-    SymmIsotropicElasticityTensor * t = dynamic_cast<SymmIsotropicElasticityTensor*>(&tensor);
-    if (!t)
-    {
-      mooseError("Cannot use Youngs modulus or Poissons ratio functions");
-    }
-    t->unsetConstants();
-
-    YM = UCMechanical::YOUNGS(_temperature[_qp], porosity );
-    PR = UCMechanical::POISSONS(porosity);
-    
-    //std::cout << "temp: " << _temperature[_qp] << " por: " << porosity << " YM: " << YM << " PR: " << PR << std::endl;
-
-    t->constant(false);
-    t->setYoungsModulus(YM);
-    t->setPoissonsRatio(PR);
-
-    bool changed = true;
-    return changed;
-  }
-  else
-  {
-    return SolidModel::updateElasticityTensor( tensor );
-  }
-
 }

@@ -1,27 +1,25 @@
-#ifndef CREEPUC
-#define CREEPUC
+#ifndef CREEPUC_H
+#define CREEPUC_H
 
 #include "SolidModel.h"
 
 // Forward declarations
-class CreepUC;
+class BurnupFunction;
 
-template<>
-InputParameters validParams<CreepUC>();
-
-/*
- * Combined steady-state thermal and irradiation creep for UC:
- *  edot = A1*Fdot*sigma + A2*sigma^2.44*exp(-Q/T)
- *
+/**
+ * Combined steady-state thermal and irradiation creep for UO2:
+ *  edot = (A1+A2*Fdot)/((A3+D)*G**2))*(sigma)*exp(-Q1/(RT)) +
+ *         (A4/(A6+D))*sigma**4.5*exp(-Q2/(RT)) +
+ *         A7*Fdot*exp(-Q3/(RT))
  *   where:
- *     edot  = creep strain rate (1/s),
+ *     edot = creep strain rate (1/s),
  *     sigma = Mises stress (Pa),
- *     Fdot  = volumetric fission rate (fissions/m**3-s),
- *     T     = temperature (K),
- *     Q     = activation energy (J/mol),
- *     A1&A2 = material constants
- * 
- *  Ref: T. Preusser Nuclear Technology 57 1982
+ *     Fdot = volumetric fission rate (fissions/m**3-s),
+ *     T = temperature (K),
+ *     Q = activation energy (J/mol),
+ *     G = grain size (microns)
+ *     R = universal gas constant (J/mol-K), and
+ *     A1-A7 =  material constants
  */
 
 class CreepUC : public SolidModel
@@ -32,24 +30,43 @@ public:
 
 protected:
 
+  virtual void createElasticityTensor();
+  virtual bool updateElasticityTensor(SymmElasticityTensor & tensor);
+  // virtual void applyThermalStrain();
+
   const Real _relative_tolerance;
   const Real _absolute_tolerance;
   const unsigned int _max_its;
   const bool _output_iteration_info;
   const PostprocessorValue * _output;
 
-  VariableValue  & _fission_rate;
+  Real _density_percent;
+
+  // BurnupFunction * const _burnup_function;
 
   MaterialProperty<SymmTensor> & _creep_strain;
   MaterialProperty<SymmTensor> & _creep_strain_old;
 
   const Real _a1;
   const Real _a2;
-
   const Real _q;
+
+  const bool _calc_elastic_modulus;
+  // const bool _calc_alpha;
+  const bool _model_creep;
+
+  VariableValue  & _fission_rate;
+  const VariableValue & _porosity;
+
 
   /// Compute the stress (sigma += deltaSigma)
   virtual void computeStress();
+
+private:
+
 };
 
-#endif //CREEPUC
+template<>
+InputParameters validParams<CreepUC>();
+
+#endif //CREEPUC_H

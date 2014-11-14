@@ -4,10 +4,10 @@
     input = 'thermal_expansion.i'
     exodiff = 'thermal_expansion_out.e'
   [../]
-  [./elastic_modulus]
+  [./calc_elastic_modulus]
     type = 'Exodiff'
-    input = 'elastic_modulus_calc.i'
-    exodiff = 'elastic_modulus_calc_out.e'
+    input = 'calc_elastic_modulus.i'
+    exodiff = 'calc_elastic_modulus_out.e'
   [../]
   [./solid_swelling]
     type = 'Exodiff'
