@@ -32,15 +32,12 @@ protected:
 
   virtual void createElasticityTensor();
   virtual bool updateElasticityTensor(SymmElasticityTensor & tensor);
-  // virtual void applyThermalStrain();
 
   const Real _relative_tolerance;
   const Real _absolute_tolerance;
   const unsigned int _max_its;
   const bool _output_iteration_info;
   const PostprocessorValue * _output;
-
-  Real _density_percent;
 
   // BurnupFunction * const _burnup_function;
 
@@ -52,7 +49,6 @@ protected:
   const Real _q;
 
   const bool _calc_elastic_modulus;
-  // const bool _calc_alpha;
   const bool _model_creep;
 
   VariableValue  & _fission_rate;

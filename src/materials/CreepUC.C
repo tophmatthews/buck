@@ -18,11 +18,9 @@ InputParameters validParams<CreepUC>()
   params.addParam<bool>("output_iteration_info", false, "Set true to output sub-newton iteration information");
   params.addParam<PostprocessorName>("output", "", "The reporting postprocessor to use for the max_iterations value.");
 
-  params.addRequiredParam<Real>("density", "Initial fuel density");
   // params.addParam<FunctionName>("burnup_function", "Burnup function");
 
   params.addParam<bool>("calc_elastic_modulus", false, "Flag for using MaterialUC to compute Young's modulus and Poisson's ratio. If false, they will be calculated using the values given in the input file.");
-  // params.addParam<bool>("calc_alpha", false, "Flag for using MaterialUC to compute Young's modulus and Poisson's ratio. If false, they will be calculated using the values given in the input file.");
   params.addParam<bool>("model_creep", true, "Flag for modeling creep");
 
   params.addCoupledVar("fission_rate", 0, "Coupled fission rate");
@@ -54,7 +52,6 @@ CreepUC::CreepUC( const std::string & name,
 
 
    _calc_elastic_modulus(parameters.get<bool>("calc_elastic_modulus")),
-   // _calc_alpha(parameters.get<bool>("calc_alpha")),
    _model_creep(parameters.get<bool>("model_creep")),
 
    // _has_fission_rate(isCoupled("fission_rate")),

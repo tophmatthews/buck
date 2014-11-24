@@ -3,6 +3,6 @@
 #ifndef BUCK_REVISION_H
 #define BUCK_REVISION_H
 
-#define BUCK_REVISION "git commit cf04130 on 2014-11-13"
+#define BUCK_REVISION "git commit 87bed8b on 2014-11-14"
 
 #endif // BUCK_REVISION_H
