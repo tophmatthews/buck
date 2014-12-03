@@ -5,6 +5,7 @@ html/*
 *out.e
 ~$*
 .libs
+*tmp
 *.la
 *.lo
 *.d

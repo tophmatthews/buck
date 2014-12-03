@@ -47,7 +47,7 @@ CreepUC::CreepUC( const std::string & name,
    _creep_strain_old(declarePropertyOld<SymmTensor>("creep_strain")),
 
    _a1(1.0e-37), // Irradiation creep constant
-   _a2(9.48e-9), // Thermal creep constant
+   _a2(4.14), // Thermal creep constant
    _q(63200),    // Thermal activation constant, [K]
 
 

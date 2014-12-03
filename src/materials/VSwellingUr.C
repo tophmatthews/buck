@@ -18,7 +18,7 @@ InputParameters validParams<VSwellingUr>()
   params.addParam<PostprocessorName>("contact_pressure", 0, "Postpressor for contact_pressure average");
   params.addParam<Real>("total_densification",0.034, "The total fractional densification that can occur");
   params.addParam<Real>("burnup_constant",0.006, "Constant that divides burnup in Densifcation equation in units of FIMA");
-  params.addParam<Real>("solid_factor", 0.417, "Factor multiplied against Burnup [FIMA] to determine swelling due to solid fission products");
+  params.addParam<Real>("solid_factor", 0.5, "Factor multiplied against Burnup [FIMA] to determine swelling due to solid fission products");
   params.addParam<bool>("calculate_gas_swelling", true, "Flag to calculate gas swelling");
   params.addParam<bool>("save_solid_swell", false, "Should the solid swelling be saved in a material property");
   params.addParam<bool>("save_densification", false, "Should the densification be saved in a material property");
