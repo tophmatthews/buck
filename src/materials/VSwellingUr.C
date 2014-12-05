@@ -18,7 +18,7 @@ InputParameters validParams<VSwellingUr>()
   params.addParam<PostprocessorName>("contact_pressure", 0, "Postpressor for contact_pressure average");
   params.addParam<Real>("total_densification",0.034, "The total fractional densification that can occur");
   params.addParam<Real>("burnup_constant",0.006, "Constant that divides burnup in Densifcation equation in units of FIMA");
-  params.addParam<Real>("solid_factor", 0.5, "Factor multiplied against Burnup [FIMA] to determine swelling due to solid fission products");
+  params.addParam<Real>("solid_factor", 0.417, "Factor multiplied against Burnup [FIMA] to determine swelling due to solid fission products");
   params.addParam<bool>("calculate_gas_swelling", true, "Flag to calculate gas swelling");
   params.addParam<bool>("save_solid_swell", false, "Should the solid swelling be saved in a material property");
   params.addParam<bool>("save_densification", false, "Should the densification be saved in a material property");
@@ -177,45 +177,48 @@ VSwellingUr::solidSwelling( const Real solid_swelling_factor,
 void
 VSwellingUr::calcGasSwelling( const Real burnup,
                               const Real burnup_old,
-                              const Real temperature,
+                              const Real temp,
                               const Real por,
                               const Real cont_pres,
                               Real & fract_volumetric,
                               Real & dfract_volumetric_dtemp )
 {
-  const Real temp = temperature - 273;
-  const Real c( 1.711 );
-  const Real d1( 6.412 );
-  const Real d2( -0.0198 );
-  const Real d3( 0.152e-4 );
+  const Real c_gs( 1.528 );
+  const Real d1( 12.95 );
+  const Real d2( -0.0281 );
+  const Real d3( 1.52e-5 );
   const Real BU0( .0112 ); // [FIMA] from 1 MWd/kg = .00112 FIMA
-  const Real a( 2 );
+  const Real a( 2.0 );
   const Real b( 0.1 );
   const Real pc0( 1e6 ); //[Pa]
 
-  const Real limit( 4.091 ); //4.558 - 0.4667 ( total minus solid swelling )
+  const Real limit( 3.653 ); // volume swelling rate maximum, [1/FIMA]
 
+  // Porosity correction
   Real corr_por = std::exp( - (por - 0.04));
-  if ( corr_por > 1 )
-    corr_por = 1;
+  if ( corr_por > 1.0 )
+    corr_por = 1.0;
 
+  // Contact stress correction
   Real corr_stress = std::exp( - cont_pres / pc0 * b );
   if ( corr_stress > 1 )
     corr_stress = 1;
 
+  // Burnup correction
   Real corr_burnup = burnup / BU0 - a;
-  if ( corr_burnup < 0 )
-    corr_burnup = 0;
+  if ( corr_burnup < 0.0 )
+    corr_burnup = 0.0;
 
-  Real corr_temp = 0;
-  Real dcorr_temp = 0;
-  if ( temp >= 700 )
+  // Temperature correction
+  Real corr_temp = 0.0;
+  Real dcorr_temp = 0.0;
+  if ( temp > 973.0 )
   {
     corr_temp = d1 + d2 * temp + d3 * temp * temp;
-    dcorr_temp = d2 + d3 * temp;
+    dcorr_temp = d2 + 2.0 * d3 * temp;
   }
 
-  fract_volumetric = ( c + corr_temp * corr_burnup ) * corr_por * corr_stress;
+  fract_volumetric = ( c_gs + corr_temp * corr_burnup ) * corr_por * corr_stress;
   dfract_volumetric_dtemp = dcorr_temp * corr_burnup * corr_por * corr_stress;
 
   if ( fract_volumetric > limit )
@@ -224,11 +227,14 @@ VSwellingUr::calcGasSwelling( const Real burnup,
     dfract_volumetric_dtemp = 0; // I think?
   }
   if ( fract_volumetric < 0 )
+  {
     fract_volumetric = 0;
-
+    dfract_volumetric_dtemp = 0;
+  }
+    
   const Real burnup_inc = burnup - burnup_old;
-  fract_volumetric *= 1.12 * burnup_inc; // convert from [% vol/(MWd/kg)] to [/]
-  dfract_volumetric_dtemp *= 1.12 * burnup_inc;
+  fract_volumetric *= burnup_inc;
+  dfract_volumetric_dtemp *= burnup_inc;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////

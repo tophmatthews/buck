@@ -83,7 +83,7 @@ UrFGR::computeProperties()
 
     // Generate fission gas
     const Real yield = _frac_yield / _avogadros_num;  // yield of fission gas (Xe + Kr) [mol]
-    const Real gas_gen_rate     = _fission_rate[qp]     * yield;
+    const Real gas_gen_rate  = _fission_rate[qp]     * yield;
     Real old_fsnrate = _fission_rate_old[qp];
     if( _t_step == 1)
       old_fsnrate = _fission_rate[qp];
@@ -102,27 +102,25 @@ UrFGR::computeProperties()
 
     // compute release rate
     // The following model is taken from Preusser, JNM vol 57 (1982)
+    Real burnup = _burnup[qp];
 
-    const Real cen_temp_cel = _center_temp - 273;
-    Real burnup_threshold( 2.0 );
-    if ( cen_temp_cel > 2325 )
-      burnup_threshold = 0;
-    else if ( cen_temp_cel > 1455 )
-      burnup_threshold = -0.0023 * cen_temp_cel + 5.3504;
+    // Burnup correction
+    Real burnup_free = -2.576e-6 * _center_temp + 6.696e-3;
 
-    const Real bu_percent = _burnup[qp] * 100;
-
-    Real corr_burnup = ( 1 - std::exp( -1.5 * ( bu_percent - burnup_threshold ) ) );
+    Real corr_burnup = ( 1 - std::exp( -1.5 * ( burnup - burnup_free ) ) );
     if ( corr_burnup < 0)
       corr_burnup = 0;
+    else if( corr_burnup > 0.00224 )
+      corr_burnup = 0.00224;
 
+    // Temperature correction
     Real gas_rel_rate(0.0);
-    if ( cen_temp_cel < 1000 )
+    if ( _center_temp < 1273 )
       gas_rel_rate = 0.0;
-    else if ( cen_temp_cel > 2070 )
-      gas_rel_rate = 0.741918 * std::log( 0.7675 * cen_temp_cel ) - 4.968477;
+    else if ( _center_temp > 2343 )
+      gas_rel_rate = 0.7419 * std::log( 0.7675 * (_center_temp-273) ) - 4.968477;
     else
-      gas_rel_rate = 0.000467 * cen_temp_cel - 0.467;
+      gas_rel_rate = 4.67e-4 * _center_temp - 0.594;
 
     bool add;
     Real avg_ratio = _gas_rel_old[qp] / _gas_gen_old[qp];
@@ -135,13 +133,13 @@ UrFGR::computeProperties()
     }
     else
     {
-      _gas_rel[qp] = _gas_rel_old[qp] + gas_rel_rate * dgas_gen;
+      _gas_rel[qp] = _gas_rel_old[qp] + gas_rel_rate  * corr_burnup * dgas_gen;
       add = true;
     }
     if ( _testing )
     {
-      std::cout << " burnup_thres: " << burnup_threshold << " bu_corr: " << corr_burnup<< " cen_temp_cel: " << cen_temp_cel << std::endl;
-      std::cout <<  "burnup: " << bu_percent << " gas_rel_rate: " << gas_rel_rate << " rel/gen "  << avg_ratio << " add: " << add << std::endl;
+      // std::cout << " burnup_thres: " << burnup_threshold << " bu_corr: " << corr_burnup<< " cen_temp_cel: " << cen_temp_cel << std::endl;
+      // std::cout <<  "burnup: " << bu_percent << " gas_rel_rate: " << gas_rel_rate << " rel/gen "  << avg_ratio << " add: " << add << std::endl;
     }
 
     if ( _gas_rel[qp] < _gas_rel_old[qp])
