@@ -79,11 +79,6 @@
     x = '0 1e4'
     y = '1 1'
   [../]
-  [./temp_ramp]
-    type = PiecewiseLinear
-    x = '0.0 1e4'
-    y = '1350 1350'
-  [../]
 []
 
 [SolidMechanics]
@@ -118,12 +113,6 @@
     boundary = 10
     value = 0.0
   [../]
-  [./heatup]
-     type = FunctionDirichletBC
-     boundary = '15'
-     variable = temp
-     function = temp_ramp
-  [../]
 []
 
 
@@ -139,6 +128,7 @@
     thermal_expansion = 0
     calc_elastic_modulus = false
     model_creep = true
+    max_its = 100
   [../]
   [./thermal]
     type = HeatConductionMaterial

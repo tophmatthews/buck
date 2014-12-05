@@ -1,5 +1,5 @@
 # Porosity should equal gas_swelling + densification + initial_porosity/
-# At last time step, porosity = 0.40884
+# At last time step, porosity = 0.34166
 
 [GlobalParams]
   density = 10000.0
@@ -58,6 +58,7 @@
     type = PorosityAuxUr
     variable = porosity
     block = '1 2 3 4 5 6 7'
+    initial_porosity = 0.05
   [../]
 []
 

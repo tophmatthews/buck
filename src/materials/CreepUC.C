@@ -18,8 +18,6 @@ InputParameters validParams<CreepUC>()
   params.addParam<bool>("output_iteration_info", false, "Set true to output sub-newton iteration information");
   params.addParam<PostprocessorName>("output", "", "The reporting postprocessor to use for the max_iterations value.");
 
-  // params.addParam<FunctionName>("burnup_function", "Burnup function");
-
   params.addParam<bool>("calc_elastic_modulus", false, "Flag for using MaterialUC to compute Young's modulus and Poisson's ratio. If false, they will be calculated using the values given in the input file.");
   params.addParam<bool>("model_creep", true, "Flag for modeling creep");
 
@@ -39,28 +37,19 @@ CreepUC::CreepUC( const std::string & name,
    _max_its(parameters.get<unsigned int>("max_its")),
    _output_iteration_info(getParam<bool>("output_iteration_info")),
    _output( getParam<PostprocessorName>("output") != "" ? &getPostprocessorValue("output") : NULL ),
-
-   // _burnup_function( isParamValid("burnup_function") ?
-   //                   dynamic_cast<BurnupFunction*>(&getFunction("burnup_function")) : NULL ),
-
    _creep_strain(declareProperty<SymmTensor>("creep_strain")),
    _creep_strain_old(declarePropertyOld<SymmTensor>("creep_strain")),
-
-   _a1(1.0e-37), // Irradiation creep constant
-   _a2(4.14), // Thermal creep constant
-   _q(63200),    // Thermal activation constant, [K]
-
 
    _calc_elastic_modulus(parameters.get<bool>("calc_elastic_modulus")),
    _model_creep(parameters.get<bool>("model_creep")),
 
-   // _has_fission_rate(isCoupled("fission_rate")),
    _fission_rate(coupledValue("fission_rate")),
-   _porosity(coupledValue("porosity"))
-{
+   _porosity(coupledValue("porosity")),
 
-  // if (_has_fission_rate && _burnup_function)
-  //   mooseError("CreepUC: Cannot specify burnup_function with either fission_rate or burnup");
+   _a1(1.0e-37), // Irradiation creep constant [1/s/Pa/fsnrate]
+   _a2(9.48e-9), // Thermal creep constant [1/s/MPa]
+   _q(63200)    // Thermal activation constant, [K]
+{
 }
 
 void
@@ -68,15 +57,6 @@ CreepUC::computeStress()
 {
   if ( _model_creep )
   {
-  // Define coefficients
-    // const Real fission_rate = _has_fission_rate ? _fission_rate[_qp] : _burnup_function->fissionRate(_q_point[_qp]);
-    const Real fission_rate = _fission_rate[_qp];
-
-    const Real _c1 = _a1 * fission_rate; // irradiation term
-    const Real _c2 = _a2;                    // thermal term
-    const Real _activation_term = std::exp( -_q / _temperature[_qp] );
-
-
     // Given the stretching, compute the stress increment and add it to the old stress. Also update the creep strain
     // stress = stressOld + stressIncrement
     // creep_strain = creep_strainOld + creep_strainIncrement
@@ -124,9 +104,13 @@ CreepUC::computeStress()
           << std::endl;
           mooseError("Effective stress in CreepUC is negative!");
       }
+
       // edot = A1*Fdot*sigma + A2*sigma^2.44*exp(-Q/T)
-      phi = stress_delta * _c1 + _c2 * std::pow(stress_delta, 2.44) * _activation_term;
-      dphi_ddelp = -3. * _shear_modulus * (_c1 + 2.44 * _c2 * std::pow(stress_delta, 1.44) * _activation_term);
+      const Real c1 = _a1 * _fission_rate[_qp];
+      const Real activation_term = std::exp( -_q / _temperature[_qp] );
+
+      phi = stress_delta * c1 + _a2 * std::pow(stress_delta, 2.44) * activation_term;
+      dphi_ddelp = -3.0 * _shear_modulus * (c1 + 2.44 * _a2 * std::pow(stress_delta, 1.44) * activation_term);
 
       creep_residual = phi -  del_p/_dt;
       norm_residual = std::abs(creep_residual);

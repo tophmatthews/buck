@@ -11,7 +11,6 @@ InputParameters validParams<UrFGR>()
 
   params.addParam<bool>("testing", false, "Turns on/off testing output");
 
-  params.addCoupledVar("temp", 0, "Coupled Temperature");
   params.addCoupledVar("fission_rate",0, "Coupled Fission Rate");
   params.addCoupledVar("burnup", 0, "Coupled Burnup");
 
@@ -26,11 +25,9 @@ UrFGR::UrFGR(const std::string & name, InputParameters parameters) :
   _frac_yield(getParam<Real>("frac_yield")),
 
   _fission_rate(coupledValue("fission_rate")),  // fission rate [1/(m**3*s)]
-  _temp(coupledValue("temp")),  // temperature [K]
   _burnup(coupledValue("burnup")),  // local burnup [FIMA]
 
   _fission_rate_old(coupledValueOld("fission_rate")),
-  _temp_old(coupledValueOld("temp")),
   _burnup_old(coupledValueOld("burnup")),
 
   _gas_gen(declareProperty<Real>("gas_gen")),  // volume concentration of gas produced [mol/m**3]
@@ -78,12 +75,9 @@ UrFGR::computeProperties()
 
   for(unsigned int qp=0; qp<_qrule->n_points(); ++qp)
   {
-    if (_temp[qp] < 0.0)
-      mooseError("UrFGR: Negative temperature in element.");
-
     // Generate fission gas
     const Real yield = _frac_yield / _avogadros_num;  // yield of fission gas (Xe + Kr) [mol]
-    const Real gas_gen_rate  = _fission_rate[qp]     * yield;
+    const Real gas_gen_rate  = _fission_rate[qp] * yield;
     Real old_fsnrate = _fission_rate_old[qp];
     if( _t_step == 1)
       old_fsnrate = _fission_rate[qp];
@@ -106,21 +100,27 @@ UrFGR::computeProperties()
 
     // Burnup correction
     Real burnup_free = -2.576e-6 * _center_temp + 6.696e-3;
+    if ( burnup_free < 0)
+      burnup_free = 0;
+    else if( burnup_free > 0.00224 )
+      burnup_free = 0.00224;
 
     Real corr_burnup = ( 1 - std::exp( -1.5 * ( burnup - burnup_free ) ) );
-    if ( corr_burnup < 0)
+    if ( corr_burnup < 0 )
       corr_burnup = 0;
-    else if( corr_burnup > 0.00224 )
-      corr_burnup = 0.00224;
+    
 
     // Temperature correction
-    Real gas_rel_rate(0.0);
+    Real corr_temp(0.0);
     if ( _center_temp < 1273 )
-      gas_rel_rate = 0.0;
+      corr_temp = 0.0;
     else if ( _center_temp > 2343 )
-      gas_rel_rate = 0.7419 * std::log( 0.7675 * (_center_temp-273) ) - 4.968477;
+      corr_temp = 0.7419 * std::log( 0.7675 * (_center_temp-273) ) - 4.9685;
     else
-      gas_rel_rate = 4.67e-4 * _center_temp - 0.594;
+      corr_temp = 4.67e-4 * _center_temp - 0.594;
+
+    //fraction gas release
+    Real gas_rel_rate = corr_burnup * corr_temp;
 
     bool add;
     Real avg_ratio = _gas_rel_old[qp] / _gas_gen_old[qp];
@@ -128,18 +128,18 @@ UrFGR::computeProperties()
       avg_ratio = 0;
     if ( gas_rel_rate > avg_ratio )
     {
-      _gas_rel[qp] = gas_rel_rate * corr_burnup * _gas_gen[qp];
+      _gas_rel[qp] = gas_rel_rate * _gas_gen[qp];
       add = false;
     }
     else
     {
-      _gas_rel[qp] = _gas_rel_old[qp] + gas_rel_rate  * corr_burnup * dgas_gen;
+      _gas_rel[qp] = _gas_rel_old[qp] + gas_rel_rate * dgas_gen;
       add = true;
     }
     if ( _testing )
     {
-      // std::cout << " burnup_thres: " << burnup_threshold << " bu_corr: " << corr_burnup<< " cen_temp_cel: " << cen_temp_cel << std::endl;
-      // std::cout <<  "burnup: " << bu_percent << " gas_rel_rate: " << gas_rel_rate << " rel/gen "  << avg_ratio << " add: " << add << std::endl;
+      std::cout << " burnup_free: " << burnup_free << " corr_burnup: " << corr_burnup << " corr_temp: " << corr_temp << " center_temp " << _center_temp << std::endl;
+      std::cout <<  "burnup: " << _burnup[qp] << " gas_rel_rate: " << gas_rel_rate << "old rel/gen "  << avg_ratio << " add: " << add << std::endl;
     }
 
     if ( _gas_rel[qp] < _gas_rel_old[qp])

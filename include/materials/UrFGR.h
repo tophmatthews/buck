@@ -25,11 +25,9 @@ protected:
   const Real _frac_yield;
 
   VariableValue & _fission_rate;
-  VariableValue & _temp;
   VariableValue & _burnup;
 
   VariableValue & _fission_rate_old;  
-  VariableValue & _temp_old;
   VariableValue & _burnup_old;
 
   MaterialProperty<Real> & _gas_gen;

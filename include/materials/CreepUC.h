@@ -39,14 +39,8 @@ protected:
   const bool _output_iteration_info;
   const PostprocessorValue * _output;
 
-  // BurnupFunction * const _burnup_function;
-
   MaterialProperty<SymmTensor> & _creep_strain;
   MaterialProperty<SymmTensor> & _creep_strain_old;
-
-  const Real _a1;
-  const Real _a2;
-  const Real _q;
 
   const bool _calc_elastic_modulus;
   const bool _model_creep;
@@ -54,6 +48,9 @@ protected:
   VariableValue  & _fission_rate;
   const VariableValue & _porosity;
 
+  const Real _a1;
+  const Real _a2;
+  const Real _q;
 
   /// Compute the stress (sigma += deltaSigma)
   virtual void computeStress();
