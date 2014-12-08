@@ -20,7 +20,7 @@ InputParameters validParams<VSwellingUr>()
   params.addParam<Real>("burnup_constant",0.006, "Constant that divides burnup in Densifcation equation in units of FIMA");
   params.addParam<Real>("solid_factor", 0.417, "Factor multiplied against Burnup [FIMA] to determine swelling due to solid fission products");
   params.addParam<bool>("calculate_gas_swelling", true, "Flag to calculate gas swelling");
-  params.addParam<bool>("save_solid_swell", false, "Should the solid swelling be saved in a material property");
+  // params.addParam<bool>("save_solid_swelling", false, "Should the solid swelling be saved in a material property");
   params.addParam<bool>("save_densification", false, "Should the densification be saved in a material property");
 
   return params;
@@ -51,10 +51,10 @@ VSwellingUr::VSwellingUr( const std::string & name, InputParameters parameters)
    _densification_old(NULL)
 
 {
-  if (parameters.get<bool>("save_solid_swell"))
+  // if (parameters.get<bool>("save_solid_swell"))
   {
-    _solid_swelling = &declareProperty<Real>("solid_swell");
-    _solid_swelling_old = &declarePropertyOld<Real>("solid_swell");
+    _solid_swelling = &declareProperty<Real>("solid_swelling");
+    _solid_swelling_old = &declarePropertyOld<Real>("solid_swelling");
   }
   // if ( _calc_gas_swell )
   {

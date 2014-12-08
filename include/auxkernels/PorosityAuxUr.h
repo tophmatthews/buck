@@ -17,6 +17,7 @@ class PorosityAuxUr : public AuxKernel
     const Real _initial_porosity;
 
     MaterialProperty<Real> & _gas_swelling;
+    MaterialProperty<Real> & _solid_swelling;
     MaterialProperty<Real> & _densification;
 };
 
