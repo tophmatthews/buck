@@ -122,8 +122,8 @@ VSwellingUr::modifyStrain(const unsigned int qp,
     {
       (*_solid_swelling)[qp] = ssStrain;
     }
-    if ( _contact_pressure != 0)
-      std::cout << "_contact pressure= "<< _contact_pressure << std::endl;
+    // if ( _contact_pressure != 0)
+    //   std::cout << "_contact pressure= "<< _contact_pressure << std::endl;
     Real gsStrainRate(0);
     Real dgsStrainRate_dT(0);
     calcGasSwelling( _burnup[qp], _burnup_old[qp], _temperature[qp], _porosity[qp], _contact_pressure, gsStrainRate, dgsStrainRate_dT );
