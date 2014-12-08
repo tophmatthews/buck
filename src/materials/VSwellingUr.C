@@ -122,7 +122,8 @@ VSwellingUr::modifyStrain(const unsigned int qp,
     {
       (*_solid_swelling)[qp] = ssStrain;
     }
-    
+    if ( _contact_pressure != 0)
+      std::cout << "_contact pressure= "<< _contact_pressure << std::endl;
     Real gsStrainRate(0);
     Real dgsStrainRate_dT(0);
     calcGasSwelling( _burnup[qp], _burnup_old[qp], _temperature[qp], _porosity[qp], _contact_pressure, gsStrainRate, dgsStrainRate_dT );
@@ -195,7 +196,7 @@ VSwellingUr::calcGasSwelling( const Real burnup,
   const Real limit( 3.653 ); // volume swelling rate maximum, [1/FIMA]
 
   // Porosity correction
-  Real corr_por = std::exp( - (por - 0.04));
+  Real corr_por = std::exp( - (por - 0.04) );
   if ( corr_por > 1.0 )
     corr_por = 1.0;
 

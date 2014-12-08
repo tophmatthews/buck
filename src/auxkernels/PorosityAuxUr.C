@@ -24,8 +24,7 @@ PorosityAuxUr::PorosityAuxUr(const std::string & name, InputParameters parameter
 Real
 PorosityAuxUr::computeValue()
 {
-  // Solid swelling component is subtracted due to assumption that bubble porosity is above atoms that stay in solution
-  Real total_porosity = _initial_porosity + _gas_swelling[_qp] + _densification[_qp] - _solid_swelling[_qp];
+  Real total_porosity = _initial_porosity + _gas_swelling[_qp] + _densification[_qp];
   if ( total_porosity < 0. ) total_porosity = 0.;
 
   return total_porosity;
