@@ -25,13 +25,19 @@ CONTACT           := yes
 HEAT_CONDUCTION   := yes
 WATER_STEAM_EOS   := yes
 MISC              := yes
+#PHASE_FIELD       := yes
+# TENSOR_MECHANICS  := yes
+#CHEMICAL_REACTIONS := yes
 include           $(MOOSE_DIR)/modules/modules.mk
 ###############################################################################
-
 # dep apps
 APPLICATION_DIR    := $(HERD_TRUNK_DIR)/bison
 APPLICATION_NAME   := bison
 include            $(FRAMEWORK_DIR)/app.mk
+
+# APPLICATION_DIR    := $(HERD_TRUNK_DIR)/marmot
+# APPLICATION_NAME   := marmot
+# include            $(FRAMEWORK_DIR)/app.mk
 
 APPLICATION_DIR    := $(CURRENT_DIR)
 APPLICATION_NAME   := buck

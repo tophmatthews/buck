@@ -5,7 +5,6 @@
 
 //Forward Declarations
 class FGSource;
-class Function;
 
 template<>
 InputParameters validParams<FGSource>();

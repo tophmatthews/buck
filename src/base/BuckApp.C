@@ -8,14 +8,19 @@
 #include "LinearElasticityApp.h"
 #include "MiscApp.h"
 #include "SolidMechanicsApp.h"
+// #include "TensorMechanicsApp.h"
+// #include "PhaseFieldApp.h"
+// #include "ChemicalReactionsApp.h"
 
 #include "BisonApp.h"
 #include "BisonSyntax.h"
 
+// #include "MarmotApp.h"
+// #include "MarmotSyntax.h"
+
 // Auxkernels
 #include "PorosityAuxUC.h"
 #include "PorosityAuxUr.h"
-#include "BubbleAtomicDensityAuxUC.h"
 
 // Kernels
 #include "FGSource.h"
@@ -59,6 +64,10 @@ BuckApp::BuckApp(const std::string & name, InputParameters parameters) :
   MiscApp::registerObjects(_factory);
   SolidMechanicsApp::registerObjects(_factory);
   BisonApp::registerObjects(_factory);
+  // MarmotApp::registerObjects(_factory);
+  // PhaseFieldApp::registerObjects(_factory);
+  // TensorMechanicsApp::registerObjects(_factory);
+  // ChemicalReactionsApp::registerObjects(_factory);
 
   Moose::associateSyntax(_syntax, _action_factory);
   BuckApp::associateSyntax(_syntax, _action_factory);
@@ -68,6 +77,10 @@ BuckApp::BuckApp(const std::string & name, InputParameters parameters) :
   HeatConductionApp::associateSyntax(_syntax, _action_factory);
   MiscApp::associateSyntax(_syntax, _action_factory);
   Bison::associateSyntax(_syntax, _action_factory);
+  // Marmot::associateSyntax(_syntax, _action_factory);
+  // PhaseFieldApp::associateSyntax(_syntax, _action_factory);
+  // TensorMechanicsApp::associateSyntax(_syntax, _action_factory);
+  // ChemicalReactionsApp::associateSyntax(_syntax, _action_factory);
 }
 
 BuckApp::~BuckApp()
@@ -85,7 +98,6 @@ BuckApp::registerObjects(Factory & factory)
 {
   registerAux(PorosityAuxUC);
   registerAux(PorosityAuxUr);
-  registerAux(BubbleAtomicDensityAuxUC);
 
   registerKernel(FGSource);
   
