@@ -1,51 +1,40 @@
-# This test is used to verify the fission gas source kernel
-#
+# This test is used to verify the VariableScaledSource with an AuxVariable
 # The mesh is a 1x1x1 cube (single element).
-# The fission rate is constant
-# Yield is constant at 1
 #
-# The average gas content should equal the time step.
+# The integral gas content should equal the time step.
 
 [Mesh]
-  file = 1x1x1cube.e
+  type = GeneratedMesh
+  dim = 3
 []
 
 [Variables]
-  [./gas]
-    order = FIRST
-    family = LAGRANGE
-    initial_condition = 0
+  [./c]
   [../]
 []
 
-
 [AuxVariables]
-  [./fission_rate]
-    order = FIRST
-    family = LAGRANGE
+  [./auxvar]
   []
 []
 
-
 [Kernels]
-  [./gas_time]
+  [./c_time]
     type = TimeDerivative
-    variable = gas
+    variable = c
   [../]
-
   [./source]
-    type = FGSource
-    variable = gas
-    fission_rate = fission_rate
+    type = VariableScaledSource
+    variable = c
+    scaling_variable = auxvar
     yield = 1
   [../]
 []
 
-
 [AuxKernels]
-  [./fissionrate]
-    type = FissionRateAux
-    variable = fission_rate
+  [./var_value]
+    type = ConstantAux
+    variable = auxvar
     value = 1
   [../]
 []
@@ -71,22 +60,27 @@
   dt = 1
 []
 
-# [Postprocessors]
-#  [./Fission Gas]
-#    type = ElementAverageValue
-#    block = 1
-#    variable = gas
-#  [../]
-# []
+[Postprocessors]
+  [./c_total]
+    type = ElementIntegralVariablePostprocessor
+    block = 0
+    variable = c
+  [../]
+  [./var_average]
+    type = ElementAverageValue
+    block = 0
+    variable = auxvar
+  [../]
+[]
 
 [Outputs]
-  file_base = out
+  file_base = auxvar_out
   output_initial = true
   csv = false
   interval = 10
   [./exodus]
     type = Exodus
-    elemental_as_nodal = true
+    elemental_as_nodal = false
   [../]
   [./console]
     type = Console

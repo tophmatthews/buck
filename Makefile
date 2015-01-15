@@ -25,9 +25,9 @@ CONTACT           := yes
 HEAT_CONDUCTION   := yes
 WATER_STEAM_EOS   := yes
 MISC              := yes
-#PHASE_FIELD       := yes
+# PHASE_FIELD       := yes
 # TENSOR_MECHANICS  := yes
-#CHEMICAL_REACTIONS := yes
+# CHEMICAL_REACTIONS := yes
 include           $(MOOSE_DIR)/modules/modules.mk
 ###############################################################################
 # dep apps
@@ -41,9 +41,16 @@ include            $(FRAMEWORK_DIR)/app.mk
 
 APPLICATION_DIR    := $(CURRENT_DIR)
 APPLICATION_NAME   := buck
+APP_REV_HEADER     := $(CURRENT_DIR)/include/base/BuckRevision.h
 BUILD_EXEC         := yes
 DEP_APPS           := $(shell $(FRAMEWORK_DIR)/scripts/find_dep_apps.py $(APPLICATION_NAME))
 include            $(FRAMEWORK_DIR)/app.mk
 
+# APPLICATION_DIR    := $(CURRENT_DIR)
+# APPLICATION_NAME   := buck
+# #APP_REV_HEADER     := $(CURDIR)/include/base/BisonRevision.h
+# BUILD_EXEC         := yes
+# DEP_APPS           := $(shell $(FRAMEWORK_DIR)/scripts/find_dep_apps.py $(APPLICATION_NAME))
+# include            $(FRAMEWORK_DIR)/app.mk
 ###############################################################################
 # Additional special case targets should be added here

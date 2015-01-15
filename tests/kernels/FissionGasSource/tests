@@ -1,7 +1,0 @@
-[Tests]
-  [./test]
-    type = 'Exodiff'
-    input = 'FissionGasSource_test.i'
-    exodiff = 'out.e'
-  [../]
-[]

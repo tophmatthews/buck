@@ -23,7 +23,7 @@
 #include "PorosityAuxUr.h"
 
 // Kernels
-#include "FGSource.h"
+#include "VariableScaledSource.h"
 
 // Materials
 #include "ThermalUC.h"
@@ -72,10 +72,10 @@ BuckApp::BuckApp(const std::string & name, InputParameters parameters) :
   Moose::associateSyntax(_syntax, _action_factory);
   BuckApp::associateSyntax(_syntax, _action_factory);
   
-  SolidMechanicsApp::associateSyntax(_syntax, _action_factory);
   ContactApp::associateSyntax(_syntax, _action_factory);
   HeatConductionApp::associateSyntax(_syntax, _action_factory);
   MiscApp::associateSyntax(_syntax, _action_factory);
+  SolidMechanicsApp::associateSyntax(_syntax, _action_factory);
   Bison::associateSyntax(_syntax, _action_factory);
   // Marmot::associateSyntax(_syntax, _action_factory);
   // PhaseFieldApp::associateSyntax(_syntax, _action_factory);
@@ -99,7 +99,7 @@ BuckApp::registerObjects(Factory & factory)
   registerAux(PorosityAuxUC);
   registerAux(PorosityAuxUr);
 
-  registerKernel(FGSource);
+  registerKernel(VariableScaledSource);
   
   registerMaterial(ThermalUC);
   registerMaterial(CreepUC);
