@@ -25,7 +25,7 @@
     type = VariableScaledSource
     variable = c
     scaling_variable = var
-    yield = 1
+    factor = 1
   [../]
   [./var_time]
     type = TimeDerivative
@@ -57,28 +57,20 @@
 [Postprocessors]
   [./c_total]
     type = ElementIntegralVariablePostprocessor
-    block = 0
     variable = c
   [../]
   [./var_average]
     type = ElementAverageValue
-    block = 0
     variable = var
   [../]
 []
 
 [Outputs]
+  exodus = true
   file_base = var_out
-  output_initial = true
-  csv = false
-  interval = 10
-  [./exodus]
-    type = Exodus
-    elemental_as_nodal = false
-  [../]
   [./console]
     type = Console
     perf_log = true
-    linear_residuals = true
+    interval = 10
   [../]
 []

@@ -35,7 +35,7 @@
     type = VariableScaledSource
     variable = c
     scaling_variable = var
-    yield = 1
+    factor = 1
   [../]
 []
 
@@ -73,22 +73,15 @@
   [./c_total]
     type = ElementIntegralVariablePostprocessor
     variable = c
-    elementid = 0
   [../]
 []
 
 [Outputs]
+  exodus = true
   file_base = 1d_out
-  output_initial = true
-  csv = false
-  interval = 10
-  [./exodus]
-    type = Exodus
-    elemental_as_nodal = false
-  [../]
   [./console]
     type = Console
     perf_log = true
-    linear_residuals = true
+    interval = 10
   [../]
 []
