@@ -160,8 +160,6 @@ BuckApp::printHeader()
   Moose::out << "Input file:   " << _input_filename << "\n"
              << "Input units:  nanometer, gram, second, kelvin, mole\n"
              << "\n"
+             << "BUCK version: " << BUCK_REVISION << std::endl
              << std::endl;
-
-  Moose::out << std::left;
-  Moose::out << std::setw(25) << "BUCK version: " << BUCK_REVISION << "\n\n";
 }
