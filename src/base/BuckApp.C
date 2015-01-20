@@ -25,6 +25,9 @@
 
 // Kernels
 #include "VariableScaledSource.h"
+#include "HomClusterCombination.h"
+#include "HomPointLoss.h"
+#include "HomClusterLoss.h"
 
 // Materials
 #include "ThermalUC.h"
@@ -32,9 +35,9 @@
 #include "MechUC.h"
 #include "VSwellingUC.h"
 #include "VSwellingUr.h"
-#include "BubblesUC.h"
-#include "ZonalUC.h"
 #include "UrFGR.h"
+#include "ZonalUC.h"
+#include "HomNucleationMaterial.h"
 
 //Postprocessors
 #include "RatioPostprocessor.h"
@@ -101,15 +104,18 @@ BuckApp::registerObjects(Factory & factory)
   registerAux(PorosityAuxUr);
 
   registerKernel(VariableScaledSource);
+  registerKernel(HomClusterCombination);
+  registerKernel(HomPointLoss);
+  registerKernel(HomClusterLoss);
   
   registerMaterial(ThermalUC);
   registerMaterial(CreepUC);
   registerMaterial(VSwellingUC);
   registerMaterial(VSwellingUr);
   registerMaterial(MechUC);
-  registerMaterial(BubblesUC);
-  registerMaterial(ZonalUC);
   registerMaterial(UrFGR);
+  registerMaterial(ZonalUC);
+  registerMaterial(HomNucleationMaterial);
 
   registerPostprocessor(RatioPostprocessor);
 

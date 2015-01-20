@@ -1,0 +1,7 @@
+[Tests]
+  [./3d]
+    type = 'Exodiff'
+    input = '3d.i'
+    exodiff = '3d_out.e'
+  [../]
+[]

@@ -1,7 +1,5 @@
 #include "VariableScaledSource.h"
 
-#include "MooseException.h"
-
 template<>
 InputParameters validParams<VariableScaledSource>()
 {

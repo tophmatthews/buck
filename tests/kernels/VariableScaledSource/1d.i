@@ -2,7 +2,7 @@
 #
 # c_total should equal time * 4/3 * Pi
 #
-# For last time step, c_total = 4.188790e+05
+# For last time step, c_total = 4.188790e+02
 
 [Problem]
   coord_type = RSPHERICAL
@@ -12,7 +12,7 @@
   type = GeneratedMesh
   dim = 1
   nx = 10
-  xmax = 10
+  xmax = 1
   xmin = 0
 []
 
