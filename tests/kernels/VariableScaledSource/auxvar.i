@@ -74,9 +74,9 @@
 [Outputs]
   exodus = true
   file_base = auxvar_out
+  print_perf_log = true
   [./console]
     type = Console
-    perf_log = true
     interval = 10
   [../]
 []

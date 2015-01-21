@@ -79,9 +79,9 @@
 [Outputs]
   exodus = true
   file_base = 1d_out
+  print_perf_log = true
   [./console]
     type = Console
-    perf_log = true
     interval = 10
   [../]
 []
