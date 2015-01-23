@@ -1,7 +1,0 @@
-[Tests]
-  [./porosity]
-    type = 'Exodiff'
-    input = 'porosity_test.i'
-    exodiff = 'porosity_test_out.e'
-  [../]
-[]

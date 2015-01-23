@@ -1,7 +1,0 @@
-#[Tests]
-#  [./test]
-#    type = 'Exodiff'
-#    input = 'ronchi_test.i'
-#    exodiff = 'out.e'
-#  [../]
-#[]

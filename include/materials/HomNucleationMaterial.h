@@ -22,11 +22,26 @@ protected:
   virtual void computeProperties();
   virtual void initialize();
 
-  MaterialProperty<std::vector<Real> > & _coeffs;
+  std::vector<Real> _diff_coeff;
 
-  std::vector<Real> _input;
-  int _num;
+  std::vector<Real> _c1_rx_coeffs;
+  std::vector<Real> _c2_rx_coeffs;
+  std::vector<Real> _c3_rx_coeffs;
+  std::vector<Real> _c4_rx_coeffs;
+  std::vector<Real> _c5_rx_coeffs;
+  std::vector<Real> _c6_rx_coeffs;
+  std::vector<Real> _c7_rx_coeffs;
+  std::vector<Real> _c8_rx_coeffs;
+  std::vector<Real> _c9_rx_coeffs;
+
+  std::vector<std::vector<Real> > _rx_coeffs;
+
+  MaterialProperty<std::vector<Real> > & _diffusivities;
+  MaterialProperty<std::vector<std::vector<Real> > > & _rx_rates;
+
   bool _initialized;
+  int _N;
+
   
 };
 
