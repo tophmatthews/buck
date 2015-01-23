@@ -8,18 +8,15 @@ class BurnupFunction;
 
 /**
  * Combined steady-state thermal and irradiation creep for UO2:
- *  edot = (A1+A2*Fdot)/((A3+D)*G**2))*(sigma)*exp(-Q1/(RT)) +
- *         (A4/(A6+D))*sigma**4.5*exp(-Q2/(RT)) +
- *         A7*Fdot*exp(-Q3/(RT))
+ *  edot = A1*Fdot*sigma + A2*sigma^2.44*exp(-Q/RT)
  *   where:
- *     edot = creep strain rate (1/s),
- *     sigma = Mises stress (Pa),
- *     Fdot = volumetric fission rate (fissions/m**3-s),
- *     T = temperature (K),
- *     Q = activation energy (J/mol),
- *     G = grain size (microns)
- *     R = universal gas constant (J/mol-K), and
- *     A1-A7 =  material constants
+ *     edot   = creep strain rate (1/s),
+ *     sigma  = Mises stress (Pa),
+ *     Fdot   = volumetric fission rate (fissions/m**3-s),
+ *     T      = temperature (K),
+ *     Q      = activation energy (J/mol),
+ *     R      = universal gas constant (J/mol-K), and
+ *     A1, A2 =  material constants
  */
 
 class CreepUC : public SolidModel
@@ -52,7 +49,6 @@ protected:
   const Real _a2;
   const Real _q;
 
-  /// Compute the stress (sigma += deltaSigma)
   virtual void computeStress();
 
 private:
