@@ -2,7 +2,7 @@
 doc/doxygen/html/*
 latex/*
 html/*
-*out.e
+#.e
 ~$*
 .libs
 *tmp
