@@ -1,11 +1,5 @@
-/syntax/*
-doc/doxygen/html/*
-latex/*
-html/*
-#.e
-~$*
+syntax/*
 .libs
-*tmp
 *.la
 *.lo
 *.d
@@ -14,6 +8,7 @@ html/*
 *-opt
 *-dbg
 *-oprof
+*.e
 *.nav
 *.log
 *.aux
@@ -22,6 +17,7 @@ html/*
 *.csv
 *.dylib
 *.so
+*.gitignore*
 *.vrb
 *.jou
 *.pyc
@@ -115,6 +111,9 @@ traceout*.txt
 peacock_run_tmp.i
 yaml_dump*
 
+# Generated header file
+BisonRevision.h
+
 # test garbagge
 *.FAILED.txt
 
@@ -161,3 +160,5 @@ peacock_*.e
 *.cpr
 *.cpa-*
 *.cpr-*
+
+lib
