@@ -6,6 +6,7 @@
 // Kernels
 #include "VariableScaledSource.h"
 #include "HomNucleation.h"
+#include "SpeciesDiffusion.h"
 
 // Materials
 #include "HomNucleationMaterial.h"
@@ -49,6 +50,7 @@ BuckApp::registerObjects(Factory & factory)
 {
   registerKernel(VariableScaledSource);
   registerKernel(HomNucleation);
+  registerKernel(SpeciesDiffusion);
 
   registerMaterial(HomNucleationMaterial);
 }
