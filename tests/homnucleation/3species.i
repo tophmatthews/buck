@@ -5,10 +5,12 @@
   nucleation_conc_vars = 'c1 c2 c3'
 []
 
+
 [Mesh]
   type = GeneratedMesh
   dim = 3
 []
+
 
 [Variables]
   [./c1]
@@ -57,10 +59,14 @@
   [./coeffs]
     type = HomNucleationMaterial
     block = 0
+    temp = 2000
     diffusivity_multipliers = '1 0 0'
     c1_rx_coeffs = '1 10 0'
     c2_rx_coeffs = '10 0 0'
     c3_rx_coeffs = '0 0 0'
+    D0 = 1.7e5
+    Q = 2.3
+    k = 8.617e-5
   [../]
 []
 
@@ -76,30 +82,21 @@
 
   line_search = 'none'
 
-  l_max_its = 100
-  nl_max_its = 100
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-  l_tol = 1e-5
-  start_time = 0.0
-  end_time = 10
-  dt = 1
+  num_steps = 10
+  dt = 10
 []
 
 
 [Postprocessors]
-  [./volume]
-    type = VolumePostprocessor
-  [../]
-  [./c1_atoms]
+  [./c1_num]
     type = ElementIntegralVariablePostprocessor
     variable = c1
   [../]
-  [./c2_atoms]
+  [./c2_num]
     type = ElementIntegralVariablePostprocessor
     variable = c2
   [../]
-  [./c3_atoms]
+  [./c3_num]
     type = ElementIntegralVariablePostprocessor
     variable = c3
   [../]

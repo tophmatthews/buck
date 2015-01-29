@@ -19,6 +19,9 @@ int main(int argc, char *argv[])
   // This creates dynamic memory that we're responsible for deleting
   MooseApp * app = AppFactory::createApp("BuckApp", argc, argv);
 
+  // Terminate if unused parameters in input file
+  app->setCheckUnusedFlag(true);
+
   // Execute the application
   app->run();
 

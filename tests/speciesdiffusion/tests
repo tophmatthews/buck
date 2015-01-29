@@ -1,0 +1,12 @@
+[Tests]
+  [./2species]
+    type = 'Exodiff'
+    input = '2species.i'
+    exodiff = '2species_out.e'
+  [../]
+  [./diffusion]
+    type = 'Exodiff'
+    input = 'diffusion.i'
+    exodiff = 'diffusion_out.e'
+  [../]
+[]
