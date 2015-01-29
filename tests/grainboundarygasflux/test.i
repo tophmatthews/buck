@@ -99,9 +99,8 @@
     value = grain_gas_flux
   [../]
   [./sum]
-    type = SumPostprocessor
-    value1 = grain_gas_total
-    value2 = c1_num
+    type = SumOfPostprocessors
+    postprocessors = 'grain_gas_total c1_num'
   [../]
 []
 

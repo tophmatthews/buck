@@ -15,7 +15,7 @@
 
 // Postprocessors
 #include "GrainBoundaryGasFlux.h"
-#include "SumPostprocessor.h"
+#include "SumOfPostprocessors.h"
 
 // User Objects
 
@@ -59,7 +59,7 @@ BuckApp::registerObjects(Factory & factory)
   registerMaterial(HomNucleationMaterial);
 
   registerPostprocessor(GrainBoundaryGasFlux);
-  registerPostprocessor(SumPostprocessor);
+  registerPostprocessor(SumOfPostprocessors);
 }
 
 void

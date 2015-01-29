@@ -8,7 +8,7 @@
 
 [Mesh]
   type = GeneratedMesh
-  dim = 3
+  dim = 1
 []
 
 
@@ -19,6 +19,7 @@
   [./c2]
   [../]
   [./c3]
+  [../]
 []
 
 
@@ -59,14 +60,16 @@
   [./coeffs]
     type = HomNucleationMaterial
     block = 0
-    temp = 2000
+    temp = 1000
     diffusivity_multipliers = '1 0 0'
     c1_rx_coeffs = '1 10 0'
-    c2_rx_coeffs = '10 0 0'
+    c2_rx_coeffs = '0 0 0'
     c3_rx_coeffs = '0 0 0'
     D0 = 1.7e5
     Q = 2.3
     k = 8.617e-5
+    omega = 3.0e4
+    a = 0.5
   [../]
 []
 
@@ -76,14 +79,8 @@
 
   solve_type = PJFNK
 
-  petsc_options = '-snes_ksp_ew'
-  petsc_options_iname = '-ksp_gmres_restart'
-  petsc_options_value = '101'
-
-  line_search = 'none'
-
   num_steps = 10
-  dt = 10
+  dt = 1000
 []
 
 

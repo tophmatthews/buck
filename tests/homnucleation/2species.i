@@ -48,13 +48,15 @@
   [./coeffs]
     type = HomNucleationMaterial
     block = 0
-    temp = 2000
+    temp = 1000
     diffusivity_multipliers = '1 0'
     c1_rx_coeffs = '1 0'
     c2_rx_coeffs = '0 0'
     D0 = 1.7e5
     Q = 2.3
     k = 8.617e-5
+    omega = 3.0e4
+    a = 0.5
   [../]
 []
 
@@ -65,14 +67,11 @@
   solve_type = PJFNK
 
   num_steps = 10
-  dt = 1000
+  dt = 10
 []
 
 
 [Postprocessors]
-  [./volume]
-    type = VolumePostprocessor
-  [../]
   [./c1_num]
     type = ElementIntegralVariablePostprocessor
     variable = c1

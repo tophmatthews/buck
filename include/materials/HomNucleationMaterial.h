@@ -26,7 +26,7 @@ protected:
   const Real _Q;
   const Real _k;
 
-  std::vector<Real> _diff_coeff;
+  std::vector<Real> _diffusivity_multipliers;
 
   std::vector<Real> _c1_rx_coeffs;
   std::vector<Real> _c2_rx_coeffs;

@@ -9,7 +9,7 @@ InputParameters validParams<HomNucleationMaterial>()
   params.addCoupledVar("nucleation_conc_vars", "List of concentration variables for nucleation model");
   params.addCoupledVar("temp", 0, "Coupled Temperature");
 
-  params.addParam<Real>("omega", 0.125, "Lattice site volume [nm**2]");
+  params.addParam<Real>("omega", 3.0e4, "Lattice site volume [nm**2]");
   params.addParam<Real>("a", 0.5, "Lattice parameter [nm]");
   params.addParam<Real>("D0", 1.7e5, "Diffusion coefficient [nm^2/s]");
   params.addParam<Real>("Q", 2.3, "Activation energy [eV]");
@@ -41,7 +41,7 @@ HomNucleationMaterial::HomNucleationMaterial(const std::string & name, InputPara
   _Q(getParam<Real>("Q")),
   _k(getParam<Real>("k")),
 
-  _diff_coeff(getParam<std::vector<Real> >("diffusivity_multipliers")),
+  _diffusivity_multipliers(getParam<std::vector<Real> >("diffusivity_multipliers")),
 
   _c1_rx_coeffs(getParam<std::vector<Real> >("c1_rx_coeffs")),
   _c2_rx_coeffs(getParam<std::vector<Real> >("c2_rx_coeffs")),
@@ -95,6 +95,14 @@ HomNucleationMaterial::HomNucleationMaterial(const std::string & name, InputPara
     mooseError(errorMsg.str());
   }
 
+  if ( _diffusivity_multipliers.size() != _N )
+  {
+    std::stringstream errorMsg;
+    errorMsg << "In HomNucleationMaterial: The number of diffusivity_multipliers is incorrect .\n"
+             << "\tRequired number: " << _N << std::endl;
+    mooseError(errorMsg.str());
+  }
+
   _rx_coeffs.resize(_N);
 
   _rx_coeffs[0].insert( _rx_coeffs[0].end(), _c1_rx_coeffs.begin(), _c1_rx_coeffs.end() );
@@ -134,7 +142,7 @@ HomNucleationMaterial::computeProperties()
   {
     for ( int i=0; i<_N; ++i )
     {
-      _diffusivities[qp][i] = _D0 * std::exp( -_Q / _k / _temp[qp] ) * _diff_coeff[i];
+      _diffusivities[qp][i] = _D0 * std::exp( -_Q / _k / _temp[qp] ) * _diffusivity_multipliers[i];
       // std::cout <<  "i: " << i <<  " diffusivities: " << _diffusivities[qp][i] << std::endl;
     }
   
@@ -142,7 +150,7 @@ HomNucleationMaterial::computeProperties()
     {
       for (int j=0; j<_N; ++j)
       {
-        _rx_rates[qp][i][j] = _a * _diffusivities[qp][i] * _rx_coeffs[i][j]; // omega/a2 = a
+        _rx_rates[qp][i][j] = _omega / _a / _a * _diffusivities[qp][i] * _rx_coeffs[i][j];
       }
     }
   }

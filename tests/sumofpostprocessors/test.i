@@ -64,7 +64,7 @@
   [./bc_fcn_left]
     type = PiecewiseLinear
     x = '0 10'
-    y = '0 2'
+    y = '0 -2'
   [../]
 []
 
@@ -91,9 +91,8 @@
     boundary = left
   [../]
   [./sum]
-    type = SumPostprocessor
-    value1 = u_left
-    value2 = u_right
+    type = SumOfPostprocessors
+    postprocessors = 'u_left u_right'
   [../]
 []
 
