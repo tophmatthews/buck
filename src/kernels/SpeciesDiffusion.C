@@ -9,7 +9,7 @@ InputParameters validParams<SpeciesDiffusion>()
 {
   InputParameters params = validParams<Diffusion>();
 
-  params.addRequiredParam<int>("m", "Name of the diffusivity material property");
+  params.addRequiredParam<int>("m", "Number of atoms in the current concentration variable");
   return params;
 }
 

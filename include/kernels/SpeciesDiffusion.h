@@ -2,7 +2,6 @@
 #define SPECIESDIFFUSION_H
 
 #include "Diffusion.h"
-#include "Material.h"
 
 class SpeciesDiffusion : public Diffusion
 {
@@ -15,7 +14,6 @@ protected:
 
 private:
   MaterialProperty<std::vector<Real> > & _diffusivities;
-
   int _m;
 };
 

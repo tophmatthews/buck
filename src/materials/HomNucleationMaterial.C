@@ -7,6 +7,13 @@ InputParameters validParams<HomNucleationMaterial>()
   InputParameters params = validParams<Material>();
   
   params.addCoupledVar("nucleation_conc_vars", "List of concentration variables for nucleation model");
+  params.addCoupledVar("temp", 0, "Coupled Temperature");
+
+  params.addParam<Real>("omega", 0.125, "Lattice site volume [nm**2]");
+  params.addParam<Real>("a", 0.5, "Lattice parameter [nm]");
+  params.addParam<Real>("D0", 1.7e5, "Diffusion coefficient [nm^2/s]");
+  params.addParam<Real>("Q", 2.3, "Activation energy [eV]");
+  params.addParam<Real>("k", 8.617e-5, "Boltzmann's constant [eV/K]");
 
   params.addRequiredParam<std::vector<Real> >("diffusivity_multipliers", "Multipliers to diffusivity");
 
@@ -26,6 +33,14 @@ InputParameters validParams<HomNucleationMaterial>()
 HomNucleationMaterial::HomNucleationMaterial(const std::string & name, InputParameters parameters) :
   Material(name, parameters),
 
+  _temp(coupledValue("temp")),
+
+  _omega(getParam<Real>("omega")),
+  _a(getParam<Real>("a")),
+  _D0(getParam<Real>("D0")),
+  _Q(getParam<Real>("Q")),
+  _k(getParam<Real>("k")),
+
   _diff_coeff(getParam<std::vector<Real> >("diffusivity_multipliers")),
 
   _c1_rx_coeffs(getParam<std::vector<Real> >("c1_rx_coeffs")),
@@ -39,11 +54,11 @@ HomNucleationMaterial::HomNucleationMaterial(const std::string & name, InputPara
   _c9_rx_coeffs(getParam<std::vector<Real> >("c9_rx_coeffs")),
 
   _diffusivities(declareProperty<std::vector<Real> >("diffusivities")),
-  _rx_rates(declareProperty<std::vector<std::vector<Real> > >("rx_rates"))
+  _rx_rates(declareProperty<std::vector<std::vector<Real> > >("rx_rates")),
+
+  _initialized(false)       // flag to see if coefficients were resized
 
 {
-  _initialized = false;       // flag to see if coefficients were resized
-
   _N = coupledComponents("nucleation_conc_vars"); // number of variables that need coefficients
 
   // Protect against not the right number of input for a needed cn coefficient
@@ -91,28 +106,6 @@ HomNucleationMaterial::HomNucleationMaterial(const std::string & name, InputPara
   _rx_coeffs[6].insert( _rx_coeffs[6].end(), _c7_rx_coeffs.begin(), _c7_rx_coeffs.end() );
   _rx_coeffs[7].insert( _rx_coeffs[7].end(), _c8_rx_coeffs.begin(), _c8_rx_coeffs.end() );
   _rx_coeffs[8].insert( _rx_coeffs[8].end(), _c9_rx_coeffs.begin(), _c9_rx_coeffs.end() );
-
-  // std::cout << "_rx_coeffs[i][j]" << std::endl;
-  // for ( int i=0; i<_N; ++i )
-  // {
-  //   for ( int j=0; j<_N; ++j )
-  //   {
-  //     std::cout << _rx_coeffs[i][j] << " ";
-  //   }
-  //   std::cout << std::endl;
-  // }
-
-  //   for ( int j=0; j<_N; ++j )
-  //     _input_rx_coeffs[i][j] = 0;
-  // }
-
-  // if ( _input_num != _var_num )
-  // {
-  //   std::stringstream errorMsg;
-  //   errorMsg << "In HomNucleationMaterial: Size of input_coeffs is wrong.\n"
-  //            << "\tnumber of variables: " << _var_num << "\tnumber of input coefficients: " << _input_num;
-  //   mooseError(errorMsg.str());
-  // }
 }
 
 void
@@ -120,11 +113,13 @@ HomNucleationMaterial::initialize()
 {
   for( unsigned int qp(0); qp < _qrule->n_points(); ++qp)
   {
-    // resize and set default values
     _diffusivities[qp].resize(_N);
 
-    // resize
     _rx_rates[qp].resize(_N);
+    for ( int i=0; i<_N; ++i )
+    {
+      _rx_rates[qp][i].resize(_N);
+    }
   }
   _initialized = true;
 }
@@ -135,29 +130,20 @@ HomNucleationMaterial::computeProperties()
   if (!_initialized)
     initialize();
 
-  for( unsigned int qp(0); qp < _qrule->n_points(); ++qp) // iterate over quadrature points
+  for( unsigned int qp(0); qp < _qrule->n_points(); ++qp)
   {
     for ( int i=0; i<_N; ++i )
     {
-      _diffusivities[qp][i] = _diff_coeff[i]; // TODO: need to create temperature dependent diffusivity
+      _diffusivities[qp][i] = _D0 * std::exp( -_Q / _k / _temp[qp] ) * _diff_coeff[i];
+      // std::cout <<  "i: " << i <<  " diffusivities: " << _diffusivities[qp][i] << std::endl;
     }
   
     for ( int i=0; i<_N; ++i )
     {
-      _rx_rates[qp][i].insert(_rx_rates[qp][i].end(), _rx_coeffs[i].begin(), _rx_coeffs[i].end());
+      for (int j=0; j<_N; ++j)
+      {
+        _rx_rates[qp][i][j] = _a * _diffusivities[qp][i] * _rx_coeffs[i][j]; // omega/a2 = a
+      }
     }
   }
-
-  // for ( int i=0; i<_N; ++i )
-  // {
-  //   for ( int j=0; j<_N; ++j )
-  //   {
-  //     std::cout << _rx_rates[0][i][j] << " ";
-  //   }
-  //   std::cout << std::endl;
-  // }
-
-  // for ( int i=0; i<_N; ++i )
-  //   std::cout << _c1_rx_coeffs[i] << " ";
-  // std::cout << std::endl;
 }

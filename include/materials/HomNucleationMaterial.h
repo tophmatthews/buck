@@ -3,15 +3,11 @@
 
 #include "Material.h"
 
-//Forward Declarations
 class HomNucleationMaterial;
 
 template<>
 InputParameters validParams<HomNucleationMaterial>();
 
-/**
- * Simple material with constant properties.
- */
 class HomNucleationMaterial : public Material
 {
 public:
@@ -21,6 +17,14 @@ public:
 protected:
   virtual void computeProperties();
   virtual void initialize();
+
+  VariableValue  & _temp;
+
+  const Real _omega;
+  const Real _a;
+  const Real _D0;
+  const Real _Q;
+  const Real _k;
 
   std::vector<Real> _diff_coeff;
 
@@ -41,8 +45,6 @@ protected:
 
   bool _initialized;
   int _N;
-
-  
 };
 
 #endif //HOMNUCLEATIONMATERIAL_H
