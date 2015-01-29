@@ -112,7 +112,7 @@ peacock_run_tmp.i
 yaml_dump*
 
 # Generated header file
-BisonRevision.h
+BuckRevision.h
 
 # test garbagge
 *.FAILED.txt
