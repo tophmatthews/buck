@@ -9,7 +9,7 @@ InputParameters validParams<HomNucleationMaterial>()
   params.addCoupledVar("nucleation_conc_vars", "List of concentration variables for nucleation model");
   params.addCoupledVar("temp", 0, "Coupled Temperature");
 
-  params.addParam<Real>("omega", 3.0e4, "Lattice site volume [nm**2]");
+  params.addParam<Real>("omega", 3.0e-2, "Lattice site volume [nm**3]");
   params.addParam<Real>("a", 0.5, "Lattice parameter [nm]");
   params.addParam<Real>("D0", 1.7e5, "Diffusion coefficient [nm^2/s]");
   params.addParam<Real>("Q", 2.3, "Activation energy [eV]");
@@ -150,6 +150,7 @@ HomNucleationMaterial::computeProperties()
     {
       for (int j=0; j<_N; ++j)
       {
+        // _rx_rates[qp][i][j] = 4.0e8 * std::exp( -_Q / _k / _temp[qp] ) * _rx_coeffs[i][j];
         _rx_rates[qp][i][j] = _omega / _a / _a * _diffusivities[qp][i] * _rx_coeffs[i][j];
       }
     }

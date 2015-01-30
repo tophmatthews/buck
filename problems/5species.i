@@ -14,6 +14,8 @@
 
 
 [Variables]
+  [./c_tot]
+  [../]
   [./c1]
   [../]
   [./c2]
@@ -28,6 +30,18 @@
 
 
 [Kernels]
+  [./c_tot_source]
+    type = VariableScaledSource
+    variable = c_tot
+    factor = 6.6e-8
+    # factor = 1
+    scaling_variable = 1
+  [../]
+  [./c_tot_time]
+    type = TimeDerivative
+    variable = c_tot
+  [../]
+
   [./c1_source]
     type = VariableScaledSource
     variable = c1
@@ -116,7 +130,7 @@
   [./coeffs]
     type = HomNucleationMaterial
     block = 0
-    temp = 1573
+    temp = 923
     diffusivity_multipliers = '1 0 0 0 0'
     c1_rx_coeffs = '84 20 12 15 18'
     # c1_rx_coeffs = '84  0  0  0  0'
@@ -124,10 +138,11 @@
     c3_rx_coeffs = ' 0  0  0  0  0'
     c4_rx_coeffs = ' 0  0  0  0  0'
     c5_rx_coeffs = ' 0  0  0  0  0'
-    D0 = 1.7e5
+    D0 = 1.7e7
     Q = 2.3
     k = 8.617e-5
     a = 0.5
+    omega = 6
   [../]
 []
 
@@ -135,18 +150,25 @@
 [Executioner]
   type = Transient
 
+  # scheme = 'rk-2'
+
   solve_type = PJFNK
 
-  petsc_options = '-snes_ksp_ew'
-  petsc_options_iname = '-ksp_gmres_restart'
-  petsc_options_value = '101'
+  # petsc_options = '-snes_ksp_ew'
+  # petsc_options_iname = '-ksp_gmres_restart'
+  # petsc_options_value = '101'
 
-  num_steps = 1
-  dt = 1
+  # num_steps = 250
+  end_time = 2e6
+  dt = 1e3
 []
 
 
 [Postprocessors]
+  # [./c_tot]
+  #   type = ElementAverageValue
+  #   variable = c_tot
+  # [../]
   [./c1]
     type = ElementAverageValue
     variable = c1
@@ -169,7 +191,7 @@
   [../]
   [./sum]
     type = SumOfPostprocessors
-    postprocessors = 'c1 c2 c3 c4 c5'
+    postprocessors = 'c2 c3 c4 c5'
   [../]
 []
 

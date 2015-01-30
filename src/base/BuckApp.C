@@ -93,16 +93,7 @@ BuckApp::printHeader()
               << "             Corvallis, OR        \n"
               << "\n"
               << "\n";
-  if (_argv)
-  {
-    std::string argv(_argv[0]);
-    for (int i = 1; i < _argc; ++i)
-    {
-      argv += " ";
-      argv += std::string(_argv[i]);
-    }
-    Moose::out << "Command line: " << argv << "\n";
-  }
+              
   Moose::out << "Input file:   " << _input_filename << "\n"
              << "Input units:  nanometer, gram, second, kelvin, mole\n"
              << "\n"
