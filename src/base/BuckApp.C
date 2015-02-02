@@ -9,6 +9,7 @@
 #include "VariableScaledSource.h"
 #include "HomNucleation.h"
 #include "SpeciesDiffusion.h"
+#include "SinkGrowth.h"
 
 // Materials
 #include "HomNucleationMaterial.h"
@@ -16,6 +17,7 @@
 // Postprocessors
 #include "GrainBoundaryGasFlux.h"
 #include "SumOfPostprocessors.h"
+#include "MaterialXeBubbleTester.h"
 
 // User Objects
 
@@ -55,11 +57,13 @@ BuckApp::registerObjects(Factory & factory)
   registerKernel(VariableScaledSource);
   registerKernel(HomNucleation);
   registerKernel(SpeciesDiffusion);
+  registerKernel(SinkGrowth);
 
   registerMaterial(HomNucleationMaterial);
 
   registerPostprocessor(GrainBoundaryGasFlux);
   registerPostprocessor(SumOfPostprocessors);
+  registerPostprocessor(MaterialXeBubbleTester);
 }
 
 void
@@ -93,7 +97,7 @@ BuckApp::printHeader()
               << "             Corvallis, OR        \n"
               << "\n"
               << "\n";
-              
+
   Moose::out << "Input file:   " << _input_filename << "\n"
              << "Input units:  nanometer, gram, second, kelvin, mole\n"
              << "\n"

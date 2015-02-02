@@ -1,6 +1,8 @@
 #include "HomNucleationMaterial.h"
 #include "MooseEnum.h"
 
+// #include "MaterialXeBubble.h"
+
 template<>
 InputParameters validParams<HomNucleationMaterial>()
 {

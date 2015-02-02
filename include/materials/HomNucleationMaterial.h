@@ -18,7 +18,7 @@ protected:
   virtual void computeProperties();
   virtual void initialize();
 
-  VariableValue  & _temp;
+  VariableValue & _temp;
 
   const Real _omega;
   const Real _a;

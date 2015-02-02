@@ -50,7 +50,7 @@ Real HomNucleation::computeQpResidual()
       losses -= _rx_rates[_qp][i][_m-1] * (*_vals[i])[_qp];
   }
 
-  // Self combination loss. 2 is to signify two points are lost.
+  // Self combination loss. Factor of 2 needed since two points are lost.
   losses -= 2 * _rx_rates[_qp][_m-1][_m-1] * _u[_qp];
 
   losses *= _u[_qp]; 
@@ -60,13 +60,9 @@ Real HomNucleation::computeQpResidual()
   {
     for ( int j=0; j<_m-1; ++j)
     {
-      // std::cout << "m: " << _m << " i: " << i << " j: " << j << std::endl;
       if ( (i+j+2) == _m ) // If the combination of two bubble sizes results in current bubble size
       {
         gains += _rx_rates[_qp][i][j] * (*_vals[i])[_qp] * (*_vals[j])[_qp];
-        // std::cout << "_m: " << _m << " i+j+2: " << i+j+2 << " i: " << i << " j: " << j 
-        // << " vals[" << i << "]: " << (*_vals[i])[_qp] << " vals[" << j << "]: " << (*_vals[j])[_qp]
-        // << " rx_rate: " << _rx_rates[_qp][i][j] << std::endl;
       }
     }
   }
@@ -97,8 +93,6 @@ Real HomNucleation::computeQpJacobian()
   losses -= 4 * _rx_rates[_qp][_m-1][_m-1] * _u[_qp];
 
   losses *= _phi[_j][_qp]; 
-
-  // Gains from smaller clusters joining
 
   return -losses * _test[_i][_qp];
 }
