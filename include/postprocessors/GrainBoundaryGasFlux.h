@@ -16,7 +16,7 @@ public:
 protected:
   virtual Real computeQpIntegral();
 
-  MaterialProperty<std::vector<Real> > & _diffusivities;
+  MaterialProperty<Real> & _diffusivity;
 };
 
 #endif // GRAINBOUNDARYGAS_H

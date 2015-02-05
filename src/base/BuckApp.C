@@ -8,11 +8,13 @@
 // Kernels
 #include "VariableScaledSource.h"
 #include "HomNucleation.h"
-#include "SpeciesDiffusion.h"
+#include "HomClusterDiffusion.h"
 #include "SinkGrowth.h"
+#include "AtomicDiffusion.h"
 
 // Materials
 #include "HomNucleationMaterial.h"
+#include "AtomicDiffusionCoef.h"
 
 // Postprocessors
 #include "GrainBoundaryGasFlux.h"
@@ -56,10 +58,12 @@ BuckApp::registerObjects(Factory & factory)
 {
   registerKernel(VariableScaledSource);
   registerKernel(HomNucleation);
-  registerKernel(SpeciesDiffusion);
+  registerKernel(HomClusterDiffusion);
   registerKernel(SinkGrowth);
+  registerKernel(AtomicDiffusion);
 
   registerMaterial(HomNucleationMaterial);
+  registerMaterial(AtomicDiffusionCoef);
 
   registerPostprocessor(GrainBoundaryGasFlux);
   registerPostprocessor(SumOfPostprocessors);
@@ -85,9 +89,9 @@ BuckApp::printHeader()
               << "\n"
               << "     ______  _     _  ______ _    _      \n"
               << "    (____  \\| |   | |/ _____) |  / )    \n"
-              << "     ____)  ) |   | | /     | | / /      \n"
+              << "     ____)  | |   | | /     | | / /      \n"
               << "    |  __  (| |   | | |     | |< <       \n"
-              << "    | |__)  ) |___| | \\_____| | \\ \\   \n"
+              << "    | |__)  | |___| | \\_____| | \\ \\   \n"
               << "    |______/ \\______|\\______)_|  \\_)  \n"
                                 
               << "\n"

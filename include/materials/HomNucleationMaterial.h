@@ -18,13 +18,9 @@ protected:
   virtual void computeProperties();
   virtual void initialize();
 
-  VariableValue & _temp;
-
   const Real _omega;
   const Real _a;
-  const Real _D0;
-  const Real _Q;
-  const Real _k;
+  const bool _cluster_diffusion;
 
   std::vector<Real> _diffusivity_multipliers;
 
@@ -38,13 +34,15 @@ protected:
   std::vector<Real> _c8_rx_coeffs;
   std::vector<Real> _c9_rx_coeffs;
 
-  std::vector<std::vector<Real> > _rx_coeffs;
-
-  MaterialProperty<std::vector<Real> > & _diffusivities;
   MaterialProperty<std::vector<std::vector<Real> > > & _rx_rates;
+  MaterialProperty<std::vector<Real> > & _cluster_diffusivities;
+
+  MaterialProperty<Real> & _atomic_diffusivity;
 
   bool _initialized;
   int _N;
+
+  std::vector<std::vector<Real> > _rx_coeffs;
 };
 
 #endif //HOMNUCLEATIONMATERIAL_H

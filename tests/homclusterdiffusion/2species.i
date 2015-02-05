@@ -4,15 +4,15 @@
 # are 1 and 9 respectively. After 5 timesteps, c1 should be nearly at the 
 # steady state values, while c2 should still be varying. End steps should be:
 #
-#  +----------------+----------------+----------------+----------------+----------------+
-#  | time           | c1_left        | c1_right       | c2_left        | c2_right       |
-#  +----------------+----------------+----------------+----------------+----------------+
-#  |   5.000000e+00 |   1.252478e+00 |   8.747522e+00 |   4.768369e+00 |   5.231631e+00 |
-#  |   1.000000e+01 |   1.020994e+00 |   8.979006e+00 |   3.866450e+00 |   6.133550e+00 |
-#  |   1.500000e+01 |   1.002033e+00 |   8.997967e+00 |   3.298167e+00 |   6.701833e+00 |
-#  |   2.000000e+01 |   1.000204e+00 |   8.999796e+00 |   2.910629e+00 |   7.089371e+00 |
-#  |   2.500000e+01 |   1.000021e+00 |   8.999979e+00 |   2.629061e+00 |   7.370939e+00 |
-#  +----------------+----------------+----------------+----------------+----------------+
+# +----------------+----------------+----------------+----------------+----------------+
+# | time           | c1_left        | c1_right       | c2_left        | c2_right       |
+# +----------------+----------------+----------------+----------------+----------------+
+# |   1.000000e+01 |   1.131808e+00 |   8.868192e+00 |   6.333671e+00 |   3.666329e+00 |
+# |   2.000000e+01 |   1.005802e+00 |   8.994198e+00 |   6.327643e+00 |   3.672357e+00 |
+# |   3.000000e+01 |   1.000297e+00 |   8.999703e+00 |   6.321628e+00 |   3.678372e+00 |
+# |   4.000000e+01 |   1.000016e+00 |   8.999984e+00 |   6.315627e+00 |   3.684373e+00 |
+# |   5.000000e+01 |   1.000001e+00 |   8.999999e+00 |   6.309639e+00 |   3.690361e+00 |
+# +----------------+----------------+----------------+----------------+----------------+
 
 [GlobalParams]
   nucleation_conc_vars = 'c1 c2'
@@ -47,12 +47,11 @@
   [../]
 
   [./c1_diffusion]
-    type = SpeciesDiffusion
+    type = AtomicDiffusion
     variable = c1
-    m = 1
   [../]
   [./c2_diffusion]
-    type = SpeciesDiffusion
+    type = HomClusterDiffusion
     variable = c2
     m = 2
   [../]
@@ -89,16 +88,22 @@
 
 
 [Materials]
-  [./coeffs]
-    type = HomNucleationMaterial
-    block = 0
-    diffusivity_multipliers = '1e5 1e3'
-    c1_rx_coeffs = '0 0'
-    c2_rx_coeffs = '0 0'
+  [./diff]
+    type = AtomicDiffusionCoef
     temp = 1000
     D0 = 1.7e5
     Q = 2.3
     k = 8.617e-5
+    factor = 1e5
+    block = 0
+  [../]
+  [./coeffs]
+    type = HomNucleationMaterial
+    block = 0
+    diffusivity_multipliers = '1e-5'
+    c1_rx_coeffs = '0 0'
+    c2_rx_coeffs = '0 0'  
+    cluster_diffusion = true  
   [../]
 []
 
@@ -108,43 +113,31 @@
 
   solve_type = PJFNK
 
-  petsc_options = '-snes_ksp_ew'
-  petsc_options_iname = '-ksp_gmres_restart'
-  petsc_options_value = '101'
-
-  line_search = 'none'
-
-  l_max_its = 100
-  nl_max_its = 100
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-  l_tol = 1e-5
-
   num_steps = 5
-  dt = 5
+  dt = 10
 []
 
 
 [Postprocessors]
   [./c1_left]
-    type = NodalVariableValue
+    type = PointValue
     variable = c1
-    nodeid = 1
+    point = '.1 0 0'
   [../]
   [./c1_right]
-    type = NodalVariableValue
+    type = PointValue
     variable = c1
-    nodeid = 9
+    point = '.9 0 0'
   [../]
   [./c2_left]
-    type = NodalVariableValue
+    type = PointValue
     variable = c2
-    nodeid = 1
+    point = '.1 0 0'
   [../]
   [./c2_right]
-    type = NodalVariableValue
+    type = PointValue
     variable = c2
-    nodeid = 9
+    point = '.9 0 0'
   [../]
 []
 

@@ -18,7 +18,6 @@
 [GlobalParams]
   order = SECOND
   family = LAGRANGE
-  nucleation_conc_vars = 'c1'
 []
 
 
@@ -44,9 +43,8 @@
     variable = c1
   [../]
   [./c1_diffusion]
-    type = SpeciesDiffusion
+    type = AtomicDiffusion
     variable = c1
-    m=1
   [../]
 []
 
@@ -62,15 +60,14 @@
 
 
 [Materials]
-  [./coeffs]
-    type = HomNucleationMaterial
-    block = 0
-    diffusivity_multipliers = '1'
-    c1_rx_coeffs = '0'
+  [./diff]
+    type = AtomicDiffusionCoef
     temp = 1000
     D0 = 1.7e5
     Q = 2.3
     k = 8.617e-5
+    factor = 1
+    block = 0
   [../]
 []
 

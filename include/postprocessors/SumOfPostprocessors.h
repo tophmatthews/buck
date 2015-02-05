@@ -22,6 +22,7 @@ public:
   virtual Real getValue();
 
 protected:
+	std::vector<Real> _factors;
   std::vector<const PostprocessorValue *> _postprocessor_values;
 };
 
