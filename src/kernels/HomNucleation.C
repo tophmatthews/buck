@@ -7,8 +7,8 @@ InputParameters validParams<HomNucleation>()
 {
   InputParameters params = validParams<Kernel>();
 
-  params.addRequiredCoupledVar("nucleation_conc_vars", "List of concentration variables for nucleation model");
-  params.addRequiredParam<int>("m", "Number of atoms in cluster");
+  params.addRequiredCoupledVar("nucleation_conc_vars", "List of concentration variables for nucleation model, including c1.");
+  params.addRequiredParam<int>("m", "Number of atoms in cluster.");
 
   return params;
 }
@@ -17,88 +17,81 @@ HomNucleation::HomNucleation(const std::string & name, InputParameters parameter
   :Kernel(name,parameters),
   _rx_rates(getMaterialProperty<std::vector<std::vector<Real> > >("rx_rates")),
   _m(getParam<int>("m"))
-
 {
   _N = coupledComponents("nucleation_conc_vars");
 
-  _vars.resize(_N);
   _vals.resize(_N);
 
   for ( int i=0; i<_N; ++i)
-  {
-    _vars[i] = coupled("nucleation_conc_vars", i);
     _vals[i] = &coupledValue("nucleation_conc_vars", i);
-  }
 }
 
-Real HomNucleation::computeQpResidual()
+
+Real
+HomNucleation::computeQpResidual()
+{
+  Real losses = calcLosses(false);
+  Real gains = calcGains();
+
+  // std::cout << "_m: " << _m << "\tlosses*u: " << losses*_u[_qp] << "\tgains: " << gains;
+
+  return -( gains - losses * _u[_qp] ) * _test[_i][_qp];
+}
+
+
+Real
+HomNucleation::computeQpJacobian()
+{
+  Real losses = calcLosses(true);
+
+
+  return losses * _phi[_j][_qp] * _test[_i][_qp];
+}
+
+
+Real
+HomNucleation::calcLosses( bool jacobian )
 {
   Real losses(0);
-  Real gains(0);
 
   // losses due to this cluster type moving
   for ( int i=0; i<_N; ++i )
   {
     if ( _m-1 != i ) // protect against self interaction
-      losses -= _rx_rates[_qp][_m-1][i] * (*_vals[i])[_qp];
+      losses += _rx_rates[_qp][_m-1][i] * (*_vals[i])[_qp]; // * _u[_qp] later
   }
 
   // Losses due to other cluster types moving
   for ( int i=0; i<_N; ++i )
   {
     if ( _m-1 != i ) // protect against self interaction
-      losses -= _rx_rates[_qp][i][_m-1] * (*_vals[i])[_qp];
+      losses += _rx_rates[_qp][i][_m-1] * (*_vals[i])[_qp]; // * _u[_qp] later
   }
 
-  // Self combination loss. 2 is to signify two points are lost.
-  losses -= 2 * _rx_rates[_qp][_m-1][_m-1] * _u[_qp];
+  Real factor(2.0); // Factor of 2 needed since two points are lost.
+  if ( jacobian )
+    factor *= 2.0; // Extra factor of 2 needed since derivative of u**2
 
-  losses *= _u[_qp]; 
+  // Self combination loss. 
+  losses += factor * _rx_rates[_qp][_m-1][_m-1] * _u[_qp]; // * _u[_qp] below
+
+  return losses;
+}
+
+
+Real
+HomNucleation::calcGains()
+{
+  Real gains(0);
 
   // Gains from smaller clusters joining
   for ( int i=0; i<_m-1; ++i ) // will not iterate if _m=1
   {
     for ( int j=0; j<_m-1; ++j)
     {
-      // std::cout << "m: " << _m << " i: " << i << " j: " << j << std::endl;
       if ( (i+j+2) == _m ) // If the combination of two bubble sizes results in current bubble size
-      {
         gains += _rx_rates[_qp][i][j] * (*_vals[i])[_qp] * (*_vals[j])[_qp];
-        // std::cout << "_m: " << _m << " i+j+2: " << i+j+2 << " i: " << i << " j: " << j 
-        // << " vals[" << i << "]: " << (*_vals[i])[_qp] << " vals[" << j << "]: " << (*_vals[j])[_qp]
-        // << " rx_rate: " << _rx_rates[_qp][i][j] << std::endl;
-      }
     }
   }
-
-  return -(losses + gains) * _test[_i][_qp];
-}
-
-Real HomNucleation::computeQpJacobian()
-{
-  Real losses(0);
-  // Real gains(0); // gains are independent of u
-
-  // losses due to this cluster type moving
-  for ( int i=0; i<_N; ++i )
-  {
-    if ( _m-1 != i ) // protect against self interaction
-      losses -= _rx_rates[_qp][_m-1][i] * (*_vals[i])[_qp];
-  }
-
-  // Losses due to other cluster types moving
-  for ( int i=0; i<_N; ++i )
-  {
-    if ( _m-1 != i ) // protect against self interaction
-      losses -= _rx_rates[_qp][i][_m-1] * (*_vals[i])[_qp];
-  }
-
-  // Self combination loss. 2 is to signify two points are lost. *2 for derivative if u**2
-  losses -= 4 * _rx_rates[_qp][_m-1][_m-1] * _u[_qp];
-
-  losses *= _phi[_j][_qp]; 
-
-  // Gains from smaller clusters joining
-
-  return -losses * _test[_i][_qp];
+  return gains;
 }

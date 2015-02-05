@@ -3,7 +3,6 @@
 
 #include "Kernel.h"
 
-//Forward Declarations
 class HomNucleation;
 
 template<>
@@ -15,17 +14,18 @@ public:
   HomNucleation(const std::string & name, InputParameters parameters);
 
 protected:
-
   virtual Real computeQpResidual();
-
   virtual Real computeQpJacobian();
 
 private:
-  std::vector<unsigned int> _vars;
+	Real calcLosses( bool jacobian );
+	Real calcGains();
+
   std::vector<VariableValue *> _vals;
   MaterialProperty<std::vector<std::vector<Real> > > & _rx_rates;
 
   int _N;
   int _m;
+  std::vector<Real> _atoms;
 };
 #endif //HOMNUCLEATION_H

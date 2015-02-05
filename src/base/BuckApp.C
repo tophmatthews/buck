@@ -8,14 +8,18 @@
 // Kernels
 #include "VariableScaledSource.h"
 #include "HomNucleation.h"
-#include "SpeciesDiffusion.h"
+#include "HomClusterDiffusion.h"
+#include "SinkGrowth.h"
+#include "AtomicDiffusion.h"
 
 // Materials
 #include "HomNucleationMaterial.h"
+#include "AtomicDiffusionCoef.h"
 
 // Postprocessors
 #include "GrainBoundaryGasFlux.h"
-#include "SumPostprocessor.h"
+#include "SumOfPostprocessors.h"
+#include "MaterialXeBubbleTester.h"
 
 // User Objects
 
@@ -54,12 +58,16 @@ BuckApp::registerObjects(Factory & factory)
 {
   registerKernel(VariableScaledSource);
   registerKernel(HomNucleation);
-  registerKernel(SpeciesDiffusion);
+  registerKernel(HomClusterDiffusion);
+  registerKernel(SinkGrowth);
+  registerKernel(AtomicDiffusion);
 
   registerMaterial(HomNucleationMaterial);
+  registerMaterial(AtomicDiffusionCoef);
 
   registerPostprocessor(GrainBoundaryGasFlux);
-  registerPostprocessor(SumPostprocessor);
+  registerPostprocessor(SumOfPostprocessors);
+  registerPostprocessor(MaterialXeBubbleTester);
 }
 
 void
@@ -81,9 +89,9 @@ BuckApp::printHeader()
               << "\n"
               << "     ______  _     _  ______ _    _      \n"
               << "    (____  \\| |   | |/ _____) |  / )    \n"
-              << "     ____)  ) |   | | /     | | / /      \n"
+              << "     ____)  | |   | | /     | | / /      \n"
               << "    |  __  (| |   | | |     | |< <       \n"
-              << "    | |__)  ) |___| | \\_____| | \\ \\   \n"
+              << "    | |__)  | |___| | \\_____| | \\ \\   \n"
               << "    |______/ \\______|\\______)_|  \\_)  \n"
                                 
               << "\n"
@@ -93,16 +101,7 @@ BuckApp::printHeader()
               << "             Corvallis, OR        \n"
               << "\n"
               << "\n";
-  if (_argv)
-  {
-    std::string argv(_argv[0]);
-    for (int i = 1; i < _argc; ++i)
-    {
-      argv += " ";
-      argv += std::string(_argv[i]);
-    }
-    Moose::out << "Command line: " << argv << "\n";
-  }
+
   Moose::out << "Input file:   " << _input_filename << "\n"
              << "Input units:  nanometer, gram, second, kelvin, mole\n"
              << "\n"

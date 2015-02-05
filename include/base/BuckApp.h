@@ -20,17 +20,9 @@ public:
   static void registerObjects(Factory & factory);
   static void associateSyntax(Syntax & syntax, ActionFactory & action_factory);
 
-  void initialize(int argc, char ** argv)
-  {
-    _argc = argc;
-    _argv = argv;
-  }
-
 protected:
   void printHeader();
 
-  int _argc;
-  char ** _argv;
 };
 
 #endif /* BUCKAPP_H */

@@ -1,3 +1,4 @@
+problems/*
 syntax/*
 .libs
 *.la
@@ -112,7 +113,7 @@ peacock_run_tmp.i
 yaml_dump*
 
 # Generated header file
-BuckRevision.h
+include/BuckRevision.h
 
 # test garbagge
 *.FAILED.txt

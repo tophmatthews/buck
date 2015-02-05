@@ -9,4 +9,9 @@
     input = '3species.i'
     exodiff = '3species_out.e'
   [../]
+  [./exact]
+    type = 'Exodiff'
+    input = 'exact.i'
+    exodiff = 'exact_out.e'
+  [../]
 []
