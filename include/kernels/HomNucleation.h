@@ -24,6 +24,8 @@ private:
   std::vector<VariableValue *> _vals;
   MaterialProperty<std::vector<std::vector<Real> > > & _rx_rates;
 
+  std::vector<VariableValue *> _vals2;
+
   int _N;
   int _m;
   std::vector<Real> _atoms;
