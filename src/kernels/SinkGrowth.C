@@ -87,16 +87,17 @@ SinkGrowth::parseAtomsFromVars()
 
   // parses the string list of variables into a vector of Reals
   std::vector<Real> atoms;
-  std::string buf;
-  Real num;
 
   for ( int i=0; i<depend_vars.size(); ++i)
   {
   	if ( depend_vars[i].find("c") == 0 )
   	{
 	    depend_vars[i].erase( depend_vars[i].begin() );
-	    num = std::stod(depend_vars[i]);
-	    atoms.push_back(num);
+      std::stringstream buf_ss;
+      buf_ss << depend_vars[i];
+      Real buf_r;
+      buf_ss >> buf_r;
+	    atoms.push_back(buf_r);
 	  }
   }
 
