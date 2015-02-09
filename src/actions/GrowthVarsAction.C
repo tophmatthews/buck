@@ -17,7 +17,6 @@ InputParameters validParams<GrowthVarsAction>()
   params.addParam<std::string>("var_name_base", "c", "specifies the base name of the variables");
   params.addParam<int>("N_min", 4, "Smallest cluster size for growth model inclusion");
   params.addParam<int>("N_max", 10, "Largest cluster size for growth model inclusion");
-  // params.addParam<Real>("N_min_ic", 0, "Initial condition for N_min concentration");
 
   return params;
 }

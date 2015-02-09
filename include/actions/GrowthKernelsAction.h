@@ -9,7 +9,6 @@ public:
   GrowthKernelsAction(const std::string & name, InputParameters params);
 
   virtual void act();
-  // virtual void set();
 
 private:
 	std::vector<VariableName> _growth_conc_vars;
