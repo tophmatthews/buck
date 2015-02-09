@@ -13,7 +13,7 @@ InputParameters validParams<GrowthVarsAction>()
 
   params.addParam<std::string>("order", "FIRST",  "Specifies the order of the FE shape function to use for this variable");
   params.addParam<std::string>("family", "LAGRANGE", "Specifies the family of FE shape functions to use for this variable");
-  params.addParam<Real>("scaling", 1.0, "Specifies a scaling factor to apply to the L variables");
+  params.addParam<Real>("scaling", 1.0, "Specifies a scaling factor to apply");
   params.addParam<std::string>("var_name_base", "c", "specifies the base name of the variables");
   params.addParam<int>("N_min", 4, "Smallest cluster size for growth model inclusion");
   params.addParam<int>("N_max", 10, "Largest cluster size for growth model inclusion");

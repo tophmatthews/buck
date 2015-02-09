@@ -8,6 +8,7 @@
 #include "GrowthKernelsAction.h"
 #include "GrowthVarsAction.h"
 
+#include "ClusterPPAction.h"
 
 namespace Buck
 {
@@ -20,17 +21,21 @@ associateSyntax(Syntax & syntax, ActionFactory & action_factory)
    * satisfied based on the syntax encountered for classes which are registered
    * to satisfy more than one action_name
    */
-  syntax.registerActionSyntax("NucleationKernelsAction", "Nucleation/*", "add_kernel");
-  syntax.registerActionSyntax("NucleationVarsAction",    "Nucleation/*", "add_variable");
+  syntax.registerActionSyntax("NucleationKernelsAction", "Clusters/Nucleation/", "add_kernel");
+  syntax.registerActionSyntax("NucleationVarsAction",    "Clusters/Nucleation/", "add_variable");
 
   registerAction(NucleationKernelsAction, "add_kernel");
   registerAction(NucleationVarsAction,    "add_variable");
 
-  syntax.registerActionSyntax("GrowthKernelsAction", "Growth/*", "add_kernel");
-  syntax.registerActionSyntax("GrowthVarsAction",    "Growth/*", "add_variable");
+  syntax.registerActionSyntax("GrowthKernelsAction", "Clusters/Growth/", "add_kernel");
+  syntax.registerActionSyntax("GrowthVarsAction",    "Clusters/Growth/", "add_variable");
 
   registerAction(GrowthKernelsAction, "add_kernel");
   registerAction(GrowthVarsAction,    "add_variable");
+
+  syntax.registerActionSyntax("ClusterPPAction", "Clusters/PPs/", "add_postprocessor");
+
+  registerAction(ClusterPPAction, "add_postprocessor");
 }
 
 }

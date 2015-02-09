@@ -19,18 +19,13 @@
 # |   1.000000e+04 |   1.051941e-03 |   1.621257e-04 |   3.333287e+01 |   1.000000e+02 |
 # +----------------+----------------+----------------+----------------+----------------+
 
-[GlobalParams]
-  # nucleation_conc_vars = 'c1 c2 c3'
-[]
-
-
 [Mesh]
   type = GeneratedMesh
   dim = 1
 []
 
-[Nucleation]
-  [./homnucleation]
+[Clusters]
+  [./Nucleation]
     N = 3
   [../]
 []
@@ -39,10 +34,6 @@
   [./c1]
     initial_condition = 100
   [../]
-  # [./c2]
-  # [../]
-  # [./c3]
-  # [../]
 []
 
 
@@ -51,31 +42,6 @@
     type = TimeDerivative
     variable = c1
   [../]
-  # [./c1_nucleation]
-  #   type = HomNucleation
-  #   variable = c1
-  #   m = 1
-  # [../]
-
-  # [./c2_time]
-  #   type = TimeDerivative
-  #   variable = c2
-  # [../]
-  # [./c2_nucleation]
-  #   type = HomNucleation
-  #   variable = c2
-  #   m = 2
-  # [../]
-
-  # [./c3_time]
-  #   type = TimeDerivative
-  #   variable = c3
-  # [../]
-  # [./c3_nucleation]
-  #   type = HomNucleation
-  #   variable = c3
-  #   m = 3
-  # [../]
 []
 
 

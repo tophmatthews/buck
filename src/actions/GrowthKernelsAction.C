@@ -9,7 +9,7 @@ InputParameters validParams<GrowthKernelsAction>()
   InputParameters params = validParams<Action>();
 
   params.addParam<std::string>("var_name_base", "c", "Specifies the base name of the variables");
-  params.addParam<std::string>("temp_name", "temp", "Coupled Temperature variable name");
+  params.addParam<NonlinearVariableName>("temp", "temp", "The temperature variable name");
   params.addParam<int>("N_min", 4, "Smallest cluster size for growth model inclusion");
   params.addParam<int>("N_max", 10, "Largest cluster size for growth model inclusion");
   params.addParam<bool>("use_displaced_mesh", false, "Whether to use displaced mesh in the kernels");
@@ -28,8 +28,6 @@ GrowthKernelsAction::GrowthKernelsAction(const std::string & name,
   _transient(getParam<bool>("transient")),
   _N_min_transient(getParam<bool>("N_min_transient"))
 {
-  _temp.push_back(getParam<std::string>("temp_name"));
-
   // Create variable list
   _growth_conc_vars.resize(_N_max - _N_min + 2);
   for ( int i=0; i<_growth_conc_vars.size(); ++i )
@@ -70,7 +68,10 @@ GrowthKernelsAction::act()
     InputParameters poly_params = _factory.getValidParams("SinkGrowth");
     poly_params.set<NonlinearVariableName>("variable") = var_name;
     poly_params.set<std::vector<VariableName> >("growth_conc_vars") = _growth_conc_vars;
-    poly_params.set<std::vector<VariableName> >("temp") = _temp;
+
+    poly_params.addCoupledVar("temp", "");
+    poly_params.set<std::vector<VariableName> >("temp") = std::vector<VariableName>(1, getParam<NonlinearVariableName>("temp"));
+
     poly_params.set<int>("m") = atoms;
     poly_params.set<bool>("use_displaced_mesh") = getParam<bool>("use_displaced_mesh");
 

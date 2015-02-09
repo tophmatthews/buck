@@ -13,7 +13,6 @@ public:
 private:
 	std::vector<VariableName> _growth_conc_vars;
   const std::string _var_name_base;
-  std::vector<VariableName> _temp;
   const int _N_min;
   const int _N_max;
   const bool _transient;

@@ -24,8 +24,8 @@
   dim = 1
 []
 
-[Growth]
-  [./sinkgrowth]
+[Clusters]
+  [./Growth]
     N_min = 5
     N_max = 6
     N_min_transient = true
