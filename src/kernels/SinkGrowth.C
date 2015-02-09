@@ -8,7 +8,7 @@ InputParameters validParams<SinkGrowth>()
 {
   InputParameters params = validParams<Kernel>();
 
-  params.addCoupledVar("temp", 0, "Coupled Temperature");
+  params.addRequiredCoupledVar("temp", "Coupled Temperature");
 	params.addRequiredCoupledVar("growth_conc_vars", "List of concentration variables for growth model, starting with c1 and ending with the largest group.");
   params.addRequiredParam<int>("m", "Number of atoms in cluster.");
 
@@ -39,6 +39,7 @@ SinkGrowth::SinkGrowth(const std::string & name, InputParameters parameters)
                << "\tcurrent m: " << _m << std::endl;
       mooseError(errorMsg.str());
   }
+  // std::cout << "SinkGrowth tempetature: " << _temp[0] << std::endl;
 }
 
 Real

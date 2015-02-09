@@ -30,7 +30,7 @@
 []
 
 [Nucleation]
-  [./Nucleation]
+  [./homnucleation]
     N = 3
   [../]
 []

@@ -13,6 +13,7 @@ public:
 private:
   const std::string _order;
   const std::string _family;
+  const std::string _var_name_base;
   const int _N;
 };
 

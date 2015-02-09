@@ -5,6 +5,9 @@
 #include "NucleationKernelsAction.h"
 #include "NucleationVarsAction.h"
 
+#include "GrowthKernelsAction.h"
+#include "GrowthVarsAction.h"
+
 
 namespace Buck
 {
@@ -21,7 +24,13 @@ associateSyntax(Syntax & syntax, ActionFactory & action_factory)
   syntax.registerActionSyntax("NucleationVarsAction",    "Nucleation/*", "add_variable");
 
   registerAction(NucleationKernelsAction, "add_kernel");
-  registerAction(NucleationVarsAction, "add_variable");
+  registerAction(NucleationVarsAction,    "add_variable");
+
+  syntax.registerActionSyntax("GrowthKernelsAction", "Growth/*", "add_kernel");
+  syntax.registerActionSyntax("GrowthVarsAction",    "Growth/*", "add_variable");
+
+  registerAction(GrowthKernelsAction, "add_kernel");
+  registerAction(GrowthVarsAction,    "add_variable");
 }
 
 }

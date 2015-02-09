@@ -36,7 +36,7 @@ NucleationKernelsAction::NucleationKernelsAction(const std::string & name,
   if ( _N > 9 )
   {
     std::stringstream errorMsg;
-    errorMsg << "NucleationVarsAction: Requested cluster size is too big for the current HomNucleation model (9 atoms max)." <<std::endl;
+    errorMsg << "NucleationKernelsAction: Requested cluster size is too big for the current HomNucleation model (9 atoms max)." <<std::endl;
     mooseError(errorMsg.str());
   }
 }
@@ -44,19 +44,15 @@ NucleationKernelsAction::NucleationKernelsAction(const std::string & name,
 void
 NucleationKernelsAction::act()
 {
-  for (unsigned int n = 1; n < _N+1; ++n)
+  for (unsigned int n = 0; n < _N; ++n)
   {
-    // Create variable names
-    std::string var_name = _var_name_base;
-    std::stringstream out;
-    out << n;
-    var_name.append(out.str());
+    std::string var_name = _nucleation_conc_vars[n];
 
     // Create HomNucleation kernels
     InputParameters poly_params = _factory.getValidParams("HomNucleation");
     poly_params.set<NonlinearVariableName>("variable") = var_name;
     poly_params.set<std::vector<VariableName> >("nucleation_conc_vars") = _nucleation_conc_vars;
-    poly_params.set<int>("m") = n;
+    poly_params.set<int>("m") = n+1;
     poly_params.set<bool>("use_displaced_mesh") = getParam<bool>("use_displaced_mesh");
 
     std::string kernel_name = var_name;
@@ -65,7 +61,7 @@ NucleationKernelsAction::act()
     _problem->addKernel("HomNucleation", kernel_name, poly_params);
 
     // Create TimeDerivative kernels
-    if ( _transient && n != 1)
+    if ( _transient && n != 0)
     {
       poly_params = _factory.getValidParams("TimeDerivative");
       poly_params.set<NonlinearVariableName>("variable") = var_name;
