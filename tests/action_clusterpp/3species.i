@@ -14,9 +14,9 @@
     N_max = 5
   [../]
   [./PPs]
-    concentrations = true
-    total_concentrations = true
-    total_atoms = true
+    concentrations = 'exodus'
+    total_concentrations = 'console'
+    total_atoms = 'console exodus'
     N = 5
   [../]
 []

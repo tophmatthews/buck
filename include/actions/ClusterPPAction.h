@@ -15,7 +15,7 @@ private:
 	const int _N;
 	const std::string _var_name_base;
 	
-	const bool _conc_pp;
+	const bool _conc;
   const bool _total_conc;
   const bool _total_atoms;
 
