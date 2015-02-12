@@ -1,6 +1,7 @@
 problems/*
 syntax/*
 .libs
+*.tmp
 *.la
 *.lo
 *.d
@@ -150,7 +151,7 @@ peacock_*.i
 peacock_*.e
 
 #doxygen generated
-*/doc/doxygen/html/*
+/doc/doxygen/html/*
 
 # Restartable Data
 *.rd

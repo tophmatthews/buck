@@ -10,7 +10,7 @@ InputParameters validParams<NucleationKernelsAction>()
   InputParameters params = validParams<Action>();
 
   params.addParam<std::string>("var_name_base", "c", "specifies the base name of the variables");
-  params.addParam<int>("N_hom", 2, "Largest cluster size");
+  params.addRequiredParam<int>("N_nuc", "Largest nucleation cluster size");
   params.addParam<bool>("use_displaced_mesh", false, "Whether to use displaced mesh in the kernels");
   params.addParam<bool>("transient", true, "Flag to determine if TimeDerivative kernels should be made for nucleation concentration variables");
 
@@ -21,7 +21,7 @@ NucleationKernelsAction::NucleationKernelsAction(const std::string & name,
                                                              InputParameters params) :
   Action(name, params),
   _var_name_base(getParam<std::string>("var_name_base")),
-  _N(getParam<int>("N_hom")),
+  _N(getParam<int>("N_nuc")),
   _transient(getParam<bool>("transient"))
 {
 

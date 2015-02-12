@@ -1,6 +1,6 @@
 [GlobalParams]
   N = 23
-  N_hom = 5
+  N_nuc = 5
   temp = temp
   block = 0
 []
@@ -17,7 +17,6 @@
   [./Nucleation]
   [../]
   [./Growth]
-    N_min = 5
   [../]
   [./PPs]
     concentrations = 'console'

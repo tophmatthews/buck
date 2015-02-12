@@ -6,7 +6,7 @@ InputParameters validParams<HomNucleationMaterial>()
 {
   InputParameters params = validParams<Material>();
   
-  params.addRequiredParam<int>("N_hom", "Largest cluster size.");
+  params.addRequiredParam<int>("N_nuc", "Largest cluster size.");
 
   params.addParam<Real>("omega", 3.0e-2, "Lattice site volume [nm**3]");
   params.addParam<Real>("a", 0.5, "Lattice parameter [nm]");
@@ -30,7 +30,7 @@ InputParameters validParams<HomNucleationMaterial>()
 HomNucleationMaterial::HomNucleationMaterial(const std::string & name, InputParameters parameters) :
   Material(name, parameters),
 
-  _N(getParam<int>("N_hom")),
+  _N(getParam<int>("N_nuc")),
   _omega(getParam<Real>("omega")),
   _a(getParam<Real>("a")),
   _cluster_diffusion(getParam<bool>("cluster_diffusion")),

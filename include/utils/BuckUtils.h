@@ -30,9 +30,9 @@ namespace Buck
   }
 
   template <typename T>
-  inline void atomsFromN(std::vector<T> &atoms, const int N)
+  inline void atomsFromN(std::vector<T> &atoms, const int N, const int N_min=1)
   {
-   for ( int i=1; i<N+1; ++i )
+   for ( int i=N_min; i<N+1; ++i )
       atoms.push_back(i);
   }
 

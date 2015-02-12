@@ -19,21 +19,24 @@
 # +----------------+----------------+----------------+----------------+----------------+
 
 [GlobalParams]
-  N = 6
   temp = temp
 []
+
 
 [Mesh]
   type = GeneratedMesh
   dim = 1
 []
 
+
 [Clusters]
   [./Growth]
-    N_min = 5
+    N = 6
+    N_nuc = 5
     N_min_transient = true
   [../]
 []
+
 
 [ICs]
   [./c5]
@@ -41,11 +44,15 @@
     variable = c5
     value = 1
   [../]
+  [./c1]
+    type = ConstantIC
+    variable = c1
+    value = 1
 []
+
 
 [Variables]
   [./c1]
-    initial_condition = 1
   [../]
 []
 
@@ -57,12 +64,14 @@
   [../]
 []
 
+
 [AuxVariables]
   [./temp]
     order = CONSTANT
     family = MONOMIAL
   [../]
 []
+
 
 [AuxKernels]
   [./temp_aux]
@@ -81,7 +90,6 @@
     k = 8.617e-5
     factor = 1
     block = 0
-    temp = temp
   [../]
 []
 
@@ -115,6 +123,7 @@
     factors = '1 5 6'
   [../]
 []
+
 
 [Outputs]
   console = true

@@ -19,7 +19,6 @@
 
 [GlobalParams]
   nucleation_conc_vars = 'c1 c2 c3'
-  N_hom = 3
 []
 
 
@@ -90,6 +89,7 @@
     omega = 3.0e4
     a = 0.5
     cluster_diffusion = false
+    N_nuc = 3
   [../]
 []
 

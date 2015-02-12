@@ -16,8 +16,8 @@ InputParameters validParams<GrowthVarsAction>()
   params.addParam<std::string>("family", "LAGRANGE", "Specifies the family of FE shape functions to use for this variable");
   params.addParam<Real>("scaling", 1.0, "Specifies a scaling factor to apply");
   params.addParam<std::string>("var_name_base", "c", "specifies the base name of the variables");
-  params.addParam<int>("N_min", 4, "Smallest cluster size for growth model inclusion");
-  params.addParam<int>("N", 10, "Largest cluster size for growth model inclusion");
+  params.addRequiredParam<int>("N_nuc", "Smallest cluster size for growth model inclusion");
+  params.addRequiredParam<int>("N", "Largest cluster size for growth model inclusion");
 
   return params;
 }
@@ -28,7 +28,7 @@ GrowthVarsAction::GrowthVarsAction(const std::string & name,
   _order(getParam<std::string>("order")),
   _family(getParam<std::string>("family")),
   _var_name_base(getParam<std::string>("var_name_base")),
-  _N_min(getParam<int>("N_min")),
+  _N_min(getParam<int>("N_nuc")),
   _N_max(getParam<int>("N"))
 {
   Buck::varNamesFromN( _vars, _var_name_base, _N_max, _N_min);

@@ -1,6 +1,6 @@
 # Tests ClusterPPAction at building postprocessors. Total_atoms should equal 100
 [GlobalParams]
-  N_hom = 3
+  N_nuc = 3
   N = 5
   temp = temp
 []
@@ -14,7 +14,6 @@
   [./Nucleation]
   [../]
   [./Growth]
-    N_min = 3
   [../]
   [./PPs]
     concentrations = 'exodus'

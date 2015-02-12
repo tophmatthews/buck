@@ -12,6 +12,7 @@ public:
 
 private:
 	std::vector<VariableName> _growth_conc_vars;
+	std::vector<int> _atoms;
   const std::string _var_name_base;
   const int _N_min;
   const int _N_max;
