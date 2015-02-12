@@ -36,7 +36,7 @@ namespace Buck
       atoms.push_back(i);
   }
 
-  
+
 }
 
 #endif //BUCKUTILS_H

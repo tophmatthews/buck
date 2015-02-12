@@ -5,7 +5,7 @@ template<>
 InputParameters validParams<AtomicDiffusionCoef>()
 {
   InputParameters params = validParams<Material>();
-  
+
   params.addCoupledVar("temp", 0, "Coupled Temperature");
 
   params.addParam<Real>("D0", 1.7e5, "Diffusion coefficient [nm^2/s]");

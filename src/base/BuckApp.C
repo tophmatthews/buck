@@ -8,12 +8,14 @@
 
 // AuxKernels
 #include "VectorBoundsAux.h"
+
 // Kernels
 #include "VariableScaledSource.h"
 #include "HomNucleation.h"
 #include "HomClusterDiffusion.h"
 #include "SinkGrowth.h"
 #include "AtomicDiffusion.h"
+#include "Knockout.h"
 
 // Materials
 #include "HomNucleationMaterial.h"
@@ -67,6 +69,7 @@ BuckApp::registerObjects(Factory & factory)
   registerKernel(HomClusterDiffusion);
   registerKernel(SinkGrowth);
   registerKernel(AtomicDiffusion);
+  registerKernel(Knockout);
 
   registerMaterial(HomNucleationMaterial);
   registerMaterial(AtomicDiffusionCoef);
@@ -100,7 +103,7 @@ BuckApp::printHeader()
               << "    |  __  (| |   | | |     | |< <       \n"
               << "    | |__)  | |___| | \\_____| | \\ \\   \n"
               << "    |______/ \\______|\\______)_|  \\_)  \n"
-                                
+
               << "\n"
               << "\n"
               << "      Bubble and Cluster Kinetics \n"

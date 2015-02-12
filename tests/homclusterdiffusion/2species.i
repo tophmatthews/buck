@@ -1,7 +1,7 @@
 # c1 has a very high diffusivity, while c2 has a very low diffusivity.
-# The mesh is a 1D line in 10 segments, with BC of 0 on the left and 10 
-# on the right. Values are sampled at node 1 and 9. The steadystate values 
-# are 1 and 9 respectively. After 5 timesteps, c1 should be nearly at the 
+# The mesh is a 1D line in 10 segments, with BC of 0 on the left and 10
+# on the right. Values are sampled at node 1 and 9. The steadystate values
+# are 1 and 9 respectively. After 5 timesteps, c1 should be nearly at the
 # steady state values, while c2 should still be varying. End steps should be:
 #
 # +----------------+----------------+----------------+----------------+----------------+
@@ -102,8 +102,8 @@
     block = 0
     diffusivity_multipliers = '1e-5'
     c1_rx_coeffs = '0 0'
-    c2_rx_coeffs = '0 0'  
-    cluster_diffusion = true  
+    c2_rx_coeffs = '0 0'
+    cluster_diffusion = true
   [../]
 []
 

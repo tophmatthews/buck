@@ -25,7 +25,7 @@ namespace MaterialXeBubble{
     double invrho = ( B + 1.0 / (2.0*gamma/k/T/R + sigma/k/T) );
 
     return 1.0/invrho;
-  } 
+  }
 
   ////////////////////////////////////////////////////////////////////////
 
@@ -55,7 +55,7 @@ namespace MaterialXeBubble{
     // Iteration paramters
     int max_its = 100; // Max iterations
     double rel_conv = 1e-5; // Relative convergence criteria.
-    int it(0); // Iteration counter    
+    int it(0); // Iteration counter
     double dR(1); // Newton change in R
 
     if (testing)
@@ -72,10 +72,10 @@ namespace MaterialXeBubble{
       double RRRR = R*RRR;
       double res = A*D*RRRR + A*C*RRR - m*(B*D+1)*R - B*C*m;
       double dres = 4.0*A*D*RRR + 3.0*A*C*RR - m*(B*D+1);
-      
+
       dR = res/dres;
       double new_R = R - dR;
-    
+
       R = new_R;
       ++it;
 
@@ -86,7 +86,7 @@ namespace MaterialXeBubble{
         if (testing)
           std::cout << "R dropped below 0, reseting calculation by R=1" << std::endl;
       }
-      
+
       if (testing)
       {
         std::cout << "it: " << it << "\tR: " << R << "\tdR: " << res/dres << "\tnew_R: " << new_R << "\tconv: " << std::abs(dR/R) << std::endl;
@@ -101,7 +101,7 @@ namespace MaterialXeBubble{
       double calc_rho = VDW_RtoRho(R, T, sigma);
       std::cout << std::endl << "rho: " << rho << "\tcalc_rho: " << calc_rho << "\t\% diff: " << std::abs(rho-calc_rho)/calc_rho*100.0 << std::endl;
     }
-    
+
     return R;
     // return 7.0e-11*sqrt(m);
   }

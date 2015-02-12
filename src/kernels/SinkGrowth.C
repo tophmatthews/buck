@@ -28,7 +28,7 @@ SinkGrowth::SinkGrowth(const std::string & name, InputParameters parameters)
 
   for ( int i=0; i<_N; ++i)
     _c[i] = &coupledValue("growth_conc_vars", i);
-  
+
   _atoms = parseAtomsFromVars();
 
   if ( std::find(_atoms.begin(), _atoms.end(), _m)==_atoms.end() )
@@ -51,7 +51,7 @@ SinkGrowth::computeQpResidual()
 
   Real losses(0);
   Real gains(0);
-  
+
   losses = calcLosses();
   if ( _m > _atoms[1] )
     gains = calcGains();
@@ -64,7 +64,7 @@ SinkGrowth::computeQpJacobian()
 {
   Real losses(0);
   Real gains(0);
-  
+
   losses = calcLosses();
   if ( _m > _atoms[1] )
     gains = calcGains();
@@ -75,7 +75,7 @@ SinkGrowth::computeQpJacobian()
 
 std::vector<Real>
 SinkGrowth::parseAtomsFromVars()
-{ 
+{
   // Pulls the dependent variables from the current kernel
   std::vector<std::string> depend_vars;
 

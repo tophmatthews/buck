@@ -1,5 +1,5 @@
 # This tests the postprocessor MaterialXeBubbleTester that in turn tests the namespace MaterialXeBubbleTester
-# The order of magnitude of atoms (i.e. 10^m) is varied across a simple line. The output radius, given the 
+# The order of magnitude of atoms (i.e. 10^m) is varied across a simple line. The output radius, given the
 # temperature and stress. The values are double checked against the formulation for atomic density defined
 # in MaterialXeBubble, as well as a separate calculation method. The output should be as given below,
 # and the "% diff" output at each timestep should be small (~1e-8):

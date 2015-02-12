@@ -70,7 +70,7 @@ HomNucleation::calcLosses( bool jacobian )
   if ( jacobian )
     factor *= 2.0; // Extra factor of 2 needed since derivative of u**2
 
-  // Self combination loss. 
+  // Self combination loss.
   losses += factor * _rx_rates[_qp][_m-1][_m-1] * _u[_qp]; // * _u[_qp] below
 
   return losses;
