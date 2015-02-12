@@ -27,9 +27,6 @@
 #include "MaterialXeBubbleTester.h"
 #include "BoundedElementAverage.h"
 
-// User Objects
-
-
 template<>
 InputParameters validParams<BuckApp>()
 {

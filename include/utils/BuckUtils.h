@@ -3,19 +3,10 @@
 
 #include "Moose.h"
 #include "MooseTypes.h"
+#include "Conversion.h"
 
 namespace Buck
 {
-  inline Real round(Real x)
-  {
-    return ::round(x); // use round from math.h
-  }
-
-  inline Real sign(Real x)
-  {
-    return x >= 0.0 ? 1.0 : -1.0;
-  }
-
   template<typename T>
   inline void varNamesFromN(std::vector<T> & vars, const std::string prefix, const int N, const int N_start=1)
   {
@@ -32,11 +23,16 @@ namespace Buck
   template <typename T>
   inline void atomsFromN(std::vector<T> &atoms, const int N, const int N_min=1)
   {
-   for ( int i=N_min; i<N+1; ++i )
+    for ( int i=N_min; i<N+1; ++i )
       atoms.push_back(i);
   }
 
-
+  template <typename T>
+  inline void iterateAndDisplay(std::string name, std::vector<T> &show)
+  {
+    for ( int i=0; i<show.size(); ++i)
+      std::cout << name << "[" << i << "]: " << show[i] << std::endl;
+  }
 }
 
 #endif //BUCKUTILS_H
