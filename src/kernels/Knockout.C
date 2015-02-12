@@ -25,7 +25,7 @@ Knockout::Knockout(const std::string & name, InputParameters parameters) :
   Buck::atomsFromN(_atoms, _N);
 
   for ( int i=0; i<_N; ++i)
-    _vals.push_back( &coupledValue("coupled_vars", i) );  
+    _vals.push_back( &coupledValue("coupled_vars", i) );
 }
 
 Real

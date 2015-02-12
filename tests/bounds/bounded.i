@@ -1,3 +1,5 @@
+# Tests VectorBounds. Runs twice, with (runs) and without (fails) the two parameters
+
 [GlobalParams]
   N = 23
   N_nuc = 5

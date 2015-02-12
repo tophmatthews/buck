@@ -12,6 +12,7 @@ InputParameters validParams<KnockoutKernelsAction>()
   params.addParam<std::string>("var_name_base", "c", "specifies the base name of the variables");
   params.addRequiredParam<int>("N", "Largest nucleation cluster size");
   params.addParam<Real>("parameter", 1, "Re-solution parameter");
+  params.addParam<VariableName>("fission_rate", "Fission rate variable name");
   params.addParam<bool>("use_displaced_mesh", false, "Whether to use displaced mesh in the kernels");
 
   return params;
@@ -43,6 +44,13 @@ KnockoutKernelsAction::act()
     p.set<std::vector<VariableName> >("coupled_vars") = _vars;
     p.set<int>("m") = _atoms[n];
     p.set<Real>("parameter") = getParam<Real>("parameter");
+
+    if ( isParamValid("fission_rate") )
+    {
+      p.addCoupledVar("fission_rate", "");
+      p.set<std::vector<VariableName> >("fission_rate") = std::vector<VariableName>(1, getParam<VariableName>("fission_rate"));
+    }
+
     p.set<bool>("use_displaced_mesh") = getParam<bool>("use_displaced_mesh");
 
     std::string kernel_name = var_name;

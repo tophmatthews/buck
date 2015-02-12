@@ -11,6 +11,7 @@
 #include "ClustersPPAction.h"
 
 #include "ClustersBoundsAction.h"
+#include "ClustersBoundsVarsAction.h"
 
 #include "KnockoutKernelsAction.h"
 
@@ -49,6 +50,9 @@ associateSyntax(Syntax & syntax, ActionFactory & action_factory)
   syntax.registerActionSyntax("AddBoundsVectorsAction", "Clusters/Bounds/");
   syntax.registerActionSyntax("ClustersBoundsAction", "Clusters/Bounds/", "add_aux_kernel");
   registerAction(ClustersBoundsAction, "add_aux_kernel");
+
+  syntax.registerActionSyntax("ClustersBoundsVarsAction", "Clusters/Bounds/", "add_aux_variable");
+  registerAction(ClustersBoundsVarsAction, "add_aux_variable");
 
   ////////////////////////////////////////////////////////////////////////////////////////////
 

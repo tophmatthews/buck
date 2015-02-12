@@ -1,3 +1,5 @@
+# Tests Bounds action. Should pass.
+
 [GlobalParams]
   N = 23
   N_nuc = 5
@@ -47,8 +49,6 @@
 
 [AuxVariables]
   [./temp]
-  [../]
-  [./bounds_dummy]
   [../]
 []
 
