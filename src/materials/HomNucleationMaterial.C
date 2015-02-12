@@ -6,7 +6,7 @@ InputParameters validParams<HomNucleationMaterial>()
 {
   InputParameters params = validParams<Material>();
   
-  params.addCoupledVar("nucleation_conc_vars", "List of concentration variables for nucleation model, including c1");
+  params.addRequiredParam<int>("N_hom", "Largest cluster size.");
 
   params.addParam<Real>("omega", 3.0e-2, "Lattice site volume [nm**3]");
   params.addParam<Real>("a", 0.5, "Lattice parameter [nm]");
@@ -30,6 +30,7 @@ InputParameters validParams<HomNucleationMaterial>()
 HomNucleationMaterial::HomNucleationMaterial(const std::string & name, InputParameters parameters) :
   Material(name, parameters),
 
+  _N(getParam<int>("N_hom")),
   _omega(getParam<Real>("omega")),
   _a(getParam<Real>("a")),
   _cluster_diffusion(getParam<bool>("cluster_diffusion")),
@@ -53,8 +54,6 @@ HomNucleationMaterial::HomNucleationMaterial(const std::string & name, InputPara
   _initialized(false) // flag to see if coefficients were resized
 
 {
-  _N = coupledComponents("nucleation_conc_vars"); // number of variables that need coefficients
-
   // Protect against not the right number of input for a needed cN coefficient
   if ( !_cluster_diffusion )
   {

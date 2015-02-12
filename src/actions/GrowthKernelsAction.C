@@ -9,9 +9,9 @@ InputParameters validParams<GrowthKernelsAction>()
   InputParameters params = validParams<Action>();
 
   params.addParam<std::string>("var_name_base", "c", "Specifies the base name of the variables");
-  params.addParam<NonlinearVariableName>("temp", "temp", "The temperature variable name");
-  params.addParam<int>("N_min", 4, "Smallest cluster size for growth model inclusion");
-  params.addParam<int>("N_max", 10, "Largest cluster size for growth model inclusion");
+  params.addRequiredParam<NonlinearVariableName>("temp", "The temperature variable name");
+  params.addRequiredParam<int>("N_min", "Smallest cluster size for growth model inclusion");
+  params.addRequiredParam<int>("N", "Largest cluster size for growth model inclusion");
   params.addParam<bool>("use_displaced_mesh", false, "Whether to use displaced mesh in the kernels");
   params.addParam<bool>("transient", true, "Flag to determine if TimeDerivative kernels should be made for growth concentration variables");
   params.addParam<bool>("N_min_transient", false, "Flag to determine if TimeDerivative kernels should be made for N_min variable. A timeDerivative kernels is usually created in the Nucleation model.");
@@ -24,7 +24,7 @@ GrowthKernelsAction::GrowthKernelsAction(const std::string & name,
   Action(name, params),
   _var_name_base(getParam<std::string>("var_name_base")),
   _N_min(getParam<int>("N_min")),
-  _N_max(getParam<int>("N_max")),
+  _N_max(getParam<int>("N")),
   _transient(getParam<bool>("transient")),
   _N_min_transient(getParam<bool>("N_min_transient"))
 {
@@ -45,7 +45,7 @@ GrowthKernelsAction::GrowthKernelsAction(const std::string & name,
   if ( _N_min > _N_max )
   {
     std::stringstream errorMsg;
-    errorMsg << "GrowthKernelsAction: N_max must be greater than N_min." <<std::endl;
+    errorMsg << "GrowthKernelsAction: N must be greater than N_min." <<std::endl;
     mooseError(errorMsg.str());
   }
 }

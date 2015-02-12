@@ -19,6 +19,10 @@
 # |   1.000000e+04 |   1.051941e-03 |   1.621257e-04 |   3.333287e+01 |   1.000000e+02 |
 # +----------------+----------------+----------------+----------------+----------------+
 
+[GlobalParams]
+  N_hom = 3
+[]
+
 [Mesh]
   type = GeneratedMesh
   dim = 1
@@ -26,7 +30,6 @@
 
 [Clusters]
   [./Nucleation]
-    N = 3
   [../]
 []
 
@@ -62,7 +65,6 @@
     omega = 3.0e4
     a = 0.5
     cluster_diffusion = false
-    nucleation_conc_vars = 'c1 c2 c3'
   [../]
 []
 

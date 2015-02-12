@@ -1,4 +1,9 @@
 # Tests ClusterPPAction at building postprocessors. Total_atoms should equal 100
+[GlobalParams]
+  N_hom = 3
+  N = 5
+  temp = temp
+[]
 
 [Mesh]
   type = GeneratedMesh
@@ -7,17 +12,14 @@
 
 [Clusters]
   [./Nucleation]
-    N = 3
   [../]
   [./Growth]
     N_min = 3
-    N_max = 5
   [../]
   [./PPs]
     concentrations = 'exodus'
     total_concentrations = 'console'
     total_atoms = 'console exodus'
-    N = 5
   [../]
 []
 
@@ -68,7 +70,6 @@
     omega = 3.0e4
     a = 0.5
     cluster_diffusion = false
-    nucleation_conc_vars = 'c1 c2 c3'
   [../]
 []
 

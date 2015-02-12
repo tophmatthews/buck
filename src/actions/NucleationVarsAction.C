@@ -15,7 +15,7 @@ InputParameters validParams<NucleationVarsAction>()
   params.addParam<std::string>("family", "LAGRANGE", "Specifies the family of FE shape functions to use for this variable");
   params.addParam<Real>("scaling", 1.0, "Specifies a scaling factor to apply to the L variables");
   params.addParam<std::string>("var_name_base", "c", "specifies the base name of the variables");
-  params.addParam<int>("N", 2, "Largest cluster size");
+  params.addParam<int>("N_hom", 2, "Largest cluster size");
 
   return params;
 }
@@ -26,7 +26,7 @@ NucleationVarsAction::NucleationVarsAction(const std::string & name,
   _order(getParam<std::string>("order")),
   _family(getParam<std::string>("family")),
   _var_name_base(getParam<std::string>("var_name_base")),
-  _N(getParam<int>("N"))
+  _N(getParam<int>("N_hom"))
 {
 }
 

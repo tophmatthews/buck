@@ -2,6 +2,7 @@
 #include "Factory.h"
 #include "Parser.h"
 #include "FEProblem.h"
+#include "BuckUtils.h"
 
 template<>
 InputParameters validParams<NucleationKernelsAction>()
@@ -9,7 +10,7 @@ InputParameters validParams<NucleationKernelsAction>()
   InputParameters params = validParams<Action>();
 
   params.addParam<std::string>("var_name_base", "c", "specifies the base name of the variables");
-  params.addParam<int>("N", 2, "Largest cluster size");
+  params.addParam<int>("N_hom", 2, "Largest cluster size");
   params.addParam<bool>("use_displaced_mesh", false, "Whether to use displaced mesh in the kernels");
   params.addParam<bool>("transient", true, "Flag to determine if TimeDerivative kernels should be made for nucleation concentration variables");
 
@@ -20,18 +21,11 @@ NucleationKernelsAction::NucleationKernelsAction(const std::string & name,
                                                              InputParameters params) :
   Action(name, params),
   _var_name_base(getParam<std::string>("var_name_base")),
-  _N(getParam<int>("N")),
+  _N(getParam<int>("N_hom")),
   _transient(getParam<bool>("transient"))
 {
-  _nucleation_conc_vars.resize(_N);
-  for ( int i=0; i<_N; ++i )
-  {
-    VariableName var_name = _var_name_base;
-    std::stringstream out;
-    out << i+1;
-    var_name.append(out.str());
-    _nucleation_conc_vars[i] = var_name;
-  }
+
+  Buck::varNamesFromN( _nucleation_conc_vars, _var_name_base, _N);
 
   if ( _N > 9 )
   {

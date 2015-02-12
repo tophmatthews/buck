@@ -1,13 +1,13 @@
-#ifndef CLUSTERPPACTION_H
-#define CLUSTERPPACTION_H
+#ifndef CLUSTERSPPACTION_H
+#define CLUSTERSPPACTION_H
 
 #include "Action.h"
 #include "MooseTypes.h"
 
-class ClusterPPAction: public Action
+class ClustersPPAction: public Action
 {
 public:
-  ClusterPPAction(const std::string & name, InputParameters params);
+  ClustersPPAction(const std::string & name, InputParameters params);
 
   virtual void act();
 
@@ -24,6 +24,6 @@ private:
 };
 
 template<>
-InputParameters validParams<ClusterPPAction>();
+InputParameters validParams<ClustersPPAction>();
 
-#endif //CLUSTERPPACTION_H
+#endif //CLUSTERSPPACTION_H

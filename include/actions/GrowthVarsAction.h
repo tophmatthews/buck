@@ -16,6 +16,7 @@ private:
   const std::string _var_name_base;
   const int _N_min;
   const int _N_max;
+  std::vector<std::string> _vars;
 };
 
 template<>

@@ -19,6 +19,7 @@
 
 [GlobalParams]
   nucleation_conc_vars = 'c1 c2 c3'
+  N_hom = 3
 []
 
 

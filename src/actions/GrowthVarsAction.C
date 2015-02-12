@@ -5,6 +5,7 @@
 #include "Parser.h"
 #include "libmesh/string_to_enum.h"
 #include "MooseApp.h"
+#include "BuckUtils.h"
 
 template<>
 InputParameters validParams<GrowthVarsAction>()
@@ -16,7 +17,7 @@ InputParameters validParams<GrowthVarsAction>()
   params.addParam<Real>("scaling", 1.0, "Specifies a scaling factor to apply");
   params.addParam<std::string>("var_name_base", "c", "specifies the base name of the variables");
   params.addParam<int>("N_min", 4, "Smallest cluster size for growth model inclusion");
-  params.addParam<int>("N_max", 10, "Largest cluster size for growth model inclusion");
+  params.addParam<int>("N", 10, "Largest cluster size for growth model inclusion");
 
   return params;
 }
@@ -28,23 +29,17 @@ GrowthVarsAction::GrowthVarsAction(const std::string & name,
   _family(getParam<std::string>("family")),
   _var_name_base(getParam<std::string>("var_name_base")),
   _N_min(getParam<int>("N_min")),
-  _N_max(getParam<int>("N_max"))
+  _N_max(getParam<int>("N"))
 {
+  Buck::varNamesFromN( _vars, _var_name_base, _N_max, _N_min);
 }
 
 void
 GrowthVarsAction::act()
 {
-  for (unsigned i = _N_min; i < _N_max+1; ++i)
+  for (unsigned i = 0; i < _vars.size(); ++i)
   {
-    // Create variable names
-    std::string var_name = _var_name_base;
-    std::stringstream out;
-    out << i;
-    var_name.append(out.str());
-
-    // Add variable
-    _problem->addVariable(var_name,
+    _problem->addVariable(_vars[i],
                           FEType(Utility::string_to_enum<Order>(_order),
                                  Utility::string_to_enum<FEFamily>(_family)),
                           getParam<Real>("scaling"));

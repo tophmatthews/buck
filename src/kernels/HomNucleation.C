@@ -33,8 +33,6 @@ HomNucleation::computeQpResidual()
   Real losses = calcLosses(false);
   Real gains = calcGains();
 
-  // std::cout << "_m: " << _m << "\tlosses*u: " << losses*_u[_qp] << "\tgains: " << gains;
-
   return -( gains - losses * _u[_qp] ) * _test[_i][_qp];
 }
 
@@ -85,7 +83,7 @@ HomNucleation::calcGains()
   Real gains(0);
 
   // Gains from smaller clusters joining
-  for ( int i=0; i<_m-1; ++i ) // will not iterate if _m=1
+  for ( int i=0; i<_m-1; ++i )
   {
     for ( int j=0; j<_m-1; ++j)
     {

@@ -39,7 +39,6 @@ SinkGrowth::SinkGrowth(const std::string & name, InputParameters parameters)
                << "\tcurrent m: " << _m << std::endl;
       mooseError(errorMsg.str());
   }
-  // std::cout << "SinkGrowth tempetature: " << _temp[0] << std::endl;
 }
 
 Real

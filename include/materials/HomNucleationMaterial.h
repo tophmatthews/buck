@@ -18,6 +18,7 @@ protected:
   virtual void computeProperties();
   virtual void initialize();
 
+  const int _N;
   const Real _omega;
   const Real _a;
   const bool _cluster_diffusion;
@@ -40,7 +41,6 @@ protected:
   MaterialProperty<Real> & _atomic_diffusivity;
 
   bool _initialized;
-  int _N;
 
   std::vector<std::vector<Real> > _rx_coeffs;
 };

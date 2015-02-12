@@ -101,7 +101,9 @@ namespace MaterialXeBubble{
       double calc_rho = VDW_RtoRho(R, T, sigma);
       std::cout << std::endl << "rho: " << rho << "\tcalc_rho: " << calc_rho << "\t\% diff: " << std::abs(rho-calc_rho)/calc_rho*100.0 << std::endl;
     }
+    
     return R;
+    // return 7.0e-11*sqrt(m);
   }
   /////////////////////////////////////////////////////////
 }
