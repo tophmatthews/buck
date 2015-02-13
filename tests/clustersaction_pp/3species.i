@@ -56,9 +56,7 @@
   [./c1_diff]
     type = AtomicDiffusionCoef
     temp = 1000
-    D0 = 1.7e5
-    Q = 2.3
-    k = 8.617e-5
+    model = 1
     factor = 1
     block = 0
   [../]

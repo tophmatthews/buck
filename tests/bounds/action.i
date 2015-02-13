@@ -1,7 +1,7 @@
 # Tests Bounds action. Should pass.
 
 [GlobalParams]
-  N = 23
+  N = 7
   N_nuc = 5
   temp = temp
   block = 0
@@ -65,10 +65,7 @@
 [Materials]
   [./c1_diff]
     type = AtomicDiffusionCoef
-    temp = temp
-    D0 = 1.7e5
-    Q = 2.3
-    k = 8.617e-5
+    model = 1
     factor = 1
   [../]
   [./cN_coeffs]

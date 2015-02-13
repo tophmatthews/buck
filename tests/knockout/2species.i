@@ -42,11 +42,11 @@
     type = Diffusion
     variable = dummy
   [../]
-
   [./dummy_time]
     type = TimeDerivative
     variable = dummy
   [../]
+  
   [./c1_time]
     type = TimeDerivative
     variable = c1
@@ -88,7 +88,7 @@
     temp = 1
     D0 = 0.1
     Q = 0
-    k = 1
+    model = 0
     factor = 1
     block = 0
   [../]
@@ -128,7 +128,7 @@
 
   solve_type = PJFNK
 
-  num_steps = 10
+  num_steps = 3
   dt = 1e3
 []
 
@@ -152,5 +152,4 @@
 [Outputs]
   console = true
   exodus = true
-  interval = 1
 []

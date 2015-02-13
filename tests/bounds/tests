@@ -2,7 +2,7 @@
   [./notbounded]
     type = 'RunException'
     input = 'bounded.i Bounds/c_bounds1/bounded_variable=c1'
-    expect_err = 'From Postprocessor c22_conc: value is lower than lower limit of 0'
+    expect_err = 'From Postprocessor c6_conc: value is lower than lower limit of 0'
     cli_args = --use-petsc-dm
   [../]
   [./bounded]

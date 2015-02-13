@@ -19,10 +19,11 @@ protected:
 
   VariableValue & _temp;
 
-  const Real _D0;
-  const Real _Q;
-  const Real _k;
+  Real _D0;
+  Real _Q;
+  const Real _R;
   const Real _factor;
+  const int _model;
 
   MaterialProperty<Real> & _atomic_diffusivity;
 };

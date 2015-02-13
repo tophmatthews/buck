@@ -1,7 +1,7 @@
 # Tests VectorBounds. Runs twice, with (runs) and without (fails) the two parameters
 
 [GlobalParams]
-  N = 23
+  N = 6
   N_nuc = 5
   temp = temp
   block = 0
@@ -66,7 +66,7 @@
   [./c_bounds1]
     type = VectorBoundsAux
     variable = bounds_dummy
-    bounded_variable = 'c1 c22'
+    bounded_variable = 'c1 c6'
     lower = 0
   [../]
 []
@@ -75,10 +75,7 @@
 [Materials]
   [./c1_diff]
     type = AtomicDiffusionCoef
-    temp = temp
-    D0 = 1.7e5
-    Q = 2.3
-    k = 8.617e-5
+    model = 1
     factor = 1
   [../]
   [./cN_coeffs]

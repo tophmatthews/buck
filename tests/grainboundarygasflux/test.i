@@ -1,16 +1,16 @@
 # This tests the grain_gas_flux postprocessor. Grain_gas_flux calculates the mass flux
 #  across the right side of a 1D line. Grain_gas_total linearlly adds all the values as
 #  time continues. Sum takes the sum of grain_gas_total and c1_num. Sum should equal close
-#  to the initial_condition of c1 = 100*L = 50.
+#  to the initial_condition of c1 = 100*L = 50. It is not exact due to the BC of 0.
 #
 # +----------------+----------------+----------------+----------------+----------------+
 # | time           | c1_num         | grain_gas_flux | grain_gas_total| sum            |
 # +----------------+----------------+----------------+----------------+----------------+
-# |   2.000000e+02 |   4.896470e+01 |   2.956851e-03 |   7.763346e-01 |   4.974104e+01 |
-# |   4.000000e+02 |   4.852598e+01 |   2.071211e-03 |   1.266018e+00 |   4.979200e+01 |
-# |   6.000000e+02 |   4.818773e+01 |   1.653786e-03 |   1.634358e+00 |   4.982209e+01 |
-# |   8.000000e+02 |   4.790344e+01 |   1.408331e-03 |   1.938727e+00 |   4.984217e+01 |
-# |   1.000000e+03 |   4.765362e+01 |   1.245041e-03 |   2.203097e+00 |   4.985672e+01 |
+# |   2.000000e+00 |   4.951253e+01 |   1.033049e-01 |   1.033049e-01 |   4.961584e+01 |
+# |   4.000000e+00 |   4.935127e+01 |   8.698558e-02 |   2.935954e-01 |   4.964487e+01 |
+# |   6.000000e+00 |   4.921390e+01 |   7.532367e-02 |   4.559046e-01 |   4.966980e+01 |
+# |   8.000000e+00 |   4.909272e+01 |   6.676865e-02 |   5.979969e-01 |   4.969071e+01 |
+# |   1.000000e+01 |   4.898350e+01 |   6.023091e-02 |   7.249965e-01 |   4.970850e+01 |
 # +----------------+----------------+----------------+----------------+----------------+
 
 [GlobalParams]
@@ -50,9 +50,8 @@
 
 [BCs]
   [./right1]
-    type = DirichletBC
+    type = VacuumBC
     variable = c1
-    value = 0
     boundary = right
   [../]
 []
@@ -62,9 +61,7 @@
   [./diff]
     type = AtomicDiffusionCoef
     temp = 1000
-    D0 = 1.7e5
-    Q = 2.3
-    k = 8.617e-5
+    model = 1
     factor = 1
     block = 0
   [../]
@@ -76,8 +73,8 @@
 
   solve_type = PJFNK
 
-  num_steps = 50
-  dt = 20
+  num_steps = 5
+  dt = 2
 []
 
 
@@ -87,7 +84,8 @@
     variable = c1
   [../]
   [./grain_gas_flux]
-    type = GrainBoundaryGasFlux
+    type = SideFluxIntegral
+    diffusivity = atomic_diffusivity 
     boundary = right
     variable = c1
   [../]
@@ -105,5 +103,5 @@
 [Outputs]
   console = true
   exodus = true
-  interval = 10
+  interval = 1
 []
