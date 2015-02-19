@@ -1,10 +1,10 @@
 #ifndef CLUSTERSPPACTION_H
 #define CLUSTERSPPACTION_H
 
-#include "Action.h"
-#include "MooseTypes.h"
+#include "ClustersActionBase.h"
+// #include "MooseTypes.h"
 
-class ClustersPPAction: public Action
+class ClustersPPAction: public ClustersActionBase
 {
 public:
   ClustersPPAction(const std::string & name, InputParameters params);
@@ -12,15 +12,9 @@ public:
   virtual void act();
 
 private:
-	const int _N;
-	const std::string _var_name_base;
-
 	const bool _conc;
   const bool _total_conc;
   const bool _total_atoms;
-
-	std::vector<PostprocessorName> _vars;
-	std::vector<Real> _atoms;
 };
 
 template<>

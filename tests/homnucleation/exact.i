@@ -15,7 +15,8 @@
 # 1.031244E-01  1.03E-01  1.93893E-05
 
 [GlobalParams]
-  nucleation_conc_vars = 'c1 c2'
+  coupled_conc = 'c1 c2'
+  N_nuc = 2
 []
 
 
@@ -47,7 +48,7 @@
   [./c2_nucleation]
     type = HomNucleation
     variable = c2
-    m = 2
+    g = 2
   [../]
 []
 

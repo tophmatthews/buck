@@ -18,7 +18,8 @@
 # +----------------+----------------+----------------+----------------+----------------+
 
 [GlobalParams]
-  nucleation_conc_vars = 'c1 c2 c3'
+  coupled_conc = 'c1 c2'
+  N_nuc = 2
 []
 
 
@@ -47,7 +48,7 @@
   [./c1_nucleation]
     type = HomNucleation
     variable = c1
-    m = 1
+    g = 1
   [../]
 
   [./c2_time]
@@ -57,7 +58,7 @@
   [./c2_nucleation]
     type = HomNucleation
     variable = c2
-    m = 2
+    g = 2
   [../]
 
   [./c3_time]
@@ -67,7 +68,7 @@
   [./c3_nucleation]
     type = HomNucleation
     variable = c3
-    m = 3
+    g = 3
   [../]
 []
 

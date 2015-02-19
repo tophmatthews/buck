@@ -1,20 +1,14 @@
 #ifndef KNOCKOUTKERNERLSACTION_H
 #define KNOCKOUTKERNERLSACTION_H
 
-#include "Action.h"
+#include "ClustersActionBase.h"
 
-class KnockoutKernelsAction: public Action
+class KnockoutKernelsAction: public ClustersActionBase
 {
 public:
   KnockoutKernelsAction(const std::string & name, InputParameters params);
 
   virtual void act();
-
-private:
-	std::vector<VariableName> _vars;
-	std::vector<int> _atoms;
-  const std::string _var_name_base;
-  const int _N;
 };
 
 template<>

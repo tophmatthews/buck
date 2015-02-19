@@ -19,6 +19,10 @@
 # +----------------+----------------+----------------+----------------+----------------+
 
 [GlobalParams]
+  N_max = 6
+  G = 6
+  log = false
+  N_nuc = 5
   temp = temp
 []
 
@@ -31,9 +35,6 @@
 
 [Clusters]
   [./Growth]
-    N = 6
-    N_nuc = 5
-    N_min_transient = true
   [../]
 []
 
@@ -48,20 +49,6 @@
     type = ConstantIC
     variable = c1
     value = 1
-  [../]
-[]
-
-
-[Variables]
-  [./c1]
-  [../]
-[]
-
-
-[Kernels]
-  [./c1_time]
-    type = TimeDerivative
-    variable = c1
   [../]
 []
 

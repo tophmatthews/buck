@@ -19,13 +19,13 @@ protected:
   virtual Real computeQpResidual();
   virtual Real computeQpJacobian();
 
+  std::vector<Real> _atoms;
   std::vector<VariableValue *> _vals;
-  std::vector<int> _atoms;
   VariableValue & _fsn_rate;
 
   Real _parameter;
-  int _m;
-  int _N;
+  int _g;
+  int _G;
 };
 
 #endif // KNOCKOUT_H

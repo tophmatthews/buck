@@ -24,8 +24,8 @@ private:
   std::vector<VariableValue *> _vals;
   MaterialProperty<std::vector<std::vector<Real> > > & _rx_rates;
 
-  int _N;
-  int _m;
+  int _N_nuc;
+  int _g;
   std::vector<Real> _atoms;
 };
 #endif //HOMNUCLEATION_H

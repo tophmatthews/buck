@@ -6,7 +6,11 @@
 # c2 -> 0.25
 
 [GlobalParams]
-  nucleation_conc_vars = 'c1 c2'
+  coupled_conc = 'c1 c2'
+  N_nuc = 2
+  G = 2
+  N_max = 2
+  log = false
 []
 
 
@@ -17,19 +21,21 @@
 
 
 [Variables]
-  [./c1]
-    initial_condition = 1
-  [../]
-  [./c2]
-  [../]
   [./dummy]
   [../]
 []
 
 [Clusters]
   [./Knockout]
-    N = 2
     parameter = .1
+  [../]
+[]
+
+[ICs]
+  [./c1]
+    type = ConstantIC
+    variable = c1
+    value = 1
   [../]
 []
 
@@ -39,47 +45,21 @@
     type = Diffusion
     variable = dummy
   [../]
-
   [./dummy_time]
     type = TimeDerivative
     variable = dummy
-  [../]
-  [./c1_time]
-    type = TimeDerivative
-    variable = c1
-  [../]
-  [./c2_time]
-    type = TimeDerivative
-    variable = c2
   [../]
 
   [./c1_nucleation]
     type = HomNucleation
     variable = c1
-    m = 1
+    g = 1
   [../]
   [./c2_nucleation]
     type = HomNucleation
     variable = c2
-    m = 2
+    g = 2
   [../]
-
-  # [./c1_knockout]
-  #   type = Knockout
-  #   variable = c1
-  #   m = 1
-  #   parameter = 1
-  # fission_rate = 0.1
-  # coupled_vars = 'c1 c2'
-  # [../]
-  # [./c2_knockout]
-  #   type = Knockout
-  #   variable = c2
-  #   m = 2
-  #   parameter = 1
-  #   fission_rate = 0.1
-  #   coupled_vars = 'c1 c2'
-  # [../]
 []
 
 

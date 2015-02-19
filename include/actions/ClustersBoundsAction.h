@@ -1,14 +1,14 @@
 #ifndef CLUSTERSBOUNDSACTION_H
 #define CLUSTERSBOUNDSACTION_H
 
-#include "MooseObjectAction.h"
+#include "ClustersActionBase.h"
 
 class ClustersBoundsAction;
 
 template<>
 InputParameters validParams<ClustersBoundsAction>();
 
-class ClustersBoundsAction : public Action
+class ClustersBoundsAction : public ClustersActionBase
 {
 public:
   ClustersBoundsAction(const std::string & name, InputParameters params);
@@ -17,10 +17,6 @@ public:
 
 private:
 	std::vector<SubdomainName> _blocks;
-	const std::string _var_name_base;
-  const int _N;
-
-  std::vector<VariableName> _vars;
 };
 
 #endif // CLUSTERSBOUNDSACTION_H

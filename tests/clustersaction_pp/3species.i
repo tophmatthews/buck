@@ -1,7 +1,10 @@
 # Tests ClusterPPAction at building postprocessors. Total_atoms should equal 100
+
 [GlobalParams]
   N_nuc = 3
-  N = 5
+  N_max = 5
+  G = 5
+  log = false
   temp = temp
 []
 
@@ -22,19 +25,14 @@
   [../]
 []
 
-[Variables]
+[ICs]
   [./c1]
-    initial_condition = 100
-  [../]
-[]
-
-
-[Kernels]
-  [./c1_time]
-    type = TimeDerivative
+    type = ConstantIC
     variable = c1
+    value = 100
   [../]
 []
+
 
 [AuxVariables]
   [./temp]

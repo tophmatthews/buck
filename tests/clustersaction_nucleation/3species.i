@@ -21,6 +21,9 @@
 
 [GlobalParams]
   N_nuc = 3
+  G = 3
+  N_max = 3
+  log = false
 []
 
 [Mesh]
@@ -33,17 +36,12 @@
   [../]
 []
 
-[Variables]
+
+[ICs]
   [./c1]
-    initial_condition = 100
-  [../]
-[]
-
-
-[Kernels]
-  [./c1_time]
-    type = TimeDerivative
+    type = ConstantIC
     variable = c1
+    value = 100
   [../]
 []
 

@@ -54,6 +54,13 @@ HomNucleationMaterial::HomNucleationMaterial(const std::string & name, InputPara
   _initialized(false) // flag to see if coefficients were resized
 
 {
+  if ( _N> 9 )
+  {
+    std::stringstream errorMsg;
+    errorMsg << "NucleationKernelsAction: Requested cluster size is too big for the current HomNucleation model (9 atoms max)." <<std::endl;
+    mooseError(errorMsg.str());
+  }
+
   // Protect against not the right number of input for a needed cN coefficient
   if ( !_cluster_diffusion )
   {

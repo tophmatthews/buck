@@ -1,8 +1,10 @@
 # Tests Bounds action. Should pass.
 
 [GlobalParams]
-  N = 7
+  N_max = 7
   N_nuc = 5
+  log = false
+  G = 7
   temp = temp
   block = 0
 []
@@ -28,17 +30,7 @@
 []
 
 
-[Variables]
-  [./c1]
-  [../]
-[]
-
-
 [Kernels]
-  [./c1_time]
-    type = TimeDerivative
-    variable = c1
-  [../]
   [./c1_source]
     type = VariableScaledSource
     variable = c1

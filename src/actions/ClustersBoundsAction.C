@@ -6,22 +6,17 @@
 template<>
 InputParameters validParams<ClustersBoundsAction>()
 {
-	InputParameters params = validParams<Action>();
+	InputParameters params = validParams<ClustersActionBase>();
 
   params.addRequiredParam<std::vector<SubdomainName> >("block", "The blocks where bounds should be applied.");
-  params.addParam<std::string>("var_name_base", "c", "specifies the base name of the variables");
-  params.addRequiredParam<int>("N", "Largest cluster size for growth model inclusion");
 
   return params;
 }
 
 ClustersBoundsAction::ClustersBoundsAction(const std::string & name, InputParameters params) :
-  Action(name, params),
-  _blocks(getParam<std::vector<SubdomainName> >("block")),
-  _var_name_base(getParam<std::string>("var_name_base")),
-  _N(getParam<int>("N"))
+  ClustersActionBase(name, params),
+  _blocks(getParam<std::vector<SubdomainName> >("block"))
 {
-  Buck::varNamesFromN( _vars, _var_name_base, _N );
 }
 
 void

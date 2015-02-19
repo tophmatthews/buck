@@ -2,11 +2,12 @@
 #include "ActionFactory.h"
 
 // Actions
+#include "ClustersVarsAction.h"
+#include "ClustersTimeKernelAction.h"
+
 #include "NucleationKernelsAction.h"
-#include "NucleationVarsAction.h"
 
 #include "GrowthKernelsAction.h"
-#include "GrowthVarsAction.h"
 
 #include "ClustersPPAction.h"
 
@@ -26,26 +27,21 @@ associateSyntax(Syntax & syntax, ActionFactory & action_factory)
    * satisfied based on the syntax encountered for classes which are registered
    * to satisfy more than one action_name
    */
+
+  syntax.registerActionSyntax("ClustersVarsAction", "Clusters", "add_variable");
+  registerAction(ClustersVarsAction, "add_variable");
+
+  syntax.registerActionSyntax("ClustersTimeKernelAction", "Clusters", "add_kernel");
+  registerAction(ClustersTimeKernelAction, "add_kernel");
+
   syntax.registerActionSyntax("NucleationKernelsAction", "Clusters/Nucleation/", "add_kernel");
-  syntax.registerActionSyntax("NucleationVarsAction",    "Clusters/Nucleation/", "add_variable");
-
   registerAction(NucleationKernelsAction, "add_kernel");
-  registerAction(NucleationVarsAction,    "add_variable");
-
-  ////////////////////////////////////////////////////////////////////////////////////////////
 
   syntax.registerActionSyntax("GrowthKernelsAction", "Clusters/Growth/", "add_kernel");
-  syntax.registerActionSyntax("GrowthVarsAction",    "Clusters/Growth/", "add_variable");
-
   registerAction(GrowthKernelsAction, "add_kernel");
-  registerAction(GrowthVarsAction,    "add_variable");
-
-  ////////////////////////////////////////////////////////////////////////////////////////////
 
   syntax.registerActionSyntax("ClustersPPAction", "Clusters/PPs/", "add_postprocessor");
   registerAction(ClustersPPAction, "add_postprocessor");
-
-  ////////////////////////////////////////////////////////////////////////////////////////////
 
   syntax.registerActionSyntax("AddBoundsVectorsAction", "Clusters/Bounds/");
   syntax.registerActionSyntax("ClustersBoundsAction", "Clusters/Bounds/", "add_aux_kernel");
@@ -53,9 +49,7 @@ associateSyntax(Syntax & syntax, ActionFactory & action_factory)
 
   syntax.registerActionSyntax("ClustersBoundsVarsAction", "Clusters/Bounds/", "add_aux_variable");
   registerAction(ClustersBoundsVarsAction, "add_aux_variable");
-
-  ////////////////////////////////////////////////////////////////////////////////////////////
-
+  
   syntax.registerActionSyntax("KnockoutKernelsAction", "Clusters/Knockout/", "add_kernel");
   registerAction(KnockoutKernelsAction, "add_kernel");
 

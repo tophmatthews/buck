@@ -7,10 +7,8 @@
 template<>
 InputParameters validParams<KnockoutKernelsAction>()
 {
-  InputParameters params = validParams<Action>();
+  InputParameters params = validParams<ClustersActionBase>();
 
-  params.addParam<std::string>("var_name_base", "c", "specifies the base name of the variables");
-  params.addRequiredParam<int>("N", "Largest nucleation cluster size");
   params.addParam<Real>("parameter", 1, "Re-solution parameter");
   params.addParam<VariableName>("fission_rate", "Fission rate variable name");
   params.addParam<bool>("use_displaced_mesh", false, "Whether to use displaced mesh in the kernels");
@@ -20,29 +18,23 @@ InputParameters validParams<KnockoutKernelsAction>()
 
 KnockoutKernelsAction::KnockoutKernelsAction(const std::string & name,
                                                              InputParameters params) :
-  Action(name, params),
-  _var_name_base(getParam<std::string>("var_name_base")),
-  _N(getParam<int>("N"))
+  ClustersActionBase(name, params)
 {
-  Buck::varNamesFromN( _vars, _var_name_base, _N);
-  Buck::atomsFromN( _atoms, _N);
-
-  Buck::iterateAndDisplay("vars", _vars);
-  Buck::iterateAndDisplay("atoms", _atoms);
 }
 
 void
 KnockoutKernelsAction::act()
 {
-  for (unsigned int n = 0; n < _N; ++n)
+  for (unsigned int g = 0; g<_G; ++g)
   {
-    std::string var_name = _vars[n];
+    std::string var_name = _vars[g];
     std::string orig_kernel = "Knockout";
 
     InputParameters p = _factory.getValidParams(orig_kernel);
     p.set<NonlinearVariableName>("variable") = var_name;
-    p.set<std::vector<VariableName> >("coupled_vars") = _vars;
-    p.set<int>("m") = _atoms[n];
+    p.set<std::vector<VariableName> >("coupled_conc") = _vars;
+    p.set<std::vector<Real> >("coupled_conc_atoms") = _atoms;
+    p.set<int>("g") = g+1;
     p.set<Real>("parameter") = getParam<Real>("parameter");
 
     if ( isParamValid("fission_rate") )

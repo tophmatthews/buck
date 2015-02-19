@@ -17,7 +17,9 @@
 # +----------------+----------------+----------------+----------------+----------------+
 
 [GlobalParams]
-  growth_conc_vars = 'c1 c5 c6'
+  coupled_conc = 'c1 c5 c6'
+  coupled_conc_atoms = '1 5 6'
+  N_nuc = 5
   temp = 1000
 []
 
@@ -48,7 +50,7 @@
   [./c1_growth]
     type = SinkGrowth
     variable = c1
-    m = 1
+    g = 1
   [../]
 
   [./c5_time]
@@ -58,7 +60,7 @@
   [./c5_growth]
     type = SinkGrowth
     variable = c5
-    m = 5
+    g = 2
   [../]
 
   [./c6_time]
@@ -68,7 +70,7 @@
   [./c6_growth]
     type = SinkGrowth
     variable = c6
-    m = 6
+    g = 3
   [../]
 []
 

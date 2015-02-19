@@ -8,10 +8,7 @@
 template<>
 InputParameters validParams<ClustersPPAction>()
 {
-  InputParameters params = validParams<Action>();
-
-  params.addRequiredParam<int>("N", "Largest cluster size for growth model inclusion");
-  params.addParam<std::string>("var_name_base", "c", "specifies the base name of the variables");
+  InputParameters params = validParams<ClustersActionBase>();
 
   params.addParam<std::vector<OutputName> >("concentrations", "Where to output concentration postprocessors");
   params.addParam<std::vector<OutputName> >("total_concentrations", "Where to output concentration postprocessors. Not calculated if empty");
@@ -21,16 +18,11 @@ InputParameters validParams<ClustersPPAction>()
 }
 
 ClustersPPAction::ClustersPPAction(const std::string & name, InputParameters params) :
-  Action(name, params),
-  _N(getParam<int>("N")),
-  _var_name_base(getParam<std::string>("var_name_base")),
+  ClustersActionBase(name, params),
   _conc( isParamValid("concentrations")? true : false),
   _total_conc( isParamValid("total_concentrations")? true : false),
   _total_atoms( isParamValid("total_atoms")? true : false)
-
 {
-  Buck::varNamesFromN( _vars, _var_name_base, _N);
-  Buck::atomsFromN(_atoms, _N);
 }
 
 void

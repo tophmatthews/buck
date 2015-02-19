@@ -20,7 +20,7 @@ SumOfPostprocessors::SumOfPostprocessors(const std::string & name, InputParamete
 
   // Create vector of pps
   int _N = pps_names.size();
-  for (unsigned int i=0; i<_N; ++i)
+  for ( int i=0; i<_N; ++i )
   {
     if (!hasPostprocessorByName(pps_names[i]))
       mooseError("In SumOfPostprocessors, postprocessor with name: "<<pps_names[i]<<" does not exist");
@@ -43,7 +43,7 @@ Real
 SumOfPostprocessors::getValue()
 {
   Real val(0.0);
-  for (unsigned int i=0; i<_postprocessor_values.size(); ++i)
+  for ( int i=0; i<_postprocessor_values.size(); ++i)
   {
     val += *_postprocessor_values[i] * _factors[i];
   }

@@ -1,6 +1,6 @@
 #include "SinkGrowth.h"
 
-#include "MooseException.h"
+// #include "MooseException.h"
 #include "MaterialXeBubble.h"
 
 template<>
@@ -8,37 +8,32 @@ InputParameters validParams<SinkGrowth>()
 {
   InputParameters params = validParams<Kernel>();
 
+  params.addRequiredCoupledVar("coupled_conc", "List of coupled concentration variables.");
+  params.addRequiredParam<std::vector<Real> >("coupled_conc_atoms", "List of coupled concentration variables.");
   params.addRequiredCoupledVar("temp", "Coupled Temperature");
-	params.addRequiredCoupledVar("growth_conc_vars", "List of concentration variables for growth model, starting with c1 and ending with the largest group.");
-  params.addRequiredParam<int>("m", "Number of atoms in cluster.");
+  params.addRequiredParam<int>("g", "Group number");
+  params.addRequiredParam<int>("N_nuc", "Largest cluster size in nucleation model");
 
   return params;
 }
 
 SinkGrowth::SinkGrowth(const std::string & name, InputParameters parameters)
   :Kernel(name,parameters),
+  _atoms(getParam<std::vector<Real> >("coupled_conc_atoms")),
   _temp(coupledValue("temp")),
-  _m(getParam<int>("m")),
+  _g(getParam<int>("g") - 1),
+  _N_nuc(getParam<int>("N_nuc")),
+
   _atomic_diffusivity(getMaterialProperty<Real>("atomic_diffusivity"))
 
 {
-	_N = coupledComponents("growth_conc_vars");
+	_G = coupledComponents("coupled_conc");
 
-  _c.resize(_N);
+  for ( int i=0; i<_G; ++i)
+    _c.push_back( &coupledValue("coupled_conc", i) );
 
-  for ( int i=0; i<_N; ++i)
-    _c[i] = &coupledValue("growth_conc_vars", i);
-
-  _atoms = parseAtomsFromVars();
-
-  if ( std::find(_atoms.begin(), _atoms.end(), _m)==_atoms.end() )
-  {
-      std::stringstream errorMsg;
-      errorMsg << "In SinkGrowth: Couldn't find the current atom number in the atom list.\n"
-               << "Are you sure nucleation_conc_vars has the right number of variables?\n"
-               << "\tcurrent m: " << _m << std::endl;
-      mooseError(errorMsg.str());
-  }
+  if ( _atoms.size() != _c.size() )
+    mooseError("In SinkGrowth: coupled_conc.size() != coupled_conc_atoms.size()");
 }
 
 Real
@@ -53,7 +48,7 @@ SinkGrowth::computeQpResidual()
   Real gains(0);
 
   losses = calcLosses();
-  if ( _m > _atoms[1] )
+  if ( _atoms[_g] > _N_nuc )
     gains = calcGains();
 
   return -( gains - losses * _u[_qp] ) * _test[_i][_qp];
@@ -63,70 +58,41 @@ Real
 SinkGrowth::computeQpJacobian()
 {
   Real losses(0);
-  Real gains(0);
+  // Real gains(0); // Gains are independent of u
 
   losses = calcLosses();
-  if ( _m > _atoms[1] )
-    gains = calcGains();
 
-  return -( gains - losses * _phi[_j][_qp] ) * _test[_i][_qp];
-}
-
-
-std::vector<Real>
-SinkGrowth::parseAtomsFromVars()
-{
-  // Pulls the dependent variables from the current kernel
-  std::vector<std::string> depend_vars;
-
-  std::map<std::string, std::vector<MooseVariable *> > coupled_vars = getCoupledVars();
-  for (std::map<std::string, std::vector<MooseVariable *> >::iterator it = coupled_vars.begin(); it != coupled_vars.end(); ++it)
-    for (std::vector<MooseVariable *>::iterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
-      depend_vars.push_back((*it2)->name());
-
-  // parses the string list of variables into a vector of Reals
-  std::vector<Real> atoms;
-
-  for ( int i=0; i<depend_vars.size(); ++i)
-  {
-  	if ( depend_vars[i].find("c") == 0 )
-  	{
-	    depend_vars[i].erase( depend_vars[i].begin() );
-      std::stringstream buf_ss;
-      buf_ss << depend_vars[i];
-      Real buf_r;
-      buf_ss >> buf_r;
-	    atoms.push_back(buf_r);
-	  }
-  }
-
-  return atoms;
+  return losses * _phi[_j][_qp] * _test[_i][_qp];
 }
 
 
 Real
 SinkGrowth::calcLosses()
 {
+  // Calculates losses due to absorbing single gas atoms
   Real losses(0);
   Real radius(0);
   Real sigma(0); // TODO: change this to be actual hydrostatic stress
 
   Real KoverR = 4.0 * M_PI * _atomic_diffusivity[_qp]; // reaction co-efficient divided by radius
 
-  if (_m == 1) // if single gas atom
+  if ( _g == 0 ) // if single gas atom
   {
-    for ( int i=1; i<_N-1; ++i ) // iterate through cluster, except for largest size
+    for ( int i=1; i<_G-1; ++i ) // iterate through clusters, except for largest size
     {
-      radius = 1.0e9 * MaterialXeBubble::VDW_MtoR( _atoms[i], _temp[_qp], sigma );
-      losses += KoverR * radius * (*_c[i])[_qp]; // *_u[_qp] below
+      if ( _atoms[i] >= _N_nuc )
+      {
+        radius = 1.0e9 * MaterialXeBubble::VDW_MtoR( _atoms[i], _temp[_qp], sigma );
+        losses += KoverR * radius * (*_c[i])[_qp]; // *_u[_qp] below
+      }
     }
   }
   else // if bubble
   {
     // Losses due to this cluster absorbing atoms
-    if ( _m < _atoms.back() ) // make sure it's not the largest bubble size
+    if ( _g < _G-1 && _atoms[_g] >= _N_nuc ) // make sure it's not the largest bubble size
     {
-      radius = 1.0e9 * MaterialXeBubble::VDW_MtoR( _m, _temp[_qp], sigma );
+      radius = 1.0e9 * MaterialXeBubble::VDW_MtoR( _atoms[_g], _temp[_qp], sigma );
       losses += KoverR * radius * (*_c[0])[_qp]; // *_u[_qp] below
     }
   }
@@ -144,15 +110,8 @@ SinkGrowth::calcGains()
 
   Real KoverR = 4.0 * M_PI * _atomic_diffusivity[_qp]; // reaction co-efficient divided by radius
 
-  // First find position of next smaller bubble in _atoms
-  int it(0);
-  while (_atoms[it] < _m)
-    ++it;
-  --it;
-
-  // Then calculate and add gains
-  radius = 1.0e9 * MaterialXeBubble::VDW_MtoR( _atoms[it], _temp[_qp], sigma );
-  gain = KoverR * radius * (*_c[0])[_qp] * (*_c[it])[_qp];
+  radius = 1.0e9 * MaterialXeBubble::VDW_MtoR( _atoms[_g-1], _temp[_qp], sigma );
+  gain = KoverR * radius * (*_c[0])[_qp] * (*_c[_g-1])[_qp];
 
   return gain;
 }

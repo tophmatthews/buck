@@ -1,7 +1,9 @@
 # Tests VectorBounds. Runs twice, with (runs) and without (fails) the two parameters
 
 [GlobalParams]
-  N = 6
+  N_max = 6
+  G = 6
+  log = false
   N_nuc = 5
   temp = temp
   block = 0
@@ -26,17 +28,8 @@
 []
 
 
-[Variables]
-  [./c1]
-  [../]
-[]
-
 
 [Kernels]
-  [./c1_time]
-    type = TimeDerivative
-    variable = c1
-  [../]
   [./c1_source]
     type = VariableScaledSource
     variable = c1
