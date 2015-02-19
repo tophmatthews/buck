@@ -22,15 +22,17 @@ private:
   Real calcLosses();
   Real calcGains();
 
-  std::vector<Real> _atoms;
+  std::vector<VariableValue *> _c;
+  std::vector<Real> _avgsize;
+  std::vector<Real> _maxsize;
+  std::vector<Real> _jumpsize;
   VariableValue & _temp;
+
   int _g;
+  int _G;
   int _N_nuc;
 
   MaterialProperty<Real> & _atomic_diffusivity;
-
-  int _G;
-  std::vector<VariableValue *> _c;
 
 };
 #endif //SINKGROWTH_H

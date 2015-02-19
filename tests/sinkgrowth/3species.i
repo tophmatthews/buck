@@ -18,7 +18,7 @@
 
 [GlobalParams]
   coupled_conc = 'c1 c5 c6'
-  coupled_conc_atoms = '1 5 6'
+  coupled_maxsize = '1 5 6'
   N_nuc = 5
   temp = 1000
 []

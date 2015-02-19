@@ -33,7 +33,7 @@ GrowthKernelsAction::act()
       InputParameters p = _factory.getValidParams("SinkGrowth");
       p.set<NonlinearVariableName>("variable") = var_name;
       p.set<std::vector<VariableName> >("coupled_conc") = _vars;
-      p.set<std::vector<Real> >("coupled_conc_atoms") = _atoms;
+      p.set<std::vector<Real> >("coupled_maxsize") = _atoms;
       p.set<int>("N_nuc") = _N_nuc;
 
       p.addCoupledVar("temp", "");
