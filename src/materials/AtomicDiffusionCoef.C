@@ -33,7 +33,7 @@ AtomicDiffusionCoef::AtomicDiffusionCoef(const std::string & name, InputParamete
     _D0 = getParam<Real>("D0");
     _Q = getParam<Real>("Q");
   }
-  else 
+  else
   {
     if ( isParamValid("D0") || isParamValid("Q") )
       mooseError("In AtomicDiffusionCoef: D0 and Q are supplied, model must = 0");
@@ -55,7 +55,7 @@ AtomicDiffusionCoef::AtomicDiffusionCoef(const std::string & name, InputParamete
     }
     else
       mooseError("In AtomicDiffusionCoef: Invalid model value given.");
-  } 
+  }
 }
 
 void

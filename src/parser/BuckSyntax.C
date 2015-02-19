@@ -6,15 +6,12 @@
 #include "ClustersTimeKernelAction.h"
 
 #include "NucleationKernelsAction.h"
-
 #include "GrowthKernelsAction.h"
-
 #include "ClustersPPAction.h"
+#include "KnockoutKernelsAction.h"
 
 #include "ClustersBoundsAction.h"
 #include "ClustersBoundsVarsAction.h"
-
-#include "KnockoutKernelsAction.h"
 
 namespace Buck
 {
@@ -49,7 +46,7 @@ associateSyntax(Syntax & syntax, ActionFactory & action_factory)
 
   syntax.registerActionSyntax("ClustersBoundsVarsAction", "Clusters/Bounds/", "add_aux_variable");
   registerAction(ClustersBoundsVarsAction, "add_aux_variable");
-  
+
   syntax.registerActionSyntax("KnockoutKernelsAction", "Clusters/Knockout/", "add_kernel");
   registerAction(KnockoutKernelsAction, "add_kernel");
 

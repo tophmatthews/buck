@@ -85,7 +85,7 @@
   [../]
   [./grain_gas_flux]
     type = SideFluxIntegral
-    diffusivity = atomic_diffusivity 
+    diffusivity = atomic_diffusivity
     boundary = right
     variable = c1
   [../]

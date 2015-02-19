@@ -1,8 +1,7 @@
 #include "NucleationKernelsAction.h"
+
 #include "Factory.h"
-#include "Parser.h"
 #include "FEProblem.h"
-#include "BuckUtils.h"
 
 template<>
 InputParameters validParams<NucleationKernelsAction>()
@@ -28,7 +27,7 @@ NucleationKernelsAction::act()
     std::string var_name = _vars[n];
 
     InputParameters poly_params = _factory.getValidParams("HomNucleation");
-    
+
     poly_params.set<NonlinearVariableName>("variable") = var_name;
     poly_params.set<std::vector<VariableName> >("coupled_conc") = _vars;
     poly_params.set<int>("g") = n+1;

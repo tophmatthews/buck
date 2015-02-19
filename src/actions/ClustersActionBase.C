@@ -1,10 +1,5 @@
 #include "ClustersActionBase.h"
 
-#include "Factory.h"
-#include "Parser.h"
-#include "FEProblem.h"
-#include "BuckUtils.h"
-
 template<>
 InputParameters validParams<ClustersActionBase>()
 {
@@ -31,7 +26,7 @@ ClustersActionBase::ClustersActionBase(const std::string & name, InputParameters
 }
 
 
-void 
+void
 ClustersActionBase::setup()
 {
   if ( _G < _N_max )
@@ -39,10 +34,8 @@ ClustersActionBase::setup()
   if ( _N_nuc > _N_max )
     mooseError("From ClustersActionBase: N_max must be equal to or greater than N_nuc.");
 
-  Buck::varNamesFromG( _vars, _var_name_base, _G);
+  varNamesFromG( _vars, _var_name_base, _G);
   avgSizeFromGroup( _atoms, _G, getParam<Real>("N_max"), getParam<int>("N_nuc"), getParam<bool>("log") );
-  // Buck::iterateAndDisplay("vars", _vars);
-  // Buck::iterateAndDisplay("atoms", _atoms);
 }
 
 
@@ -55,9 +48,9 @@ ClustersActionBase::avgSizeFromGroup(std::vector<Real> & avgs, const Real G, con
   // N_nuc = largest cluster size from nucleation model
 
   // First setup nucleation clusters, which consist of N_nuc groups with one atom each
-  
+
   std::vector<Real> sizes;
-  
+
   for ( int g=1; g<N_nuc+1; ++g )
     sizes.push_back(g);
 
@@ -87,5 +80,19 @@ ClustersActionBase::avgSizeFromGroup(std::vector<Real> & avgs, const Real G, con
   {
     Real tempavg = 0.5*sizes[g] + 0.5*sizes[g+1];
     avgs.push_back( ceil(tempavg) );
+  }
+}
+
+
+void 
+ClustersActionBase::varNamesFromG(std::vector<VariableName> & vars, const std::string prefix, const Real G, const int start)
+{
+  for ( int i=start; i<G+1; ++i)
+  {
+    VariableName var_name = prefix;
+    std::stringstream out;
+    out << i;
+    var_name.append(out.str());
+    vars.push_back(var_name);
   }
 }

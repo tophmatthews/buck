@@ -31,6 +31,6 @@ private:
 
   int _G;
   std::vector<VariableValue *> _c;
-  
+
 };
 #endif //SINKGROWTH_H

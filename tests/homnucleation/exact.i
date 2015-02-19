@@ -2,7 +2,7 @@
 #  Exact solution in the accompanying excel spreadsheet
 #
 # EXCEL         BUCK      % diff
-# 0.000000E+00  0 
+# 0.000000E+00  0
 # 1.031244E-02  1.03E-02  1.93893E-05
 # 2.062488E-02  2.06E-02  1.93893E-05
 # 3.093733E-02  3.09E-02  1.29341E-05

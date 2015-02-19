@@ -47,7 +47,7 @@
     type = TimeDerivative
     variable = dummy
   [../]
-  
+
   [./c1_time]
     type = TimeDerivative
     variable = c1

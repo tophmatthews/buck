@@ -2,9 +2,7 @@
 
 #include "Factory.h"
 #include "FEProblem.h"
-#include "Parser.h"
 #include "libmesh/string_to_enum.h"
-#include "MooseApp.h"
 
 template<>
 InputParameters validParams<ClustersBoundsVarsAction>()
