@@ -50,6 +50,7 @@ BuckApp::~BuckApp()
 {
 }
 
+extern "C" void BuckApp__registerApps() { BuckApp::registerApps(); }
 void
 BuckApp::registerApps()
 {
