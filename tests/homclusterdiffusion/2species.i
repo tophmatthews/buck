@@ -1,21 +1,21 @@
 # c1 has a very high diffusivity, while c2 has a very low diffusivity.
-# The mesh is a 1D line in 10 segments, with BC of 0 on the left and 10 
-# on the right. Values are sampled at node 1 and 9. The steadystate values 
-# are 1 and 9 respectively. After 5 timesteps, c1 should be nearly at the 
+# The mesh is a 1D line in 10 segments, with BC of 0 on the left and 10
+# on the right. Values are sampled at node 1 and 9. The steadystate values
+# are 1 and 9 respectively. After 5 timesteps, c1 should be nearly at the
 # steady state values, while c2 should still be varying. End steps should be:
 #
 # +----------------+----------------+----------------+----------------+----------------+
 # | time           | c1_left        | c1_right       | c2_left        | c2_right       |
 # +----------------+----------------+----------------+----------------+----------------+
-# |   1.000000e+01 |   1.131808e+00 |   8.868192e+00 |   6.333671e+00 |   3.666329e+00 |
-# |   2.000000e+01 |   1.005802e+00 |   8.994198e+00 |   6.327643e+00 |   3.672357e+00 |
-# |   3.000000e+01 |   1.000297e+00 |   8.999703e+00 |   6.321628e+00 |   3.678372e+00 |
-# |   4.000000e+01 |   1.000016e+00 |   8.999984e+00 |   6.315627e+00 |   3.684373e+00 |
-# |   5.000000e+01 |   1.000001e+00 |   8.999999e+00 |   6.309639e+00 |   3.690361e+00 |
+# |   1.000000e+01 |   1.006965e+00 |   8.993035e+00 |   6.225126e+00 |   3.774874e+00 |
+# |   2.000000e+01 |   1.000016e+00 |   8.999984e+00 |   6.115298e+00 |   3.884702e+00 |
+# |   3.000000e+01 |   1.000000e+00 |   9.000000e+00 |   6.009972e+00 |   3.990028e+00 |
+# |   4.000000e+01 |   1.000000e+00 |   9.000000e+00 |   5.908902e+00 |   4.091098e+00 |
+# |   5.000000e+01 |   1.000000e+00 |   9.000000e+00 |   5.811860e+00 |   4.188140e+00 |
 # +----------------+----------------+----------------+----------------+----------------+
 
 [GlobalParams]
-  nucleation_conc_vars = 'c1 c2'
+  N_nuc = 2
 []
 
 
@@ -91,9 +91,7 @@
   [./diff]
     type = AtomicDiffusionCoef
     temp = 1000
-    D0 = 1.7e5
-    Q = 2.3
-    k = 8.617e-5
+    model = 1
     factor = 1e5
     block = 0
   [../]
@@ -102,8 +100,8 @@
     block = 0
     diffusivity_multipliers = '1e-5'
     c1_rx_coeffs = '0 0'
-    c2_rx_coeffs = '0 0'  
-    cluster_diffusion = true  
+    c2_rx_coeffs = '0 0'
+    cluster_diffusion = true
   [../]
 []
 

@@ -5,8 +5,8 @@ template<>
 InputParameters validParams<HomNucleationMaterial>()
 {
   InputParameters params = validParams<Material>();
-  
-  params.addCoupledVar("nucleation_conc_vars", "List of concentration variables for nucleation model, including c1");
+
+  params.addRequiredParam<int>("N_nuc", "Largest cluster size.");
 
   params.addParam<Real>("omega", 3.0e-2, "Lattice site volume [nm**3]");
   params.addParam<Real>("a", 0.5, "Lattice parameter [nm]");
@@ -30,6 +30,7 @@ InputParameters validParams<HomNucleationMaterial>()
 HomNucleationMaterial::HomNucleationMaterial(const std::string & name, InputParameters parameters) :
   Material(name, parameters),
 
+  _N(getParam<int>("N_nuc")),
   _omega(getParam<Real>("omega")),
   _a(getParam<Real>("a")),
   _cluster_diffusion(getParam<bool>("cluster_diffusion")),
@@ -53,7 +54,12 @@ HomNucleationMaterial::HomNucleationMaterial(const std::string & name, InputPara
   _initialized(false) // flag to see if coefficients were resized
 
 {
-  _N = coupledComponents("nucleation_conc_vars"); // number of variables that need coefficients
+  if ( _N> 9 )
+  {
+    std::stringstream errorMsg;
+    errorMsg << "NucleationKernelsAction: Requested cluster size is too big for the current HomNucleation model (9 atoms max)." <<std::endl;
+    mooseError(errorMsg.str());
+  }
 
   // Protect against not the right number of input for a needed cN coefficient
   if ( !_cluster_diffusion )
@@ -127,7 +133,7 @@ HomNucleationMaterial::HomNucleationMaterial(const std::string & name, InputPara
 
 void
 HomNucleationMaterial::initialize()
-{  
+{
   for( unsigned int qp(0); qp < _qrule->n_points(); ++qp)
   {
     _rx_rates[qp].resize(_N);
@@ -165,11 +171,11 @@ HomNucleationMaterial::computeProperties()
       _cluster_diffusivities[qp][0] = _atomic_diffusivity[qp];
       for ( int i=0; i<_N-1; ++i )
         _cluster_diffusivities[qp][i+1] = _atomic_diffusivity[qp] * _diffusivity_multipliers[i];
-  
+
       for ( int i=0; i<_N; ++i )
       {
         for (int j=1; j<_N; ++j)
-          _rx_rates[qp][i][j] = _omega / _a / _a * _cluster_diffusivities[qp][i] * _rx_coeffs[i][j];       
+          _rx_rates[qp][i][j] = _omega / _a / _a * _cluster_diffusivities[qp][i] * _rx_coeffs[i][j];
       }
     }
   }

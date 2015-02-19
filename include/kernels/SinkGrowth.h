@@ -17,18 +17,22 @@ protected:
 
   virtual Real computeQpResidual();
   virtual Real computeQpJacobian();
-  std::vector<Real> parseAtomsFromVars();
 
 private:
   Real calcLosses();
   Real calcGains();
 
+  std::vector<VariableValue *> _c;
+  std::vector<Real> _avgsize;
+  std::vector<Real> _maxsize;
+  std::vector<Real> _jumpsize;
   VariableValue & _temp;
-  int _m;
+
+  int _g;
+  int _G;
+  int _N_nuc;
+
   MaterialProperty<Real> & _atomic_diffusivity;
 
-  int _N;
-  std::vector<VariableValue *> _c;
-  std::vector<Real> _atoms;
 };
 #endif //SINKGROWTH_H
