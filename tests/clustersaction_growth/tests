@@ -4,9 +4,9 @@
     input = '3species.i'
     exodiff = '3species_out.e'
   [../]
-  [./spacedout]
-    type = 'Exodiff'
-    input = 'spacedout.i'
-    exodiff = 'spacedout_out.e'
-  [../]
+  # [./spacedout]
+  #   type = 'Exodiff'
+  #   input = 'spacedout.i'
+  #   exodiff = 'spacedout_out.e'
+  # [../]
 []

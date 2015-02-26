@@ -1,7 +1,5 @@
 #include "Knockout.h"
 
-#include "BuckUtils.h"
-
 template<>
 InputParameters validParams<Knockout>()
 {

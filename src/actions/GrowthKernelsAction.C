@@ -26,7 +26,7 @@ GrowthKernelsAction::act()
 {
   for (int g=0; g<_G; ++g)
   {
-    if ( g == 0 || g>=_N_nuc-1 )
+    if ( g == 0 || g >= _N_nuc-1 )
     {
       std::string var_name = _vars[g];
 

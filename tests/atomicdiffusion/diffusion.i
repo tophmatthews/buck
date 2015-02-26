@@ -5,12 +5,12 @@
 #  The sample point is 0.5 nm from edge.
 #  Analytical solution is c(x,t) = c0(1-erf(x/sqrt(4Dt)))
 #
-# t         EXCEL       BUCK      % diff
-# 1.00E+05  0.702916768 6.92E-01  1.49E+00
-# 2.00E+05  0.787405907 7.84E-01  4.93E-01
-# 3.00E+05  0.825720558 8.24E-01  2.60E-01
-# 4.00E+05  0.848766081 8.47E-01  1.65E-01
-# 5.00E+05  0.864568925 8.64E-01  1.16E-01
+# t         EXCEL       BUCK        % diff
+# 1.00E+05  7.0292E-01  6.9248E-01  1.4849E+00
+# 2.00E+05  7.8741E-01  7.8357E-01  4.8714E-01
+# 3.00E+05  8.2572E-01  8.2360E-01  2.5703E-01
+# 4.00E+05  8.4877E-01  8.4738E-01  1.6380E-01
+# 5.00E+05  8.6457E-01  8.6357E-01  1.1566E-01
 
 [GlobalParams]
   order = SECOND
@@ -21,7 +21,7 @@
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 1000
+  nx = 100
   xmax = 100
   xmin = 0
   second_order = true

@@ -172,9 +172,9 @@ HomNucleationMaterial::computeProperties()
       for ( int i=0; i<_N-1; ++i )
         _cluster_diffusivities[qp][i+1] = _atomic_diffusivity[qp] * _diffusivity_multipliers[i];
 
-      for ( int i=0; i<_N; ++i )
+      for (  int i=0; i<_N; ++i )
       {
-        for (int j=1; j<_N; ++j)
+        for ( int j=1; j<_N; ++j)
           _rx_rates[qp][i][j] = _omega / _a / _a * _cluster_diffusivities[qp][i] * _rx_coeffs[i][j];
       }
     }

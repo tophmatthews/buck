@@ -1,5 +1,5 @@
-#ifndef SINKGROWTH_H
-#define SINKGROWTH_H
+#ifndef SinkGrowth_H
+#define SinkGrowth_H
 
 #include "Kernel.h"
 
@@ -19,20 +19,23 @@ protected:
   virtual Real computeQpJacobian();
 
 private:
-  Real calcLosses();
-  Real calcGains();
+  Real calcLossesForAtoms(bool jac);
+  Real calcLossesForBubbles(bool jac);
+  Real calcGainsForBubbles(bool jac);
 
   std::vector<VariableValue *> _c;
-  std::vector<Real> _avgsize;
+  std::vector<VariableName> _names;
+  NonlinearVariableName _this_var;
   std::vector<Real> _maxsize;
+  std::vector<Real> _minsize;
   std::vector<Real> _jumpsize;
   VariableValue & _temp;
 
   int _g;
-  int _G;
-  int _N_nuc;
+  unsigned int _G;
+  unsigned int _N_nuc;
 
   MaterialProperty<Real> & _atomic_diffusivity;
 
 };
-#endif //SINKGROWTH_H
+#endif //SinkGrowth_H

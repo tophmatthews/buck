@@ -9,7 +9,6 @@ public:
   ClustersActionBase(const std::string & name, InputParameters params);
 
   virtual void act(){}
-  virtual void setup();
 
 protected:
 	std::vector<VariableName> _vars;
@@ -22,7 +21,7 @@ protected:
 
 private:
   void avgSizeFromGroup(std::vector<Real> & avgs, const Real G, const Real N_max, const int N_nuc, const bool log);
-  void varNamesFromG(std::vector<VariableName> & vars, const std::string prefix, const Real G, const int start=1);
+  void varNamesFromG(std::vector<VariableName> & vars, const std::string prefix, const int G, const int start=1);
 };
 
 template<>

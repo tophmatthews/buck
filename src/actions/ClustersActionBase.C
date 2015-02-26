@@ -1,6 +1,7 @@
 #include "ClustersActionBase.h"
 
 #include "BuckUtils.h"
+#include <iomanip>
 
 template<>
 InputParameters validParams<ClustersActionBase>()
@@ -24,13 +25,6 @@ ClustersActionBase::ClustersActionBase(const std::string & name, InputParameters
   _N_max(getParam<Real>("N_max")),
   _log(getParam<bool>("log"))
 {
-  setup();
-}
-
-
-void
-ClustersActionBase::setup()
-{
   // if ( _G < _N_max )
   //   mooseError("From ClustersActionBase: G must be equal to or greater than N_max.");
   if ( _N_nuc > _N_max )
@@ -39,8 +33,8 @@ ClustersActionBase::setup()
   varNamesFromG( _vars, _var_name_base, _G);
   avgSizeFromGroup( _atoms, _G, getParam<Real>("N_max"), getParam<int>("N_nuc"), getParam<bool>("log") );
 
-  Buck::iterateAndDisplay("vars", _vars);
-  Buck::iterateAndDisplay("atoms", _atoms);
+  // mooseDoOnce(Buck::iterateAndDisplay("vars", _vars));
+  // mooseDoOnce(Buck::iterateAndDisplay("atoms", _atoms));
 }
 
 
@@ -77,24 +71,19 @@ ClustersActionBase::avgSizeFromGroup(std::vector<Real> & sizes, const Real G, co
     for ( int g=N_nuc; g<G; ++g )
       sizes.push_back( b+ std::pow( 10, m * (g-N_nuc+1) ) );
   }
-
-  // avgs.push_back(1.0);
-  // for ( int g=0; g<N_max-1; ++g )
-  // {
-  //   Real tempavg = 0.5*sizes[g] + 0.5*sizes[g+1];
-  //   avgs.push_back( ceil(tempavg) );
-  // }
 }
 
 
 void 
-ClustersActionBase::varNamesFromG(std::vector<VariableName> & vars, const std::string prefix, const Real G, const int start)
+ClustersActionBase::varNamesFromG(std::vector<VariableName> & vars, const std::string prefix, const int G, const int start)
 {
+  int digits = Buck::numDigits(G);
+
   for ( int i=start; i<G+1; ++i)
   {
     VariableName var_name = prefix;
     std::stringstream out;
-    out << i;
+    out << std::setw(digits) << std::setfill('0') << i;
     var_name.append(out.str());
     vars.push_back(var_name);
   }

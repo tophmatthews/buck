@@ -1,4 +1,4 @@
-# Test for SinkGrowth. See accompanying excel file for the exact solution
+# Test for SinkGrowth without consequtive concentrations.
 # Sum should always be 600
 #
 # +----------------+----------------+----------------+----------------+----------------+
@@ -43,6 +43,7 @@
 
 
 [Kernels]
+
   [./c1_time]
     type = TimeDerivative
     variable = c1
@@ -50,7 +51,6 @@
   [./c1_growth]
     type = SinkGrowth
     variable = c1
-    g = 1
   [../]
 
   [./c5_time]
@@ -60,7 +60,6 @@
   [./c5_growth]
     type = SinkGrowth
     variable = c5
-    g = 2
   [../]
 
   [./c6_time]
@@ -70,7 +69,6 @@
   [./c6_growth]
     type = SinkGrowth
     variable = c6
-    g = 3
   [../]
 []
 
@@ -100,6 +98,7 @@
     type = ElementIntegralVariablePostprocessor
     variable = c1
   [../]
+  
   [./c5_conc]
     type = ElementIntegralVariablePostprocessor
     variable = c5
