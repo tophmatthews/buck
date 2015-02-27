@@ -26,7 +26,9 @@ associateSyntax(Syntax & syntax, ActionFactory & action_factory)
    */
 
   syntax.registerActionSyntax("ClustersVarsAction", "Clusters", "add_variable");
+  syntax.registerActionSyntax("ClustersVarsAction", "Clusters", "add_ic");
   registerAction(ClustersVarsAction, "add_variable");
+  registerAction(ClustersVarsAction, "add_ic");
 
   syntax.registerActionSyntax("ClustersTimeKernelAction", "Clusters", "add_kernel");
   registerAction(ClustersTimeKernelAction, "add_kernel");

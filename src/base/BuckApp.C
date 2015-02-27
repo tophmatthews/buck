@@ -14,6 +14,7 @@
 #include "HomNucleation.h"
 #include "HomClusterDiffusion.h"
 #include "SinkGrowth.h"
+#include "OldSinkGrowth.h"
 #include "AtomicDiffusion.h"
 #include "Knockout.h"
 
@@ -66,6 +67,7 @@ BuckApp::registerObjects(Factory & factory)
   registerKernel(HomNucleation);
   registerKernel(HomClusterDiffusion);
   registerKernel(SinkGrowth);
+  registerKernel(OldSinkGrowth);
   registerKernel(AtomicDiffusion);
   registerKernel(Knockout);
 
@@ -77,11 +79,6 @@ BuckApp::registerObjects(Factory & factory)
   registerPostprocessor(MaterialXeBubbleTester);
   registerPostprocessor(BoundedElementAverage);
 }
-
-// void
-// BuckApp::associateSyntax(Syntax & syntax, ActionFactory & action_factory)
-// {
-// }
 
 void
 BuckApp::runInputFile()

@@ -45,6 +45,14 @@ namespace Buck
     mooseError("In BuckUtils: number too large for numDigits");
     return -1;
   }
+
+  template <typename T>
+  inline T log10(T x)
+  {
+    if ( x <= 0 )
+      mooseError("In BuckUtils: Cannot take log of a negative number or 0.");
+    return std::log10(x);
+  }
 }
 
 #endif //BUCKUTILS_H

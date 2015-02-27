@@ -11,7 +11,6 @@ InputParameters validParams<SinkGrowth>()
   params.addRequiredCoupledVar("coupled_conc", "List of coupled concentration variables.");
   params.addRequiredParam<std::vector<Real> >("coupled_maxsize", "List of coupled concentration variables.");
   params.addRequiredCoupledVar("temp", "Coupled Temperature");
-  // params.addRequiredParam<int>("g", "Group number");
   params.addRequiredParam<int>("N_nuc", "Largest cluster size in nucleation model");
 
   return params;
@@ -85,7 +84,7 @@ SinkGrowth::computeQpResidual()
   if ( _minsize[_g] > _N_nuc ) // If bubble is not below smallest
     gains = calcGainsForBubbles(false);
 
-  // std::cout << "g: " << _g << " gains: " << gains << " losses: " << losses << std::endl;
+  // std::cout << std::setprecision(15) << "\tg: " << _g << " gains: " << gains << " losses: " << losses << std::endl;
 
   return -( gains - losses ) * _test[_i][_qp];
 }
@@ -210,7 +209,7 @@ SinkGrowth::calcGainsForBubbles(bool jac)
   }
   else if ( (*_c[_g-1])[_qp] == 0 )
     conc = 0;
-  else if ( _u[_qp] == 0 )
+  else if ( _u[_qp] == 0  )
   {
     if ( _g <= 2  )
       mooseError("In SinkGrowth: Not enough groups specified.");
@@ -227,6 +226,9 @@ SinkGrowth::calcGainsForBubbles(bool jac)
     else
       conc = Buck::dlogEstdRight( _minsize[_g-1], _minsize[_g], (*_c[_g-1])[_qp], _u[_qp], m); // if m=_minsize[g-1], then returns 0
   }
+
+  // std::cout << "K: " << KoverR * radius << " 10^(conc*u): " << conc * (*_c[0])[_qp] << std::endl;
     
   return KoverR * radius * conc * (*_c[0])[_qp];
+  // return 0.005;
 }
