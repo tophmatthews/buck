@@ -11,7 +11,7 @@ InputParameters validParams<ClustersVarsAction>()
   params.addParam<std::string>("order", "FIRST",  "Specifies the order of the FE shape function to use for this variable");
   params.addParam<std::string>("family", "LAGRANGE", "Specifies the family of FE shape functions to use for this variable");
   params.addParam<Real>("scaling", 1.0, "Specifies a scaling factor to apply to the L variables");
-  params.addParam<Real>("initial_condition", 1.0, "Specifies a scaling factor to apply to the L variables");
+  params.addParam<Real>("initial_condition", "Specifies a scaling factor to apply to the L variables");
 
   return params;
 }
@@ -38,7 +38,7 @@ ClustersVarsAction::act()
                             scale);
     }
   }
-  else if (_current_task == "add_ic")
+  else if (_current_task == "add_ic" && isParamValid("initial_condition"))
   {
     // Set Initial Conditions
 
