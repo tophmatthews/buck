@@ -9,10 +9,8 @@ InputParameters validParams<ClustersActionBase>()
   InputParameters params = validParams<Action>();
 
   params.addParam<std::string>("var_name_base", "c", "Specifies the base name of the variables");
-  params.addRequiredParam<int>("G", "Number of groups");
-  params.addRequiredParam<int>("N_nuc", "Largest cluster size in nucleation model");
-  params.addRequiredParam<Real>("N_max", "Largest cluster size");
-  params.addRequiredParam<bool>("log", "Flag whether or not to use log spacing when relating atoms to group number");
+  params.addRequiredParam<int>("N", "Total number of groups");
+  params.addRequiredParam<int>("M", "Number of ungrouped equations");
 
   return params;
 }
@@ -20,58 +18,65 @@ InputParameters validParams<ClustersActionBase>()
 ClustersActionBase::ClustersActionBase(const std::string & name, InputParameters params) :
   Action(name, params),
   _var_name_base(getParam<std::string>("var_name_base")),
-  _G(getParam<int>("G")),
-  _N_nuc(getParam<int>("N_nuc")),
-  _N_max(getParam<Real>("N_max")),
-  _log(getParam<bool>("log"))
+  _N(getParam<int>("N")),
+  _M(getParam<int>("M"))
 {
-  // if ( _G < _N_max )
-  //   mooseError("From ClustersActionBase: G must be equal to or greater than N_max.");
-  if ( _N_nuc > _N_max )
+  if ( _N < _M )
     mooseError("From ClustersActionBase: N_max must be equal to or greater than N_nuc.");
 
-  varNamesFromG( _vars, _var_name_base, _G);
-  avgSizeFromGroup( _atoms, _G, getParam<Real>("N_max"), getParam<int>("N_nuc"), getParam<bool>("log") );
+  varNamesFromG( _vars, _var_name_base, _N);
 
-  // mooseDoOnce(Buck::iterateAndDisplay("vars", _vars));
-  // mooseDoOnce(Buck::iterateAndDisplay("atoms", _atoms));
-}
-
-
-void
-ClustersActionBase::avgSizeFromGroup(std::vector<Real> & sizes, const Real G, const Real N_max, const int N_nuc, const bool log)
-{
-  // Determines maximum cluster size for a given group.
-  // G = Max number of groups
-  // N_max = largest cluster size
-  // N_nuc = largest cluster size from nucleation model
-
-  // First setup nucleation clusters, which consist of N_nuc groups with one atom each
-
-  for ( int g=1; g<N_nuc+1; ++g )
-    sizes.push_back(g);
-
-  Real m; // slope
-  Real b; // intercept
-  if ( !log )
+  for ( int j=0; j<_M; ++j )
   {
-    // Linear separation between max atoms and group number
-    b = N_nuc;
-    m = (N_max - N_nuc) / (G - N_nuc);
-
-    for ( int g=N_nuc; g<G; ++g )
-      sizes.push_back( b + m * (g-N_nuc+1) );
+    _width.push_back(1);
+    _maxsize.push_back(j+1);
+    _minsize.push_back(j+1);
+    _avgsize.push_back(j+1);
   }
-  else
+  for ( int j=_M; j<_N; ++j )
   {
-    // roughly log separation
-    b = N_nuc - 1;
-    m = std::log10(N_max - N_nuc +1) / (G - N_nuc);
-
-    for ( int g=N_nuc; g<G; ++g )
-      sizes.push_back( b+ std::pow( 10, m * (g-N_nuc+1) ) );
+    _width.push_back  ( (_maxsize.back() + 1.0)/_M );
+    _minsize.push_back( _maxsize.back() + 1.0 );
+    _maxsize.push_back( _width.back() + _maxsize.back() );
+    _avgsize.push_back( 0.5 * _minsize.back() + 0.5 * _maxsize.back() );
   }
 }
+
+
+// void
+// ClustersActionBase::avgSizeFromGroup(std::vector<Real> & sizes, const Real G, const Real N_max, const int N_nuc, const bool log)
+// {
+//   // Determines maximum cluster size for a given group.
+//   // G = Max number of groups
+//   // N_max = largest cluster size
+//   // N_nuc = largest cluster size from nucleation model
+
+//   // First setup nucleation clusters, which consist of N_nuc groups with one atom each
+
+//   for ( int g=1; g<N_nuc+1; ++g )
+//     sizes.push_back(g);
+
+//   Real m; // slope
+//   Real b; // intercept
+//   if ( !log )
+//   {
+//     // Linear separation between max atoms and group number
+//     b = N_nuc;
+//     m = (N_max - N_nuc) / (G - N_nuc);
+
+//     for ( int g=N_nuc; g<G; ++g )
+//       sizes.push_back( b + m * (g-N_nuc+1) );
+//   }
+//   else
+//   {
+//     // roughly log separation
+//     b = N_nuc - 1;
+//     m = std::log10(N_max - N_nuc +1) / (G - N_nuc);
+
+//     for ( int g=N_nuc; g<G; ++g )
+//       sizes.push_back( b+ std::pow( 10, m * (g-N_nuc+1) ) );
+//   }
+// }
 
 
 void 

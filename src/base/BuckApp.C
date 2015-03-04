@@ -17,16 +17,24 @@
 #include "OldSinkGrowth.h"
 #include "AtomicDiffusion.h"
 #include "Knockout.h"
+#include "SingleCavity.h"
+
+#include "PointDefect.h"
 
 // Materials
 #include "HomNucleationMaterial.h"
 #include "AtomicDiffusionCoef.h"
+#include "PointDefectDiffusionCoef.h"
+#include "PointDefectThermalEq.h"
 
 // Postprocessors
 #include "GrainBoundaryGasFlux.h"
 #include "SumOfPostprocessors.h"
 #include "MaterialXeBubbleTester.h"
 #include "BoundedElementAverage.h"
+#include "CavityPointDefectFlux.h"
+#include "CavityPointDefectEmission.h"
+
 
 template<>
 InputParameters validParams<BuckApp>()
@@ -70,14 +78,20 @@ BuckApp::registerObjects(Factory & factory)
   registerKernel(OldSinkGrowth);
   registerKernel(AtomicDiffusion);
   registerKernel(Knockout);
+  registerKernel(PointDefect);
+  registerKernel(SingleCavity);
 
   registerMaterial(HomNucleationMaterial);
   registerMaterial(AtomicDiffusionCoef);
+  registerMaterial(PointDefectDiffusionCoef);
+  registerMaterial(PointDefectThermalEq);
 
   registerPostprocessor(GrainBoundaryGasFlux);
   registerPostprocessor(SumOfPostprocessors);
   registerPostprocessor(MaterialXeBubbleTester);
   registerPostprocessor(BoundedElementAverage);
+  registerPostprocessor(CavityPointDefectFlux);
+  registerPostprocessor(CavityPointDefectEmission);
 }
 
 void

@@ -22,21 +22,21 @@ NucleationKernelsAction::NucleationKernelsAction(const std::string & name,
 void
 NucleationKernelsAction::act()
 {
-  for (unsigned int n = 0; n < _N_nuc; ++n)
-  {
-    std::string var_name = _vars[n];
+  // for (unsigned int n = 0; n < _N_nuc; ++n)
+  // {
+  //   std::string var_name = _vars[n];
 
-    InputParameters poly_params = _factory.getValidParams("HomNucleation");
+  //   InputParameters poly_params = _factory.getValidParams("HomNucleation");
 
-    poly_params.set<NonlinearVariableName>("variable") = var_name;
-    poly_params.set<std::vector<VariableName> >("coupled_conc") = _vars;
-    poly_params.set<int>("g") = n+1;
-    poly_params.set<int>("N_nuc") = _N_nuc;
-    poly_params.set<bool>("use_displaced_mesh") = getParam<bool>("use_displaced_mesh");
+  //   poly_params.set<NonlinearVariableName>("variable") = var_name;
+  //   poly_params.set<std::vector<VariableName> >("coupled_conc") = _vars;
+  //   poly_params.set<int>("g") = n+1;
+  //   poly_params.set<int>("N_nuc") = _N_nuc;
+  //   poly_params.set<bool>("use_displaced_mesh") = getParam<bool>("use_displaced_mesh");
 
-    std::string kernel_name = var_name;
-    kernel_name.append("_nucleation");
+  //   std::string kernel_name = var_name;
+  //   kernel_name.append("_nucleation");
 
-    _problem->addKernel("HomNucleation", kernel_name, poly_params);
-  }
+  //   _problem->addKernel("HomNucleation", kernel_name, poly_params);
+  // }
 }

@@ -25,7 +25,7 @@ ClustersTimeKernelAction::act()
 {
   if ( getParam<bool>("transient") )
   {
-    for (unsigned int g = 0; g < _G; ++g)
+    for (unsigned int g = 0; g < _N; ++g)
     {
       InputParameters poly_params = _factory.getValidParams("TimeDerivative");
 

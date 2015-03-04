@@ -75,7 +75,7 @@ ClustersPPAction::act()
     InputParameters params = _factory.getValidParams(pp_to_use);
     params.set<MultiMooseEnum>("execute_on") = "timestep_end";
     params.set<std::vector<PostprocessorName> >("postprocessors") = pp_names;
-    params.set<std::vector<Real> >("factors") = _atoms;
+    params.set<std::vector<Real> >("factors") = _avgsize;
 
     std::vector<OutputName> outs(getParam<std::vector<OutputName> >("total_atoms"));
     params.set<std::vector<OutputName> >("outputs") = outs;

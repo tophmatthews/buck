@@ -24,7 +24,7 @@ KnockoutKernelsAction::KnockoutKernelsAction(const std::string & name,
 void
 KnockoutKernelsAction::act()
 {
-  for (unsigned int g = 0; g<_G; ++g)
+  for (unsigned int g = 0; g<_N; ++g)
   {
     std::string var_name = _vars[g];
     std::string orig_kernel = "Knockout";
@@ -32,7 +32,7 @@ KnockoutKernelsAction::act()
     InputParameters p = _factory.getValidParams(orig_kernel);
     p.set<NonlinearVariableName>("variable") = var_name;
     p.set<std::vector<VariableName> >("coupled_conc") = _vars;
-    p.set<std::vector<Real> >("coupled_conc_atoms") = _atoms;
+    // p.set<std::vector<Real> >("coupled_conc_atoms") = _atoms;
     p.set<int>("g") = g+1;
     p.set<Real>("parameter") = getParam<Real>("parameter");
 

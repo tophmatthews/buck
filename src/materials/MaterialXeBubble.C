@@ -1,5 +1,7 @@
 #include "MaterialXeBubble.h"
 
+#include "MooseError.h"
+
 #include <iostream>
 #include <cmath>
 
@@ -25,6 +27,76 @@ namespace MaterialXeBubble{
     double invrho = ( B + 1.0 / (2.0*gamma/k/T/R + sigma/k/T) );
 
     return 1.0/invrho;
+  }
+
+  ////////////////////////////////////////////////////////////////////////
+
+  // double VDW_RtoP(double rad, double T, double m)
+  // {
+  //   // Calculates the bubble preessure in a bubble based on Van der Waal's EOS
+  //   //
+  //   // p = RT/(V/n - b) - a(n/V)^2
+  //   //
+  //   // T = Temperature, [K]
+  //   // rad = bubble radius, [m]
+  //   // m = number of atoms
+  //   // R = Ideal Gas constant, [J/mol/K]
+  //   // V = Bubble volume, [m]
+  //   // n = number of mols, [mol]
+  //   // a = 0.4306 [Pa*m6 / mol^2 ]
+  //   // b = 5.11e−5 [m^3 / mol]
+  //   // k = boltzmann constant, [J/K]
+
+  //   double R = 8.314;
+  //   double a = 0.4306;
+  //   double b = 5.11e-5;
+  //   double n = m / 6.022e23;
+  //   double V = 4.0/3.0 * M_PI * std::pow(rad,3);
+
+  //   double left = R*T/( V/n - b );
+  //   double right = a*std::pow(n/V, 2.0);
+
+  //   double p = left - right;
+
+  //   if (p<0)
+  //   {
+  //     std::cout << "rad: " << rad << " T: " << T << " m: " << m << " VDW pressure: " << p << std::endl;
+  //     mooseError("In MaterialXeBubble: Negative bubble pressure calculated");
+  //   }
+
+  //   // std::cout << "rad: " << rad << " T: " << T << " m: " << m << " VDW pressure: " << p << std::endl;
+  //   return p;
+  // }
+
+  double VDW_RtoP(double rad, double T, double m)
+  {
+    // Calculates the bubble preessure in a bubble based on Van der Waal's EOS
+    //
+    // p = kT/(1/rho - B)
+    //
+    // T = Temperature, [K]
+    // rad = bubble radius, [m]
+    // m = number of atoms
+    // k = Boltzmann constant, [J/K]
+    // rho = Bubble atomic density, [atom/m3]
+    // B = constant, [m3/atom]
+
+    double k = 1.3806488e-23; // [J/K]
+    double B = 8.469e-29; // [m3/atom]
+    double V = 4.0/3.0 * M_PI * std::pow(rad,3);
+    double rho = m/V;
+
+    double p = k*T/(1.0/rho - B);
+
+    if (p<0)
+    {
+      // p = 1e50;
+      std::cout << "rad: " << rad << " T: " << T << " m: " << m << " VDW pressure: " << p << std::endl;
+      mooseError("In MaterialXeBubble: Negative bubble pressure calculated");
+    }
+
+    // std::cout << "rad: " << rad << " T: " << T << " m: " << m << " VDW pressure: " << p << std::endl;
+    return p;
   }
 
   ////////////////////////////////////////////////////////////////////////

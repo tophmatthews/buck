@@ -59,8 +59,7 @@ AtomicDiffusionCoef::AtomicDiffusionCoef(const std::string & name, InputParamete
 }
 
 void
-AtomicDiffusionCoef::computeProperties()
+AtomicDiffusionCoef::computeQpProperties()
 {
-  for( unsigned int qp(0); qp < _qrule->n_points(); ++qp)
-    _atomic_diffusivity[qp] = _D0 * std::exp( -_Q / _R / _temp[qp] ) * _factor;
+  _atomic_diffusivity[_qp] = _D0 * std::exp( -_Q / _R / _temp[_qp] ) * _factor;
 }

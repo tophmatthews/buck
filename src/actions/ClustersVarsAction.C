@@ -46,10 +46,10 @@ ClustersVarsAction::act()
     {
       InputParameters poly_params = _factory.getValidParams("ConstantIC");
       poly_params.set<VariableName>("variable") = _vars[i];
-      // if ( i ==0 || i == 1)
-      //   poly_params.set<Real>("value") = 1;
-      // else
-      poly_params.set<Real>("value") = getParam<Real>("initial_condition");
+      if ( i == 0 || i == 1)
+        poly_params.set<Real>("value") = 1;
+      else
+        poly_params.set<Real>("value") = getParam<Real>("initial_condition");
       _problem->addInitialCondition("ConstantIC", "Initialize_" + 1+i, poly_params);
     }
   }

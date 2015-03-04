@@ -23,17 +23,23 @@ private:
   Real calcLossesForBubbles(bool jac);
   Real calcGainsForBubbles(bool jac);
 
-  std::vector<VariableValue *> _c;
+  
   std::vector<VariableName> _names;
-  NonlinearVariableName _this_var;
-  std::vector<Real> _maxsize;
-  std::vector<Real> _minsize;
-  std::vector<Real> _jumpsize;
+  const NonlinearVariableName _this_var;
   VariableValue & _temp;
+  const unsigned int _M;
+  const Real _a;
+  const Real _omega;
 
-  int _g;
-  unsigned int _G;
-  unsigned int _N_nuc;
+  std::vector<VariableValue *> _c;
+  std::vector<Real> _width;
+  std::vector<Real> _minsize;
+  std::vector<Real> _maxsize;
+  std::vector<Real> _avgsize;
+  
+  unsigned int _N;
+  int _g;  
+  
 
   MaterialProperty<Real> & _atomic_diffusivity;
 

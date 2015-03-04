@@ -15,7 +15,7 @@ public:
                          InputParameters parameters);
 
 protected:
-  virtual void computeProperties();
+  virtual void computeQpProperties();
 
   VariableValue & _temp;
 
