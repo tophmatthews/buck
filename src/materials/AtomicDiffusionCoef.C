@@ -7,12 +7,13 @@ InputParameters validParams<AtomicDiffusionCoef>()
   InputParameters params = validParams<Material>();
 
   params.addRequiredCoupledVar("temp", "Coupled Temperature");
+  params.addCoupledVar("fission_rate", 0, "Coupled fission rate");
 
-  params.addParam<Real>("D0", "Diffusion coefficient [nm^2/s]");
+  params.addParam<Real>("D0", "Diffusion coefficient [um^2/s]");
   params.addParam<Real>("Q", "Activation energy [J/mol]");
   params.addParam<Real>("R", 8.31446, "Ideal gas constant [J/(K*mo)]");
   params.addParam<Real>("factor", 1, "Scaling factor to multiply by diffusivity.");
-  params.addParam<int>("model", 1, "Switch for diffusion coefficient model (0=user input, 1=Matzke, 2=Madrid, 3=Eyre");
+  params.addParam<int>("model", 1, "Switch for diffusion coefficient model (0=user input, 1=UC Matzke, 2=UC Madrid, 3=UC Eyre, 4=UO2 Griesmeyer");
 
   return params;
 }
@@ -20,6 +21,7 @@ InputParameters validParams<AtomicDiffusionCoef>()
 AtomicDiffusionCoef::AtomicDiffusionCoef(const std::string & name, InputParameters parameters) :
   Material(name, parameters),
   _temp(coupledValue("temp")),
+  _fission_rate(coupledValue("fission_rate")),
   _R(getParam<Real>("R")),
   _factor(getParam<Real>("factor")),
   _model(getParam<int>("model")),
@@ -40,18 +42,31 @@ AtomicDiffusionCoef::AtomicDiffusionCoef(const std::string & name, InputParamete
 
     if ( _model == 1 )
     {
-      _D0 = 3.0e13;
+      _D0 = 3.0e10;
       _Q = 355000.0;
+      _D0f = 0;
+      _Qf = 0;
     }
     else if ( _model == 2 )
     {
-      _D0 = 4.6e11;
+      _D0 = 4.6e8;
       _Q = 326360.0;
+      _D0f = 0;
+      _Qf = 0;
     }
     else if ( _model == 3 )
     {
-      _D0 = 1.66e5;
+      _D0 = 1.66e2;
       _Q = 221154.0;
+      _D0f = 0;
+      _Qf = 0;
+    }
+    else if ( _model == 4 )
+    {
+      _D0 = 2.1e4;
+      _Q = 381000.0;
+      _D0f = 1.e-4;
+      _Qf = 26.36;
     }
     else
       mooseError("In AtomicDiffusionCoef: Invalid model value given.");
@@ -61,5 +76,10 @@ AtomicDiffusionCoef::AtomicDiffusionCoef(const std::string & name, InputParamete
 void
 AtomicDiffusionCoef::computeQpProperties()
 {
-  _atomic_diffusivity[_qp] = _D0 * std::exp( -_Q / _R / _temp[_qp] ) * _factor;
+  Real diff_thermal = _D0 * std::exp( -_Q / _R / _temp[_qp] );
+  Real diff_fission = _D0f * std::exp( -_Qf / _R / _temp[_qp] ) * _fission_rate[_qp];
+
+  // std::cout << "Diff: " << _atomic_diffusivity[_qp] << std::endl;
+  
+  _atomic_diffusivity[_qp] = (diff_thermal + diff_fission) * _factor;
 }

@@ -52,6 +52,13 @@ PointDefect::PointDefect(const std::string & name, InputParameters parameters) :
 {
 }
 
+
+// void
+// PointDefect::initialSetup()
+// {
+//   _u[_qp] = 
+// }
+
 void
 PointDefect::calcRates()
 {
@@ -103,7 +110,16 @@ PointDefect::calcRates()
   Real E_gb = l_d * X_th;                                                       // Emission from grain boundaries
   Real E_fr = alpha * _X_vu[_qp] * _X_iu[_qp];                                  // Emission from thermal Frenekel pair production
 
-  // std::cout << "rad_in_meters: " << rad_in_meters << " bub_p: " << bub_p << " delP: " << delP << " exp: " << sign * delP * _omega / _kB / _temp[_qp] << " E_c: " << E_c << std::endl;
+  // std::cout << "rad_in_meters: " << rad_in_meters << " bub_p: " << bub_p << " delP: " << delP << " exp: " << std::exp( sign * delP * _omega / _kB / _temp[_qp] ) << " E_c: " << E_c << std::endl;
+  // std::cout << "isvac? " << _is_vac
+  //           << " R_d: " << l_d * _u[_qp]
+  //           << " R_c: " << l_c * _u[_qp]
+  //           << " R_gb: " << l_gb * _u[_qp]
+  //           << " R_r: " << alpha * _u[_qp] * _o[_qp]
+  //           << " E_d: " << l_d * X_th
+  //           << " E_c: " << l_c * X_th
+  //           << " E_gb: " << l_gb * X_th
+  //           << " E_r: " << alpha * _X_vu[_qp] * _X_iu[_qp] << std::endl;
 
   _E_tot  = E_c + E_d + E_gb + E_fr; // total emission rate
   _dE_tot = 0;                       // total emission rate jacobian

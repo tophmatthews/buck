@@ -22,9 +22,9 @@ protected:
   const bool _is_vac;
   Real _D0;
   Real _Q;
-  const Real _R;
   const Real _factor;
   const int _model;
+  const Real _kB;
 
   MaterialProperty<Real> * _diffusivity;
 };

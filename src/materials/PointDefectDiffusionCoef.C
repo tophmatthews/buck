@@ -9,9 +9,8 @@ InputParameters validParams<PointDefectDiffusionCoef>()
   params.addRequiredCoupledVar("temp", "Coupled Temperature");
 
   params.addRequiredParam<bool>("is_vac", "Flag to define vacancy (true) or interstitial (false) diffusion coef.");
-  params.addParam<Real>("D0", "Diffusion coefficient [cm^2/s]");
-  params.addParam<Real>("Q", "Activation energy [J/mol]");
-  params.addParam<Real>("R", 8.31446, "Ideal gas constant [J/(K*mo)]");
+  params.addParam<Real>("D0", "Diffusion coefficient [um^2/s]");
+  params.addParam<Real>("Q", "Activation energy [eV/mol]");
   params.addParam<Real>("factor", 1, "Scaling factor to multiply by diffusivity.");
   params.addParam<int>("model", 1, "Switch for diffusion coefficient model (0=user input, 1=uo2)");
 
@@ -22,9 +21,11 @@ PointDefectDiffusionCoef::PointDefectDiffusionCoef(const std::string & name, Inp
   Material(name, parameters),
   _temp(coupledValue("temp")),
   _is_vac(getParam<bool>("is_vac")),
-  _R(getParam<Real>("R")),
   _factor(getParam<Real>("factor")),
-  _model(getParam<int>("model"))
+  _model(getParam<int>("model")),
+
+  _kB(8.6173324e-5) // Boltzmann constant, [ev/K]
+
 {
   if (_is_vac)
     _diffusivity = &declareProperty<Real>("vacancy_diffusivity");
@@ -47,12 +48,12 @@ PointDefectDiffusionCoef::PointDefectDiffusionCoef(const std::string & name, Inp
       if (_is_vac)
       {
         _D0 = 1.0e5; // um2/s
-        _Q = 231600.0; // J/mol
+        _Q = 2.4; // eV
       }
       else
       {
         _D0 = 7.12e11; //um2/s
-        _Q = 183300.0; // J/mol
+        _Q = 1.9; // eV
       }
     }
     // else if ( _model == 2 )
@@ -73,6 +74,6 @@ PointDefectDiffusionCoef::PointDefectDiffusionCoef(const std::string & name, Inp
 void
 PointDefectDiffusionCoef::computeQpProperties()
 {
-  (*_diffusivity)[_qp] = _D0 * std::exp( -_Q / _R / _temp[_qp] ) * _factor;
-  // std::cout << "is vac?: " << _is_vac << " diff: " << (*_diffusivity)[_qp] << std::endl;
+  (*_diffusivity)[_qp] = _D0 * std::exp( -_Q / _kB / _temp[_qp] ) * _factor;
+  // std::cout << "is vac?: " << _is_vac << " temp: " << _temp[_qp] << " diff: " << (*_diffusivity)[_qp] << std::endl;
 }

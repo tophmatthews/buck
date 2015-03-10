@@ -22,8 +22,8 @@
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 10
-  xmax = 1
+  nx = 20
+  xmax = 5
   xmin = 0
   second_order = true
 []
@@ -31,8 +31,7 @@
 
 [Variables]
   [./c1]
-  [../]
-  [./c2]
+    initial_condition = 1
   [../]
 []
 
@@ -45,21 +44,6 @@
   [./c1_diffusion]
     type = AtomicDiffusion
     variable = c1
-  [../]
-  [./c1_source]
-    type = BodyForce
-    variable = c1
-    value = 1
-  [../]
-
-  [./c2_time]
-    type = TimeDerivative
-    variable = c2
-  [../]
-  [./c2_source]
-    type = BodyForce
-    variable = c2
-    value = 1
   [../]
 []
 
@@ -76,10 +60,8 @@
 [Materials]
   [./diff]
     type = AtomicDiffusionCoef
-    temp = 1
-    D0 = 1
-    Q = 0
-    model = 0
+    temp = 1000
+    model = 1
     factor = 1
     block = 0
   [../]
@@ -91,21 +73,15 @@
 
   solve_type = PJFNK
 
-  num_steps = 50
-  dt = 1
+  num_steps = 5
+  dt = 2000000
 []
 
 
 [Postprocessors]
   [./c1_num]
     type = ElementIntegralVariablePostprocessor
-    # type = ElementAverageValue
     variable = c1
-  [../]
-  [./c2_num]
-    type = ElementIntegralVariablePostprocessor
-    # type = ElementAverageValue
-    variable = c2
   [../]
   [./grain_gas_flux]
     type = SideFluxIntegral
@@ -127,5 +103,5 @@
 [Outputs]
   console = true
   exodus = true
-  interval = 10
+  interval = 1
 []

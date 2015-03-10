@@ -77,7 +77,7 @@ void
 PointDefectThermalEq::calcUCConc()
 {
   mooseError("In PointDefectThermalEq: Fueltype 1 is not implmented yet.");
-  //TODO: implement UC thermal conc
+  //TODO: implement UC thermal concentrations
 }
 
 void

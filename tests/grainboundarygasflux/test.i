@@ -23,7 +23,7 @@
   type = GeneratedMesh
   dim = 1
   nx = 20
-  xmax = 0.5
+  xmax = 5
   xmin = 0
   second_order = true
 []
@@ -31,7 +31,7 @@
 
 [Variables]
   [./c1]
-    initial_condition = 100
+    initial_condition = 1
   [../]
 []
 
@@ -74,7 +74,7 @@
   solve_type = PJFNK
 
   num_steps = 5
-  dt = 2
+  dt = 2000000
 []
 
 
