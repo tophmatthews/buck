@@ -1,8 +1,8 @@
-#include "AtomicDiffusionCoef.h"
+#include "GasAtomDiffusivity.h"
 #include "MooseEnum.h"
 
 template<>
-InputParameters validParams<AtomicDiffusionCoef>()
+InputParameters validParams<GasAtomDiffusivity>()
 {
   InputParameters params = validParams<Material>();
 
@@ -18,7 +18,7 @@ InputParameters validParams<AtomicDiffusionCoef>()
   return params;
 }
 
-AtomicDiffusionCoef::AtomicDiffusionCoef(const std::string & name, InputParameters parameters) :
+GasAtomDiffusivity::GasAtomDiffusivity(const std::string & name, InputParameters parameters) :
   Material(name, parameters),
   _temp(coupledValue("temp")),
   _fission_rate(coupledValue("fission_rate")),
@@ -31,14 +31,14 @@ AtomicDiffusionCoef::AtomicDiffusionCoef(const std::string & name, InputParamete
   if ( _model == 0 )
   {
     if ( !isParamValid("D0") || !isParamValid("Q") )
-      mooseError("In AtomicDiffusionCoef: if model = 0 (user supplied), D0 and Q must also be supplied");
+      mooseError("In GasAtomDiffusivity: if model = 0 (user supplied), D0 and Q must also be supplied");
     _D0 = getParam<Real>("D0");
     _Q = getParam<Real>("Q");
   }
   else
   {
     if ( isParamValid("D0") || isParamValid("Q") )
-      mooseError("In AtomicDiffusionCoef: D0 and Q are supplied, model must = 0");
+      mooseError("In GasAtomDiffusivity: D0 and Q are supplied, model must = 0");
 
     if ( _model == 1 )
     {
@@ -69,12 +69,12 @@ AtomicDiffusionCoef::AtomicDiffusionCoef(const std::string & name, InputParamete
       _Qf = 26.36;
     }
     else
-      mooseError("In AtomicDiffusionCoef: Invalid model value given.");
+      mooseError("In GasAtomDiffusivity: Invalid model value given.");
   }
 }
 
 void
-AtomicDiffusionCoef::computeQpProperties()
+GasAtomDiffusivity::computeQpProperties()
 {
   Real diff_thermal = _D0 * std::exp( -_Q / _R / _temp[_qp] );
   Real diff_fission = _D0f * std::exp( -_Qf / _R / _temp[_qp] ) * _fission_rate[_qp];

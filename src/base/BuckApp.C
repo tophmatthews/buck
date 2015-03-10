@@ -18,8 +18,9 @@
 #include "PointDefect.h"
 
 // Materials
-#include "AtomicDiffusionCoef.h"
-#include "PointDefectDiffusionCoef.h"
+#include "GasAtomDiffusivity.h"
+#include "VacancyDiffusivity.h"
+#include "InterstitialDiffusivity.h"
 #include "PointDefectThermalEq.h"
 
 // Postprocessors
@@ -72,8 +73,9 @@ BuckApp::registerObjects(Factory & factory)
   registerKernel(BubbleNucleation);
   registerKernel(BubbleCoalescence);
 
-  registerMaterial(AtomicDiffusionCoef);
-  registerMaterial(PointDefectDiffusionCoef);
+  registerMaterial(GasAtomDiffusivity);
+  registerMaterial(VacancyDiffusivity);
+  registerMaterial(InterstitialDiffusivity);
   registerMaterial(PointDefectThermalEq);
 
   registerPostprocessor(GrainBoundaryGasFlux);

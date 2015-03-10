@@ -1,17 +1,17 @@
-#ifndef ATOMICDIFFUSIONCOEF_H
-#define ATOMICDIFFUSIONCOEF_H
+#ifndef GASATOMDIFFUSIVITY_H
+#define GASATOMDIFFUSIVITY_H
 
 #include "Material.h"
 
-class AtomicDiffusionCoef;
+class GasAtomDiffusivity;
 
 template<>
-InputParameters validParams<AtomicDiffusionCoef>();
+InputParameters validParams<GasAtomDiffusivity>();
 
-class AtomicDiffusionCoef : public Material
+class GasAtomDiffusivity : public Material
 {
 public:
-  AtomicDiffusionCoef(const std::string & name,
+  GasAtomDiffusivity(const std::string & name,
                          InputParameters parameters);
 
 protected:
@@ -31,4 +31,4 @@ protected:
   MaterialProperty<Real> & _atomic_diffusivity;
 };
 
-#endif // ATOMUCDIFFUSIONCOEF_H
+#endif // GASATOMDIFFUSIVITY_H

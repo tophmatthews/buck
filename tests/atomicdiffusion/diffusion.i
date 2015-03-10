@@ -55,7 +55,7 @@
 
 [Materials]
   [./diff]
-    type = AtomicDiffusionCoef
+    type = GasAtomDiffusivity
     temp = 1000
     model = 1
     factor = 1
