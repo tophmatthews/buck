@@ -42,8 +42,9 @@
     variable = c1
   [../]
   [./c1_diffusion]
-    type = AtomicDiffusion
+    type = BasicDiffusion
     variable = c1
+    diffusivity = gas_diffusivity
   [../]
 []
 
@@ -85,7 +86,7 @@
   [../]
   [./grain_gas_flux]
     type = SideFluxIntegral
-    diffusivity = atomic_diffusivity
+    diffusivity = gas_diffusivity
     boundary = right
     variable = c1
   [../]

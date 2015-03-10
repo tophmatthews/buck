@@ -23,10 +23,10 @@ PointDefectThermalEq::PointDefectThermalEq(const std::string & name, InputParame
   _kB(8.6173324e-5), // Boltzmann constant, [ev/K]
 
   // Fractional concentrations
-  _X_vo(declareProperty<Real>("X_vo")),
-  _X_io(declareProperty<Real>("X_io")),
-  _X_vu(declareProperty<Real>("X_vu")),
-  _X_iu(declareProperty<Real>("X_iu"))
+  _X_vo_eq(declareProperty<Real>("X_vo_eq")),
+  _X_io_eq(declareProperty<Real>("X_io_eq")),
+  _X_vu_eq(declareProperty<Real>("X_vu_eq")),
+  _X_iu_eq(declareProperty<Real>("X_iu_eq"))
 {
 }
 
@@ -54,23 +54,23 @@ PointDefectThermalEq::calcUO2Conc()
 
   RPoly::rpoly(coeffs, 4, real_roots, img_roots, info);
 
-  _X_vo[_qp] = -1;
+  _X_vo_eq[_qp] = -1;
   for ( int i=0; i<4; ++i)
   {
     if ( real_roots[i] > 0 )
     {
-      if (_X_vo[_qp] == -1)
-        _X_vo[_qp] = real_roots[i];
+      if (_X_vo_eq[_qp] == -1)
+        _X_vo_eq[_qp] = real_roots[i];
       else
         mooseError("In PointDefect: more than one positive root");
     }
   }
-  if (_X_vo[_qp] == -1)
+  if (_X_vo_eq[_qp] == -1)
     mooseError("In PointDefect: no positive roots");
 
-  _X_io[_qp] = K_Fo / _X_vo[_qp];
-  _X_vu[_qp] = K_S / std::pow(_X_vo[_qp], 2.0);
-  _X_iu[_qp] = K_Fu / _X_vu[_qp];
+  _X_io_eq[_qp] = K_Fo / _X_vo_eq[_qp];
+  _X_vu_eq[_qp] = K_S / std::pow(_X_vo_eq[_qp], 2.0);
+  _X_iu_eq[_qp] = K_Fu / _X_vu_eq[_qp];
 }
 
 void

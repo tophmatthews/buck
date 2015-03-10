@@ -10,7 +10,7 @@
 
 // Kernels
 #include "VariableScaledSource.h"
-#include "AtomicDiffusion.h"
+#include "BasicDiffusion.h"
 #include "SingleCavity.h"
 #include "BubbleBase.h"
 #include "BubbleNucleation.h"
@@ -66,7 +66,7 @@ void
 BuckApp::registerObjects(Factory & factory)
 {
   registerKernel(VariableScaledSource);
-  registerKernel(AtomicDiffusion);
+  registerKernel(BasicDiffusion);
   registerKernel(PointDefect);
   registerKernel(SingleCavity);
   registerKernel(BubbleBase);

@@ -26,10 +26,10 @@ protected:
 
   const Real _kB;
 
-  MaterialProperty<Real> & _X_vo;
-  MaterialProperty<Real> & _X_io;
-  MaterialProperty<Real> & _X_vu;
-  MaterialProperty<Real> & _X_iu;
+  MaterialProperty<Real> & _X_vo_eq;
+  MaterialProperty<Real> & _X_io_eq;
+  MaterialProperty<Real> & _X_vu_eq;
+  MaterialProperty<Real> & _X_iu_eq;
 };
 
 #endif // POINTDEFECTTHERMALEQ_H

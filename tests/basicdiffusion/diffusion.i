@@ -37,7 +37,8 @@
     variable = c1
   [../]
   [./c1_diffusion]
-    type = AtomicDiffusion
+    type = BasicDiffusion
+    diffusivity = gas_diffusivity
     variable = c1
   [../]
 []

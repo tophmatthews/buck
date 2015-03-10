@@ -25,7 +25,7 @@ GasAtomDiffusivity::GasAtomDiffusivity(const std::string & name, InputParameters
   _R(getParam<Real>("R")),
   _factor(getParam<Real>("factor")),
   _model(getParam<int>("model")),
-  _atomic_diffusivity(declareProperty<Real>("atomic_diffusivity"))
+  _gas_diffusivity(declareProperty<Real>("gas_diffusivity"))
 {
 
   if ( _model == 0 )
@@ -79,7 +79,7 @@ GasAtomDiffusivity::computeQpProperties()
   Real diff_thermal = _D0 * std::exp( -_Q / _R / _temp[_qp] );
   Real diff_fission = _D0f * std::exp( -_Qf / _R / _temp[_qp] ) * _fission_rate[_qp];
 
-  // std::cout << "Diff: " << _atomic_diffusivity[_qp] << std::endl;
+  // std::cout << "Diff: " << _gas_diffusivity[_qp] << std::endl;
   
-  _atomic_diffusivity[_qp] = (diff_thermal + diff_fission) * _factor;
+  _gas_diffusivity[_qp] = (diff_thermal + diff_fission) * _factor;
 }
