@@ -3,7 +3,7 @@
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  xmax = 0.001
+  # xmax = 0.001
 []
 
 
@@ -60,7 +60,7 @@
     type = PointDefectThermalEq
     temp = temp
     fueltype = 2
-    x = 0
+    x = '-0.05'
     block = 0
   [../]
 []
@@ -74,8 +74,8 @@
   petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
   petsc_options_value = '201                hypre    boomeramg      4'
 
-  end_time = 1e-3
-  dt = 1e-3
+  end_time = 1000
+  dt = 100
 []
 
 [Postprocessors]
