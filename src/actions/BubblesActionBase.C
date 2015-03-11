@@ -35,10 +35,10 @@ BubblesActionBase::BubblesActionBase(const std::string & name, InputParameters p
   varNamesFromG( _r, _rad_name_base, _G );
 
   for ( int j=0; j<_s; ++j )
-    _avgsize.push_back(j+1);
+    _atoms.push_back(j+1);
 
   for ( int j=_s; j<_G; ++j )
-    _avgsize.push_back( _avgsize.back() * _M );
+    _atoms.push_back( _atoms.back() * _M );
 }
 
 

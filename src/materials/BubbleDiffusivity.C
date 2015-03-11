@@ -6,8 +6,9 @@ InputParameters validParams<BubbleDiffusivity>()
 {
   InputParameters params = validParams<Material>();
 
-  params.addRequiredCoupledVar("coupled_rad", "List of coupled radius variables.");
+  params.addCoupledVar("coupled_rad", "List of coupled radius variables.");
   params.addRequiredCoupledVar("temp", "Coupled Temperature");
+  params.addParam<int>("G", "If specified, total number of radius groups that will equal 0.");
   params.addParam<Real>("D0", "Diffusion coefficient [um^2/s]");
   params.addParam<Real>("Q", "Activation energy [J/mol]");
   params.addParam<Real>("R", 8.31446, "Ideal gas constant [J/(K*mo)]");
@@ -28,31 +29,37 @@ BubbleDiffusivity::BubbleDiffusivity(const std::string & name, InputParameters p
 
   _bubble_diffusivity(declareProperty<std::vector<Real> >("bubble_diffusivity"))
 {
-  _G = coupledComponents("coupled_rad");
-
-  for ( unsigned int i=0; i<_G; ++i )
-    _r.push_back( &coupledValue("coupled_rad", i) );
-
-  if ( _model == 0 )
+  if (isParamValid("coupled_rad"))
   {
-    if ( !isParamValid("D0") || !isParamValid("Q") )
-      mooseError("In BubbleDiffusivity: if model = 0 (user supplied), D0 and Q must also be supplied");
-    _D0 = getParam<Real>("D0");
-    _Q = getParam<Real>("Q");
-  }
-  else
-  {
-    if ( isParamValid("D0") || isParamValid("Q") )
-      mooseError("In BubbleDiffusivity: D0 and Q are supplied, model must = 0");
+    _G = coupledComponents("coupled_rad");
+    for ( unsigned int i=0; i<_G; ++i )
+      _r.push_back( &coupledValue("coupled_rad", i) );
 
-    if ( _model == 1 )
+    if ( _model == 0 )
     {
-      _D0 = 1.19e-2;
-      _Q = 418400.0;
+      if ( !isParamValid("D0") || !isParamValid("Q") )
+        mooseError("In BubbleDiffusivity: if model = 0 (user supplied), D0 and Q must also be supplied");
+      _D0 = getParam<Real>("D0");
+      _Q = getParam<Real>("Q");
     }
     else
-      mooseError("In BubbleDiffusivity: Invalid model value given.");
+    {
+      if ( isParamValid("D0") || isParamValid("Q") )
+        mooseError("In BubbleDiffusivity: D0 and Q are supplied, model must = 0");
+
+      if ( _model == 1 )
+      {
+        _D0 = 1.19e-2;
+        _Q = 418400.0;
+      }
+      else
+        mooseError("In BubbleDiffusivity: Invalid model value given.");
+    }
   }
+  else if (isParamValid("G"))
+    _G = getParam<int>("G");
+  else
+    mooseError("In BubbleDiffusivity: Either G or coupled rad must be specified.");
 }
 
 void
@@ -72,9 +79,19 @@ BubbleDiffusivity::computeQpProperties()
     initialize();
 
   _bubble_diffusivity[_qp][0] = _gas_diffusivity[_qp];
-  for ( unsigned int i=1; i<_G; ++i )
+  if (isParamValid("coupled_rad"))
   {
-    _bubble_diffusivity[_qp][i] = _D0 / std::pow( (*_r[i])[_qp], 3.0 ) * std::exp( -_Q / _R / _temp[_qp] );
-    // std::cout << "i: " << i << " diff[i]: " << _bubble_diffusivity[_qp][i] << std::endl;
+    for ( unsigned int i=1; i<_G; ++i )
+    {
+      _bubble_diffusivity[_qp][i] = _D0 / std::pow( (*_r[i])[_qp], 3.0 ) * std::exp( -_Q / _R / _temp[_qp] );
+      // std::cout << "i: " << i << " diff[i]: " << _bubble_diffusivity[_qp][i] << std::endl;
+    }
+  }
+  else
+  {
+    for ( unsigned int i=1; i<_G; ++i )
+    {
+      _bubble_diffusivity[_qp][i] = 0;
+    }
   }
 }

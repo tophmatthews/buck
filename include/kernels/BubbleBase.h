@@ -26,7 +26,7 @@ protected:
 
   std::vector<VariableValue *> _c;
   std::vector<VariableValue *> _r;
-  std::vector<Real> _avgsize;
+  std::vector<Real> _atoms;
 
   unsigned int _G;
   int _g;

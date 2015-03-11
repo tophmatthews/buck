@@ -21,7 +21,7 @@ protected:
   std::vector<VariableName> _c;
   std::vector<VariableName> _m;
   std::vector<VariableName> _r;
-  std::vector<Real> _avgsize;
+  std::vector<Real> _atoms;
 
 private:
   void varNamesFromG(std::vector<VariableName> & vars, const std::string prefix, const int G, const int start=1);

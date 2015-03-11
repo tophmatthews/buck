@@ -75,7 +75,7 @@ BubblesPPAction::act()
     InputParameters params = _factory.getValidParams(pp_to_use);
     params.set<MultiMooseEnum>("execute_on") = "timestep_end";
     params.set<std::vector<PostprocessorName> >("postprocessors") = pp_names;
-    params.set<std::vector<Real> >("factors") = _avgsize;
+    params.set<std::vector<Real> >("factors") = _atoms;
 
     std::vector<OutputName> outs(getParam<std::vector<OutputName> >("show_total_atoms"));
     params.set<std::vector<OutputName> >("outputs") = outs;

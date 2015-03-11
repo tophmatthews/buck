@@ -19,12 +19,12 @@ BubbleBase::BubbleBase(const std::string & name, InputParameters parameters)
   :Kernel(name,parameters),
   _names(getParam<std::vector<VariableName> >("coupled_conc")),
   _this_var(getParam<NonlinearVariableName>("variable")),
-  _avgsize(getParam<std::vector<Real> >("coupled_atoms"))
+  _atoms(getParam<std::vector<Real> >("coupled_atoms"))
 {
 	_G = coupledComponents("coupled_conc");
   if (_G != coupledComponents("coupled_rad"))
     mooseError("From BubbleBase: The number of coupled concentrations does not match coupled radii.");
-  if (_G != _avgsize.size())
+  if (_G != _atoms.size())
     mooseError("From BubbleBase: The number of coupled concentrations does not match atom sizes list.");
 
   for ( unsigned int i=0; i<_G; ++i )
@@ -46,7 +46,7 @@ BubbleBase::BubbleBase(const std::string & name, InputParameters parameters)
   if (_g == -1)
     mooseError("From BubbleBase: Variable not found in coupled_conc list. Check the list.");
 
-  mooseDoOnce(Buck::iterateAndDisplay("avg", _avgsize));
+  mooseDoOnce(Buck::iterateAndDisplay("avg", _atoms));
 }
 
 Real

@@ -14,8 +14,7 @@ InputParameters validParams<CoalescenceKernelsAction>()
   return params;
 }
 
-CoalescenceKernelsAction::CoalescenceKernelsAction(const std::string & name,
-                                                             InputParameters params) :
+CoalescenceKernelsAction::CoalescenceKernelsAction(const std::string & name, InputParameters params) :
   BubblesActionBase(name, params)
 {
 }
@@ -32,7 +31,7 @@ CoalescenceKernelsAction::act()
     p.set<NonlinearVariableName>("variable") = var_name;
     p.set<std::vector<VariableName> >("coupled_conc") = _c;
     p.set<std::vector<VariableName> >("coupled_rad") = _r;
-    p.set<std::vector<Real> >("coupled_atoms") = _avgsize;
+    p.set<std::vector<Real> >("coupled_atoms") = _atoms;
 
     p.addCoupledVar("temp", "");
     p.set<std::vector<VariableName> >("temp") = std::vector<VariableName>(1, getParam<NonlinearVariableName>("temp"));

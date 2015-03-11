@@ -60,10 +60,10 @@ BubbleCoalescence::calcGains(Real & gains, bool jac)
   {
     for ( unsigned int j=0; j<=i; ++j )
     {
-      Real Ng = _avgsize[i] + _avgsize[j]; // Determine new bubble atom size
-      // std::cout << "\ncombining i: " << _avgsize[i] << " j: " << _avgsize[j] << " into Ng: " << Ng << std::endl;
+      Real Ng = _atoms[i] + _atoms[j]; // Determine new bubble atom size
+      // std::cout << "\ncombining i: " << _atoms[i] << " j: " << _atoms[j] << " into Ng: " << Ng << std::endl;
 
-      if ( Ng >= _avgsize[_g-1] )
+      if ( Ng >= _atoms[_g-1] )
       {
         Real K_ji;
         Real fk1;
@@ -76,12 +76,12 @@ BubbleCoalescence::calcGains(Real & gains, bool jac)
         if (i==j)
           K_ji /= 2.0;
 
-        if ( Ng < _avgsize[_g])
+        if ( Ng < _atoms[_g])
         {
-          Buck::getPartition(fk1, fk2, Ng, _avgsize[_g-1], _avgsize[_g]);
+          Buck::getPartition(fk1, fk2, Ng, _atoms[_g-1], _atoms[_g]);
           gains += K_ji * fk2;
           // std::cout << "big: g: " << _g << " fk1: " << fk1 << " fk2: " << fk2 << std::endl;
-          // std::cout << "\tNg: " << Ng << " min[g-1]: " << _avgsize[_g-1] << " min[g]: " << _avgsize[_g] << std::endl;
+          // std::cout << "\tNg: " << Ng << " min[g-1]: " << _atoms[_g-1] << " min[g]: " << _atoms[_g] << std::endl;
         }
 
         else if ( _g == _G-1 )
@@ -90,12 +90,12 @@ BubbleCoalescence::calcGains(Real & gains, bool jac)
           // std::cout << "all in big: g: " << _g << std::endl;
         }
 
-        else if ( Ng < _avgsize[_g+1] )
+        else if ( Ng < _atoms[_g+1] )
         {
-          Buck::getPartition(fk1, fk2, Ng, _avgsize[_g], _avgsize[_g+1]);
+          Buck::getPartition(fk1, fk2, Ng, _atoms[_g], _atoms[_g+1]);
           gains += K_ji * fk1;
           // std::cout << "small: g: " << _g << " fk1: " << fk1 << " fk2: " << fk2 << std::endl;
-          // std::cout << "\tNg: " << Ng << " min[g]: " << _avgsize[_g] << " min[g+1]: " << _avgsize[_g+1] << std::endl;
+          // std::cout << "\tNg: " << Ng << " min[g]: " << _atoms[_g] << " min[g+1]: " << _atoms[_g+1] << std::endl;
         }
       }
     }
