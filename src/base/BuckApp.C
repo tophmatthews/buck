@@ -19,6 +19,7 @@
 
 // Materials
 #include "GasAtomDiffusivity.h"
+#include "BubbleDiffusivity.h"
 #include "VacancyDiffusivity.h"
 #include "InterstitialDiffusivity.h"
 #include "PointDefectThermalEq.h"
@@ -74,6 +75,7 @@ BuckApp::registerObjects(Factory & factory)
   registerKernel(BubbleCoalescence);
 
   registerMaterial(GasAtomDiffusivity);
+  registerMaterial(BubbleDiffusivity);
   registerMaterial(VacancyDiffusivity);
   registerMaterial(InterstitialDiffusivity);
   registerMaterial(PointDefectThermalEq);

@@ -10,7 +10,8 @@ InputParameters validParams<BubbleBase>()
 
   params.addRequiredCoupledVar("coupled_conc", "List of coupled concentration variables.");
   params.addRequiredCoupledVar("coupled_rad", "List of coupled radius variables.");
-  params.addRequiredParam<int>("M", "Number of ungrouped equations");
+  params.addRequiredParam<int>("s", "Number of ungrouped equations");
+  params.addRequiredParam<Real>("M", "Grouping constant");
 
   return params;
 }
@@ -19,8 +20,8 @@ BubbleBase::BubbleBase(const std::string & name, InputParameters parameters)
   :Kernel(name,parameters),
   _names(getParam<std::vector<VariableName> >("coupled_conc")),
   _this_var(getParam<NonlinearVariableName>("variable")),
-  _M(getParam<int>("M"))
-
+  _s(getParam<int>("s")),
+  _M(getParam<Real>("M"))
 {
 	_G = coupledComponents("coupled_conc");
   if (_G != coupledComponents("coupled_rad"))
@@ -45,14 +46,14 @@ BubbleBase::BubbleBase(const std::string & name, InputParameters parameters)
   if (_g == -1)
     mooseError("From BubbleBase: Variable not found in coupled_conc list. Check the list.");
 
-  for ( int j=0; j<_M; ++j )
+  for ( unsigned int j=0; j<_s; ++j )
   {
     _width.push_back(1);
     _maxsize.push_back(j+1);
     _minsize.push_back(j+1);
     _avgsize.push_back(j+1);
   }
-  for ( int j=_M; j<_G; ++j )
+  for ( unsigned int j=_s; j<_G; ++j )
   {
     _width.push_back  ( (_maxsize.back() + 1.0)/_M );
     _minsize.push_back( _maxsize.back() + 1.0 );
@@ -72,7 +73,7 @@ BubbleBase::computeQpResidual()
   Real losses = calcLosses(false);
   Real gains = calcGains(false);
 
-  // std::cout << "\tg: " << _g << " gains: " << gains << " losses: " << losses << std::endl;
+  std::cout << "\tg: " << _g << " gains: " << gains << " losses: " << losses << std::endl;
 
   return -( gains - losses ) * _test[_i][_qp];
 }

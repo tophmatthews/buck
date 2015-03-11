@@ -20,6 +20,8 @@ protected:
 
 private:
 
+	MaterialProperty<std::vector<Real> > & _Dg;
+
 };
 
 #endif //BUBBLECOALESCENCE_H

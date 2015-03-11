@@ -11,6 +11,8 @@ InputParameters validParams<GasAtomDiffusivity>()
 
   params.addParam<Real>("D0", "Diffusion coefficient [um^2/s]");
   params.addParam<Real>("Q", "Activation energy [J/mol]");
+  params.addParam<Real>("D0f", 0, "Fission enhanced diffusion coefficient [um^2/s]");
+  params.addParam<Real>("Qf", 0, "Fission enhanced activation energy [J/mol]");
   params.addParam<Real>("R", 8.31446, "Ideal gas constant [J/(K*mo)]");
   params.addParam<Real>("factor", 1, "Scaling factor to multiply by diffusivity.");
   params.addParam<int>("model", 1, "Switch for diffusion coefficient model (0=user input, 1=UC Matzke, 2=UC Madrid, 3=UC Eyre, 4=UO2 Griesmeyer");
@@ -34,6 +36,8 @@ GasAtomDiffusivity::GasAtomDiffusivity(const std::string & name, InputParameters
       mooseError("In GasAtomDiffusivity: if model = 0 (user supplied), D0 and Q must also be supplied");
     _D0 = getParam<Real>("D0");
     _Q = getParam<Real>("Q");
+    _D0f = getParam<Real>("D0f");
+    _Qf = getParam<Real>("Qf");
   }
   else
   {
@@ -44,22 +48,16 @@ GasAtomDiffusivity::GasAtomDiffusivity(const std::string & name, InputParameters
     {
       _D0 = 3.0e10;
       _Q = 355000.0;
-      _D0f = 0;
-      _Qf = 0;
     }
     else if ( _model == 2 )
     {
       _D0 = 4.6e8;
       _Q = 326360.0;
-      _D0f = 0;
-      _Qf = 0;
     }
     else if ( _model == 3 )
     {
       _D0 = 1.66e2;
       _Q = 221154.0;
-      _D0f = 0;
-      _Qf = 0;
     }
     else if ( _model == 4 )
     {
@@ -76,7 +74,7 @@ GasAtomDiffusivity::GasAtomDiffusivity(const std::string & name, InputParameters
 void
 GasAtomDiffusivity::computeQpProperties()
 {
-  Real diff_thermal = _D0 * std::exp( -_Q / _R / _temp[_qp] );
+  Real diff_thermal = _D0 *  std::exp( -_Q  / _R / _temp[_qp] );
   Real diff_fission = _D0f * std::exp( -_Qf / _R / _temp[_qp] ) * _fission_rate[_qp];
 
   // std::cout << "Diff: " << _gas_diffusivity[_qp] << std::endl;

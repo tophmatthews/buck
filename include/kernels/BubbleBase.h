@@ -23,6 +23,7 @@ protected:
 
   std::vector<VariableName> _names;
   const NonlinearVariableName _this_var;
+  const unsigned int _s;
   const unsigned int _M;
 
   std::vector<VariableValue *> _c;

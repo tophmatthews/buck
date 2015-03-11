@@ -3,6 +3,7 @@
 [GlobalParams]
   temp = temp
   M = 2
+  s = 2
   coupled_conc = 'c1 c2'
   coupled_rad = 'c1 c2'
 []

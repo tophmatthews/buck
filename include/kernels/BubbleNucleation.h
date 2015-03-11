@@ -24,7 +24,7 @@ private:
 	const Real _a;
 	const Real _omega;
 
-	MaterialProperty<Real> & _gas_diffusivity;
+	MaterialProperty<Real> & _Dg;
 
 	const Real _Z11;
 };
