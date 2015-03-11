@@ -22,7 +22,7 @@ protected:
   std::vector<VariableValue *> _r;
   VariableValue & _temp;
 
-  int _G;
+  unsigned int _G;
   Real _D0;
   Real _Q;
   const Real _R;

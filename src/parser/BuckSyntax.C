@@ -2,8 +2,12 @@
 #include "ActionFactory.h"
 
 // Actions
-// #include "ClustersVarsAction.h"
-// #include "ClustersTimeKernelAction.h"
+#include "BubblesConcVarsAction.h"
+#include "BubblesConcMomentVarsAction.h"
+#include "BubblesRadVarsAction.h"
+
+#include "BubblesConcTimeKernelAction.h"
+#include "BubblesConcMomentTimeKernelAction.h"
 
 // #include "NucleationKernelsAction.h"
 // #include "GrowthKernelsAction.h"
@@ -25,13 +29,22 @@ associateSyntax(Syntax & syntax, ActionFactory & action_factory)
    * to satisfy more than one action_name
    */
 
-  // syntax.registerActionSyntax("ClustersVarsAction", "Clusters", "add_variable");
-  // syntax.registerActionSyntax("ClustersVarsAction", "Clusters", "add_ic");
-  // registerAction(ClustersVarsAction, "add_variable");
-  // registerAction(ClustersVarsAction, "add_ic");
+  syntax.registerActionSyntax("BubblesConcVarsAction", "Bubbles/Conc/", "add_variable");
+  syntax.registerActionSyntax("BubblesConcVarsAction", "Bubbles/Conc/", "add_ic");
+  registerAction(BubblesConcVarsAction, "add_variable");
+  registerAction(BubblesConcVarsAction, "add_ic");
 
-  // syntax.registerActionSyntax("ClustersTimeKernelAction", "Clusters", "add_kernel");
-  // registerAction(ClustersTimeKernelAction, "add_kernel");
+  syntax.registerActionSyntax("BubblesConcMomentVarsAction", "Bubbles/Moment/", "add_variable");
+  registerAction(BubblesConcMomentVarsAction, "add_variable");
+
+  syntax.registerActionSyntax("BubblesRadVarsAction", "Bubbles/Rad/", "add_aux_variable");
+  registerAction(BubblesRadVarsAction, "add_aux_variable");
+
+  syntax.registerActionSyntax("BubblesConcTimeKernelAction", "Bubbles/Conc/", "add_kernel");
+  registerAction(BubblesConcTimeKernelAction, "add_kernel");
+
+  syntax.registerActionSyntax("BubblesConcMomentTimeKernelAction", "Bubbles/Moment/", "add_kernel");
+  registerAction(BubblesConcMomentTimeKernelAction, "add_kernel");
 
   // syntax.registerActionSyntax("NucleationKernelsAction", "Clusters/Nucleation/", "add_kernel");
   // registerAction(NucleationKernelsAction, "add_kernel");

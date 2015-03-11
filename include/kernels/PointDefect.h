@@ -47,10 +47,6 @@ private:
   const Real _Zi;
   const Real _Zv;
   const Real _g;
-
-  Real _G_S;
-  Real _G_Fo;
-  Real _G_Fu;
   
   Real _E_tot;
   Real _dE_tot;

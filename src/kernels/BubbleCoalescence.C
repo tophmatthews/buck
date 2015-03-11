@@ -6,23 +6,23 @@
 template<>
 InputParameters validParams<BubbleCoalescence>()
 {
-  InputParameters params = validParams<BubbleNucleation>();
+  InputParameters params = validParams<BubbleBase>();
 
   return params;
 }
 
 BubbleCoalescence::BubbleCoalescence(const std::string & name, InputParameters parameters)
-  :BubbleNucleation(name,parameters),
+  :BubbleBase(name,parameters),
   _Dg(getMaterialProperty<std::vector<Real> >("bubble_diffusivity"))
 {
 }
 
-Real
-BubbleCoalescence::calcLosses(bool jac)
+void
+BubbleCoalescence::calcLosses(Real & losses, bool jac)
 {
   Real K_gi(0);
 
-	for (int i=0; i<_G; ++i)
+	for ( unsigned int i=0; i<_G; ++i )
 	{
     if ( i!=_g )
     {
@@ -41,30 +41,29 @@ BubbleCoalescence::calcLosses(bool jac)
 	}
 
   if (!jac)
-    return 4.0 * M_PI * K_gi * _u[_qp];
+    losses += 4.0 * M_PI * K_gi * _u[_qp];
   else
-    return 4.0 * M_PI * K_gi;
+    losses += 4.0 * M_PI * K_gi;
 }
 
 
-Real
-BubbleCoalescence::calcGains(bool jac)
+void
+BubbleCoalescence::calcGains(Real & gains, bool jac)
 {
    // Don't count gains if single atom bubble
   if ( _g==0 )
-    return 0;
+    return;
   if (jac)
-    return 0;
+    return;
 
-  Real gains(0);
-
-  for (int i=1; i<_g; ++i)
+  for ( unsigned int i=1; i<_g; ++i )
   {
-    for ( int j=0; j<=i; ++j)
+    for ( unsigned int j=0; j<=i; ++j )
     {
-      Real Ng = _minsize[i] + _minsize[j]; // Determine new bubble atom size
+      Real Ng = _avgsize[i] + _avgsize[j]; // Determine new bubble atom size
+      // std::cout << "\ncombining i: " << _avgsize[i] << " j: " << _avgsize[j] << " into Ng: " << Ng << std::endl;
 
-      if ( Ng >= _minsize[_g-1] )
+      if ( Ng >= _avgsize[_g-1] )
       {
         Real K_ji;
         Real fk1;
@@ -72,28 +71,33 @@ BubbleCoalescence::calcGains(bool jac)
 
         Real r_ji = ( (*_r[i])[_qp] + (*_r[j])[_qp] );
         Real D_ji = _Dg[_qp][j] + _Dg[_qp][i];
-        K_ji = r_ji * D_ji * (*_c[i])[_qp] * (*_c[j])[_qp];
+        K_ji = 4.0 * M_PI * r_ji * D_ji * (*_c[i])[_qp] * (*_c[j])[_qp];
 
         if (i==j)
           K_ji /= 2.0;
 
-        if ( Ng < _minsize[_g])
+        if ( Ng < _avgsize[_g])
         {
-          Buck::getPartition(fk1, fk2, Ng, _minsize[_g-1], _minsize[_g]);
+          Buck::getPartition(fk1, fk2, Ng, _avgsize[_g-1], _avgsize[_g]);
           gains += K_ji * fk2;
+          // std::cout << "big: g: " << _g << " fk1: " << fk1 << " fk2: " << fk2 << std::endl;
+          // std::cout << "\tNg: " << Ng << " min[g-1]: " << _avgsize[_g-1] << " min[g]: " << _avgsize[_g] << std::endl;
         }
 
         else if ( _g == _G-1 )
-          gains += K_ji;
-
-        else if ( Ng < _minsize[_g+1] )
         {
-          Buck::getPartition(fk1, fk2, Ng, _minsize[_g], _minsize[_g+1]);
+          gains += K_ji;
+          // std::cout << "all in big: g: " << _g << std::endl;
+        }
+
+        else if ( Ng < _avgsize[_g+1] )
+        {
+          Buck::getPartition(fk1, fk2, Ng, _avgsize[_g], _avgsize[_g+1]);
           gains += K_ji * fk1;
+          // std::cout << "small: g: " << _g << " fk1: " << fk1 << " fk2: " << fk2 << std::endl;
+          // std::cout << "\tNg: " << Ng << " min[g]: " << _avgsize[_g] << " min[g+1]: " << _avgsize[_g+1] << std::endl;
         }
       }
     }
   }
-
-  return 4.0 * M_PI * gains;
 }

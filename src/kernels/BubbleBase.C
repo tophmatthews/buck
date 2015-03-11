@@ -10,8 +10,7 @@ InputParameters validParams<BubbleBase>()
 
   params.addRequiredCoupledVar("coupled_conc", "List of coupled concentration variables.");
   params.addRequiredCoupledVar("coupled_rad", "List of coupled radius variables.");
-  params.addRequiredParam<int>("s", "Number of ungrouped equations");
-  params.addRequiredParam<Real>("M", "Grouping constant");
+  params.addRequiredParam<std::vector<Real> >("coupled_atoms", "List of atom sizes for coupled variables.");
 
   return params;
 }
@@ -20,12 +19,13 @@ BubbleBase::BubbleBase(const std::string & name, InputParameters parameters)
   :Kernel(name,parameters),
   _names(getParam<std::vector<VariableName> >("coupled_conc")),
   _this_var(getParam<NonlinearVariableName>("variable")),
-  _s(getParam<int>("s")),
-  _M(getParam<Real>("M"))
+  _avgsize(getParam<std::vector<Real> >("coupled_atoms"))
 {
 	_G = coupledComponents("coupled_conc");
   if (_G != coupledComponents("coupled_rad"))
     mooseError("From BubbleBase: The number of coupled concentrations does not match coupled radii.");
+  if (_G != _avgsize.size())
+    mooseError("From BubbleBase: The number of coupled concentrations does not match atom sizes list.");
 
   for ( unsigned int i=0; i<_G; ++i )
   {
@@ -46,34 +46,18 @@ BubbleBase::BubbleBase(const std::string & name, InputParameters parameters)
   if (_g == -1)
     mooseError("From BubbleBase: Variable not found in coupled_conc list. Check the list.");
 
-  for ( unsigned int j=0; j<_s; ++j )
-  {
-    _width.push_back(1);
-    _maxsize.push_back(j+1);
-    _minsize.push_back(j+1);
-    _avgsize.push_back(j+1);
-  }
-  for ( unsigned int j=_s; j<_G; ++j )
-  {
-    _width.push_back  ( (_maxsize.back() + 1.0)/_M );
-    _minsize.push_back( _maxsize.back() + 1.0 );
-    _maxsize.push_back( _width.back() + _maxsize.back() );
-    _avgsize.push_back( 0.5 * _minsize.back() + 0.5 * _maxsize.back() );
-  }
-
-  // mooseDoOnce(Buck::iterateAndDisplay("max", _maxsize));
-  // mooseDoOnce(Buck::iterateAndDisplay("min", _minsize));
-  // mooseDoOnce(Buck::iterateAndDisplay("width", _width));
-  // mooseDoOnce(Buck::iterateAndDisplay("avg", _avgsize));
+  mooseDoOnce(Buck::iterateAndDisplay("avg", _avgsize));
 }
 
 Real
 BubbleBase::computeQpResidual()
 {
-  Real losses = calcLosses(false);
-  Real gains = calcGains(false);
+  Real losses(0);
+  Real gains(0);
+  calcLosses(losses, false);
+  calcGains(gains, false);
 
-  std::cout << "\tg: " << _g << " gains: " << gains << " losses: " << losses << std::endl;
+  // std::cout << "\tg: " << _g << " gains: " << gains << " losses: " << losses << std::endl;
 
   return -( gains - losses ) * _test[_i][_qp];
 }
@@ -82,22 +66,24 @@ BubbleBase::computeQpResidual()
 Real
 BubbleBase::computeQpJacobian()
 {
-  Real losses = calcLosses(true);
-  Real gains = calcGains(true);
+  Real losses(0);
+  Real gains(0);
+  calcLosses(losses, true);
+  calcGains(gains, true);
 
   return -( gains - losses ) * _phi[_j][_qp] * _test[_i][_qp];
 }
 
 
-Real
-BubbleBase::calcLosses(bool jac)
-{
-  return 0;
-}
+// Real
+// BubbleBase::calcLosses(bool jac)
+// {
+//   return 0;
+// }
 
 
-Real
-BubbleBase::calcGains(bool jac)
-{
-  return 0;
-}
+// Real
+// BubbleBase::calcGains(bool jac)
+// {
+//   return 0;
+// }

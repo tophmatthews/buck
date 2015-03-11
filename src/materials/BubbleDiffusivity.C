@@ -72,7 +72,7 @@ BubbleDiffusivity::computeQpProperties()
     initialize();
 
   _bubble_diffusivity[_qp][0] = _gas_diffusivity[_qp];
-  for (int i=1; i<_G; ++i)
+  for ( unsigned int i=1; i<_G; ++i )
   {
     _bubble_diffusivity[_qp][i] = _D0 / std::pow( (*_r[i])[_qp], 3.0 ) * std::exp( -_Q / _R / _temp[_qp] );
     // std::cout << "i: " << i << " diff[i]: " << _bubble_diffusivity[_qp][i] << std::endl;

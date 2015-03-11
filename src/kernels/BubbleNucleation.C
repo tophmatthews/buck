@@ -24,37 +24,37 @@ BubbleNucleation::BubbleNucleation(const std::string & name, InputParameters par
 
   _Z11(84.0)
 {
-  mooseDoOnce(Buck::iterateAndDisplay("max", _maxsize));
-  mooseDoOnce(Buck::iterateAndDisplay("min", _minsize));
-  mooseDoOnce(Buck::iterateAndDisplay("width", _width));
-  mooseDoOnce(Buck::iterateAndDisplay("avg", _avgsize));
+  // mooseDoOnce(Buck::iterateAndDisplay("max", _maxsize));
+  // mooseDoOnce(Buck::iterateAndDisplay("min", _minsize));
+  // mooseDoOnce(Buck::iterateAndDisplay("width", _width));
+  // mooseDoOnce(Buck::iterateAndDisplay("avg", _avgsize));
 }
 
-Real
-BubbleNucleation::calcLosses(bool jac)
+void
+BubbleNucleation::calcLosses(Real & losses, bool jac)
 {
   if (_g != 0)
-    return 0;
+    return;
 
   Real P11 = _Z11 * _omega * _Dg[_qp] * _u[_qp] / std::pow(_a, 2.0);
 
   if (!jac)
-    return 2.0 * P11 * _u[_qp];
+    losses += 2.0 * P11 * _u[_qp];
   else
-    return 4.0 * P11;
+    losses += 4.0 * P11;
 }
 
 
-Real
-BubbleNucleation::calcGains(bool jac)
+void
+BubbleNucleation::calcGains(Real & gains, bool jac)
 {
   if (_g != 1)
-    return 0;
+    return;
 
   Real P11 = _Z11 * _omega * _Dg[_qp] * std::pow( (*_c[0])[_qp]/_a, 2.0 );
 
   if (!jac)
-    return P11;
+    gains += P11;
   else
-    return 0;
+    return;
 }

@@ -170,7 +170,7 @@ namespace MaterialXeBubble{
     {
       double rho = m/(4.0/3.0*M_PI*std::pow(R,3));
       double calc_rho = VDW_RtoRho(R, T, sigma);
-      std::cout << std::endl << "rho: " << rho << "\tcalc_rho: " << calc_rho << "\t\% diff: " << std::abs(rho-calc_rho)/calc_rho*100.0 << std::endl;
+      std::cout << std::endl << "rho: " << rho << "\tcalc_rho: " << calc_rho << "\t%% diff: " << std::abs(rho-calc_rho)/calc_rho*100.0 << std::endl;
     }
 
     return R;

@@ -1,5 +1,7 @@
 # Tests coalescence of bubbles. Total should equal 1e5 at all times.
 
+# This test should be exactly the same as tests/bubblecoalescence/nospacing.i
+
 # +----------------+----------------+----------------+----------------+----------------+----------------+----------------+
 # | time           | c1             | c2             | c3             | c4             | c5             | total          |
 # +----------------+----------------+----------------+----------------+----------------+----------------+----------------+
@@ -21,20 +23,19 @@
   dim = 1
 []
 
+[Bubbles]
+  [./Conc]
+    G = 5
+    s = 5
+    M = 1
+    c1_initial_condition = 1e5
+    c2_initial_condition = 1e5
+    initial_condition = 0
+  [../]
+[]
+
 
 [Variables]
-  [./c1]
-    initial_condition = 1e5
-  [../]
-  [./c2]
-    initial_condition = 1e5
-  [../]
-  [./c3]
-  [../]
-  [./c4]
-  [../]
-  [./c5]
-  [../]
   [./temp]
     initial_condition = 1000
   [../]
@@ -45,27 +46,6 @@
   [./temp_time]
     type = TimeDerivative
     variable = temp
-  [../]
-
-  [./c1_time]
-    type = TimeDerivative
-    variable = c1
-  [../]
-  [./c2_time]
-    type = TimeDerivative
-    variable = c2
-  [../]
-  [./c3_time]
-    type = TimeDerivative
-    variable = c3
-  [../]
-  [./c4_time]
-    type = TimeDerivative
-    variable = c4
-  [../]
-  [./c5_time]
-    type = TimeDerivative
-    variable = c5
   [../]
 
   [./c1_coalescence]

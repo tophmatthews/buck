@@ -1,22 +1,22 @@
 #ifndef BUBBLECOALESCENCE_H
 #define BUBBLECOALESCENCE_H
 
-#include "BubbleNucleation.h"
+#include "BubbleBase.h"
 
 class BubbleCoalescence;
 
 template<>
 InputParameters validParams<BubbleCoalescence>();
 
-class BubbleCoalescence : public BubbleNucleation
+class BubbleCoalescence : public BubbleBase
 {
 public:
   BubbleCoalescence(const std::string & name, InputParameters parameters);
 
 protected:
 
-  virtual Real calcLosses(bool jac);
-  virtual Real calcGains(bool jac);
+  virtual void calcLosses(Real & losses, const bool jac);
+  virtual void calcGains(Real & gains, const bool jac);
 
 private:
 

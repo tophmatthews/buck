@@ -15,8 +15,8 @@ public:
 
 protected:
 
-  virtual Real calcLosses(bool jac);
-  virtual Real calcGains(bool jac);
+  virtual void calcLosses(Real & losses, const bool jac);
+  virtual void calcGains(Real & gains, const bool jac);
 
 private:
 

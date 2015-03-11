@@ -18,19 +18,14 @@ protected:
   virtual Real computeQpResidual();
   virtual Real computeQpJacobian();
 
-  virtual Real calcLosses(bool jac);
-  virtual Real calcGains(bool jac);
+  virtual void calcLosses(Real & losses, const bool jac){}
+  virtual void calcGains(Real & gains, const bool jac){}
 
   std::vector<VariableName> _names;
   const NonlinearVariableName _this_var;
-  const unsigned int _s;
-  const unsigned int _M;
 
   std::vector<VariableValue *> _c;
   std::vector<VariableValue *> _r;
-  std::vector<Real> _width;
-  std::vector<Real> _minsize;
-  std::vector<Real> _maxsize;
   std::vector<Real> _avgsize;
   
   unsigned int _G;
