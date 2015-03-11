@@ -101,9 +101,9 @@ namespace MaterialXeBubble{
 
   ////////////////////////////////////////////////////////////////////////
 
-  double VDW_MtoR(double m, double T, double sigma, bool testing)
+  double VDW_MtoR(double m, double T, double sigma, double gamma, double B, bool testing)
   {
-  	// Uses a simple Newton's method to determine bubble radius as a function of atoms
+  	// Uses a simple Newton's method to determine equilbrium bubble radius as a function of atoms
   	//
   	// 1/rho = B + 1/(2*gamma/k/T/R + sigma/k/T)
   	//
@@ -115,9 +115,9 @@ namespace MaterialXeBubble{
   	// gamma = surface tension, N/m
 
     // Physical Paramters
-  	double B = 8.5e-29;
+  	// double B = 8.5e-29;
     double k = 1.3806488e-23;
-    double gamma = 1.0;
+    // double gamma = 1.0;
 
     // Calculation setup
     double A = 4.0/3.0 * M_PI;
@@ -125,10 +125,10 @@ namespace MaterialXeBubble{
     double D = sigma/k/T;
 
     // Iteration paramters
-    int max_its = 100; // Max iterations
+    int max_its = 100;      // Max iterations
     double rel_conv = 1e-5; // Relative convergence criteria.
-    int it(0); // Iteration counter
-    double dR(1); // Newton change in R
+    int it(0);              // Iteration counter
+    double dR(1);           // Newton change in R
 
     if (testing)
     {
@@ -169,7 +169,6 @@ namespace MaterialXeBubble{
     if (testing)
     {
       double rho = m/(4.0/3.0*M_PI*std::pow(R,3));
-      // double calc_rho = 1.0/(B+1.0/(2.0*gamma/k/T/R+sigma/k/T));
       double calc_rho = VDW_RtoRho(R, T, sigma);
       std::cout << std::endl << "rho: " << rho << "\tcalc_rho: " << calc_rho << "\t\% diff: " << std::abs(rho-calc_rho)/calc_rho*100.0 << std::endl;
     }

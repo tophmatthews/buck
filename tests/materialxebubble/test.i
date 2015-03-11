@@ -83,7 +83,6 @@
     type = MaterialXeBubbleTester
     temp = 2000
     sigma = 1e9
-    testing = true
     m_mag = m_mag
   [../]
 []
