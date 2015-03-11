@@ -12,8 +12,10 @@
 
 #include "BubblesPPAction.h"
 
+#include "CoalescenceKernelsAction.h"
+
 // #include "NucleationKernelsAction.h"
-// #include "GrowthKernelsAction.h"
+
 
 // #include "KnockoutKernelsAction.h"
 
@@ -52,11 +54,13 @@ associateSyntax(Syntax & syntax, ActionFactory & action_factory)
   syntax.registerActionSyntax("BubblesPPAction", "Bubbles/PPs/", "add_postprocessor");
   registerAction(BubblesPPAction, "add_postprocessor");
 
+  syntax.registerActionSyntax("CoalescenceKernelsAction", "Bubbles/Coalescence/", "add_kernel");
+  registerAction(CoalescenceKernelsAction, "add_kernel");
+
   // syntax.registerActionSyntax("NucleationKernelsAction", "Clusters/Nucleation/", "add_kernel");
   // registerAction(NucleationKernelsAction, "add_kernel");
 
-  // syntax.registerActionSyntax("GrowthKernelsAction", "Clusters/Growth/", "add_kernel");
-  // registerAction(GrowthKernelsAction, "add_kernel");
+
 
 
 
