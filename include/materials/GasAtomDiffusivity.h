@@ -28,7 +28,7 @@ protected:
   const Real _factor;
   const int _model;
   int _G;
-  
+
   MaterialProperty<Real> & _gas_diffusivity;
 };
 

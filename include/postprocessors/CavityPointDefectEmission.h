@@ -26,7 +26,7 @@ protected:
 
 	MaterialProperty<Real> * _X;
   Real _sign;
-	
+
 
 };
 

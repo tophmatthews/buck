@@ -26,7 +26,7 @@ VacancyDiffusivity::VacancyDiffusivity(const std::string & name, InputParameters
   _vacancy_diffusivity(declareProperty<Real>("vacancy_diffusivity"))
 
 {
-   
+
   if ( _model == 0 )
   {
     if ( !isParamValid("D0") || !isParamValid("Q") )

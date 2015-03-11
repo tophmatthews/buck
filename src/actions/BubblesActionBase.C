@@ -42,7 +42,7 @@ BubblesActionBase::BubblesActionBase(const std::string & name, InputParameters p
 }
 
 
-void 
+void
 BubblesActionBase::varNamesFromG(std::vector<VariableName> & vars, const std::string prefix, const int G, const int start)
 {
   int digits = Buck::numDigits(G);

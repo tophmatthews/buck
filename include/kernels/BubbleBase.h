@@ -27,9 +27,9 @@ protected:
   std::vector<VariableValue *> _c;
   std::vector<VariableValue *> _r;
   std::vector<Real> _avgsize;
-  
+
   unsigned int _G;
-  int _g;  
+  int _g;
 };
 
 #endif //BUBBLEBASE_H

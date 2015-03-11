@@ -17,7 +17,7 @@ protected:
   const unsigned int _G;
   const unsigned int _s;
   const Real _M;
-  
+
   std::vector<VariableName> _c;
   std::vector<VariableName> _m;
   std::vector<VariableName> _r;

@@ -4,14 +4,17 @@
 // Actions
 #include "BubblesConcVarsAction.h"
 #include "BubblesConcMomentVarsAction.h"
-#include "BubblesRadVarsAction.h"
+
+#include "BubblesRadAuxVarsAction.h"
 
 #include "BubblesConcTimeKernelAction.h"
 #include "BubblesConcMomentTimeKernelAction.h"
 
+#include "BubblesPPAction.h"
+
 // #include "NucleationKernelsAction.h"
 // #include "GrowthKernelsAction.h"
-// #include "ClustersPPAction.h"
+
 // #include "KnockoutKernelsAction.h"
 
 // #include "ClustersBoundsAction.h"
@@ -37,8 +40,8 @@ associateSyntax(Syntax & syntax, ActionFactory & action_factory)
   syntax.registerActionSyntax("BubblesConcMomentVarsAction", "Bubbles/Moment/", "add_variable");
   registerAction(BubblesConcMomentVarsAction, "add_variable");
 
-  syntax.registerActionSyntax("BubblesRadVarsAction", "Bubbles/Rad/", "add_aux_variable");
-  registerAction(BubblesRadVarsAction, "add_aux_variable");
+  syntax.registerActionSyntax("BubblesRadAuxVarsAction", "Bubbles/Rad/", "add_aux_variable");
+  registerAction(BubblesRadAuxVarsAction, "add_aux_variable");
 
   syntax.registerActionSyntax("BubblesConcTimeKernelAction", "Bubbles/Conc/", "add_kernel");
   registerAction(BubblesConcTimeKernelAction, "add_kernel");
@@ -46,14 +49,16 @@ associateSyntax(Syntax & syntax, ActionFactory & action_factory)
   syntax.registerActionSyntax("BubblesConcMomentTimeKernelAction", "Bubbles/Moment/", "add_kernel");
   registerAction(BubblesConcMomentTimeKernelAction, "add_kernel");
 
+  syntax.registerActionSyntax("BubblesPPAction", "Bubbles/PPs/", "add_postprocessor");
+  registerAction(BubblesPPAction, "add_postprocessor");
+
   // syntax.registerActionSyntax("NucleationKernelsAction", "Clusters/Nucleation/", "add_kernel");
   // registerAction(NucleationKernelsAction, "add_kernel");
 
   // syntax.registerActionSyntax("GrowthKernelsAction", "Clusters/Growth/", "add_kernel");
   // registerAction(GrowthKernelsAction, "add_kernel");
 
-  // syntax.registerActionSyntax("ClustersPPAction", "Clusters/PPs/", "add_postprocessor");
-  // registerAction(ClustersPPAction, "add_postprocessor");
+
 
   // syntax.registerActionSyntax("AddBoundsVectorsAction", "Clusters/Bounds/");
   // syntax.registerActionSyntax("ClustersBoundsAction", "Clusters/Bounds/", "add_aux_kernel");

@@ -56,7 +56,7 @@ PointDefect::PointDefect(const std::string & name, InputParameters parameters) :
 // void
 // PointDefect::initialSetup()
 // {
-//   _u[_qp] = 
+//   _u[_qp] =
 // }
 
 void
@@ -93,7 +93,7 @@ PointDefect::calcRates()
   Real alpha = _Di[_qp] * _g;             // recombination coefficient
   Real R_r   = alpha * _u[_qp] * _o[_qp]; // removal rate from recombination
   Real R_s   = l_tot * _u[_qp];           // removal rate from sinks
-  
+
   _R_tot  = R_s + R_r;                // total removal rate
   _dR_tot = alpha * _o[_qp] + l_tot;  // total removal rate jacobian
 

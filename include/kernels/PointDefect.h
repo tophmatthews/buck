@@ -47,7 +47,7 @@ private:
   const Real _Zi;
   const Real _Zv;
   const Real _g;
-  
+
   Real _E_tot;
   Real _dE_tot;
   Real _R_tot;

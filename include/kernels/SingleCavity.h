@@ -24,7 +24,7 @@ private:
   VariableValue & _temp;
   VariableValue & _Cv;
   VariableValue & _Ci;
-  
+
   const Real _N;
   const Real _gamma;
   const Real _omega;

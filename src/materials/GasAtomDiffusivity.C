@@ -78,6 +78,6 @@ GasAtomDiffusivity::computeQpProperties()
   Real diff_fission = _D0f * std::exp( -_Qf / _R / _temp[_qp] ) * _fission_rate[_qp];
 
   // std::cout << "Diff: " << _gas_diffusivity[_qp] << std::endl;
-  
+
   _gas_diffusivity[_qp] = (diff_thermal + diff_fission) * _factor;
 }

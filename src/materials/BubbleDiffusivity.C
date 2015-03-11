@@ -76,5 +76,5 @@ BubbleDiffusivity::computeQpProperties()
   {
     _bubble_diffusivity[_qp][i] = _D0 / std::pow( (*_r[i])[_qp], 3.0 ) * std::exp( -_Q / _R / _temp[_qp] );
     // std::cout << "i: " << i << " diff[i]: " << _bubble_diffusivity[_qp][i] << std::endl;
-  } 
+  }
 }

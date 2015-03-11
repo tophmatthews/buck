@@ -54,9 +54,9 @@ SingleCavity::computeQpResidual()
   // std::cout << "\trad: " << _u[_qp] << " bub_p: " << bub_p << " delP: " << delP << " exp: " << delP * _omega / _kB / _temp[_qp] << " X_vu: " << _X_vu[_qp] << " phi_ve: " << _X_vu[_qp] * std::exp(-delP * _omega / _kB / _temp[_qp]) << std::endl;
   // std::cout << "\trad_in_meters: " << rad_in_meters << " bub_p: " << bub_p << " delP: " << delP << " E_c: " << std::exp(-delP * _omega / _kB / _temp[_qp]) << std::endl;
 
-  // std::cout << "phi_v: "    << _Dv[_qp] * _Cv[_qp] 
-  //           << " phi_i: "   << _Di[_qp] * _Ci[_qp] 
-  //           << " phi_ve: "  << _Dv[_qp] * _X_vu[_qp] * std::exp(-delP * _omega / _kB / _temp[_qp]) 
+  // std::cout << "phi_v: "    << _Dv[_qp] * _Cv[_qp]
+  //           << " phi_i: "   << _Di[_qp] * _Ci[_qp]
+  //           << " phi_ve: "  << _Dv[_qp] * _X_vu[_qp] * std::exp(-delP * _omega / _kB / _temp[_qp])
   //           << " phi_ie: "  << _Di[_qp] * _X_iu[_qp] * std::exp(+delP * _omega / _kB / _temp[_qp])
   //           << std::endl;
 

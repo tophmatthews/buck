@@ -68,7 +68,7 @@ void
 BuckApp::registerObjects(Factory & factory)
 {
   registerAux(EquilibriumRadiusAux);
-  
+
   registerKernel(VariableScaledSource);
   registerKernel(BasicDiffusion);
   registerKernel(PointDefect);
