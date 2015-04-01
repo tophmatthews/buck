@@ -19,6 +19,7 @@ protected:
   virtual void calcGains(Real & gains, const bool jac);
 
 private:
+	bool _allow_loss;
 	MaterialProperty<Real> & _Dg;
 
 };

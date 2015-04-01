@@ -8,11 +8,14 @@ InputParameters validParams<BubbleGrowth>()
 {
   InputParameters params = validParams<BubbleBase>();
 
+  params.addParam<bool>("allow_loss", false, "Flag to allow losses from the largest bubble group.");
+
   return params;
 }
 
 BubbleGrowth::BubbleGrowth(const std::string & name, InputParameters parameters)
   :BubbleBase(name,parameters),
+  _allow_loss(getParam<bool>("allow_loss")),
   _Dg(getMaterialProperty<Real>("gas_diffusivity"))
 {
 }
@@ -21,12 +24,12 @@ BubbleGrowth::BubbleGrowth(const std::string & name, InputParameters parameters)
 void
 BubbleGrowth::calcLosses(Real & losses, bool jac)
 {
-  // if (_g==_G-1) // Don't allow losses if largest bubble size
-  //   return;
+  if ( !_allow_loss && _g==_G-1 ) // Don't allow losses if largest bubble size
+    return;
 
   if (_g == 0)
   {
-    for ( unsigned int i=0; i<_G; ++i )
+    for ( unsigned int i=1; i<_G; ++i )
     {
       if (!jac)
         losses += 4.0 * M_PI * _Dg[_qp] * (*_r[i])[_qp] * (*_c[i])[_qp] * _u[_qp] * _width[i];

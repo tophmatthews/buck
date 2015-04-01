@@ -11,6 +11,8 @@ InputParameters validParams<BubblesGrowthKernelsAction>()
   params.addRequiredParam<VariableName>("temp", "The temperature variable name");
   params.addParam<bool>("use_displaced_mesh", false, "Whether to use displaced mesh in the kernels");
 
+  params.addParam<bool>("allow_loss", false, "Flag to allow losses from the largest bubble group.");
+
   return params;
 }
 
@@ -29,6 +31,7 @@ BubblesGrowthKernelsAction::act()
 
     InputParameters p = _factory.getValidParams("BubbleGrowth");
     p.set<NonlinearVariableName>("variable") = var_name;
+    p.set<bool>("allow_loss") = getParam<bool>("allow_loss");
     p.set<std::vector<VariableName> >("coupled_conc") = _c;
     p.set<std::vector<VariableName> >("coupled_rad") = _r;
     p.set<std::vector<Real> >("coupled_atoms") = _atoms;

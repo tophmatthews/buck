@@ -1,4 +1,4 @@
-# Tests nucleation of bubbles. Total should equal 1e5 at all times.
+# Tests nucleation of bubbles. Total should equal 1e10 at all times.
 #
 # +----------------+----------------+----------------+----------------+
 # | time           | c1             | c2             | total          |
