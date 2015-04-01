@@ -62,7 +62,9 @@ namespace Buck
 
     syntax.registerActionSyntax("AddBoundsVectorsAction", "Bubbles/Bounds/");
     syntax.registerActionSyntax("BubblesBoundsAction", "Bubbles/Bounds/", "add_aux_kernel");
+    syntax.registerActionSyntax("BubblesBoundsAction", "Bubbles/Bounds/", "add_aux_variable");
     registerAction(BubblesBoundsAction, "add_aux_kernel");
+    registerAction(BubblesBoundsAction, "add_aux_variable");
   }
 
 } //end namespace

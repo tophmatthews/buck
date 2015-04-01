@@ -10,7 +10,7 @@ InputParameters validParams<BubbleGrowth>();
 
 class BubbleGrowth : public BubbleBase
 {
-	
+
 public:
   BubbleGrowth(const std::string & name, InputParameters parameters);
 

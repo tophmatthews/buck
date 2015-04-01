@@ -143,7 +143,7 @@ BubbleCoalescence::calcLosses(Real & losses, bool jac)
       losses += 4.0 * M_PI * _Dg[_qp][0] * (*_r[_g])[_qp] * (*_c[0])[_qp] * _u[_qp];
     else
       losses += 4.0 * M_PI * _Dg[_qp][0] * (*_r[_g])[_qp] * (*_c[0])[_qp];
-  } 
+  }
 }
 
 
