@@ -37,6 +37,7 @@
 #include "BoundedElementAverage.h"
 #include "CavityPointDefectFlux.h"
 #include "CavityPointDefectEmission.h"
+#include "SwellingPostprocessor.h"
 
 
 template<>
@@ -98,6 +99,7 @@ BuckApp::registerObjects(Factory & factory)
   registerPostprocessor(BoundedElementAverage);
   registerPostprocessor(CavityPointDefectFlux);
   registerPostprocessor(CavityPointDefectEmission);
+  registerPostprocessor(SwellingPostprocessor);
 }
 
 void
