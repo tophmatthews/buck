@@ -51,7 +51,12 @@ BubblesConcVarsAction::act()
       else if ( i == 1 )
         poly_params.set<Real>("value") = getParam<Real>("c2_initial_condition");
       else
+      {
+        // Real a = -5.6870e-10;
+        // Real b = 3.873e-9;
+        // Real val = a * std::log(_atoms[i]) + b;
         poly_params.set<Real>("value") = getParam<Real>("initial_condition");
+      }
       _problem->addInitialCondition("ConstantIC", "Initialize_" + 1+i, poly_params);
     }
   }

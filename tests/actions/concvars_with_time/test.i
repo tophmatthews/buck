@@ -1,4 +1,5 @@
 # Tests nucleation of bubbles. Total should equal 1e5 at all times.
+# Values should be exactly the same as tests/bubblenucleation/test.i
 #
 # +----------------+----------------+----------------+----------------+
 # | time           | c1             | c2             | total          |
@@ -21,25 +22,19 @@
 []
 
 
-[Variables]
-  [./c1]
-    initial_condition = 1e10
-  [../]
-  [./c2]
+[Bubbles]
+  [./Conc]
+    G = 2
+    s = 2
+    M = 1
+    c1_initial_condition = 1e10
+    c2_initial_condition = 0
+    initial_condition = 0
   [../]
 []
 
 
 [Kernels]
-  [./c1_time]
-    type = TimeDerivative
-    variable = c1
-  [../]
-  [./c2_time]
-    type = TimeDerivative
-    variable = c2
-  [../]
-
   [./c1_nucleation]
     type = BubbleNucleation
     variable = c1
@@ -70,6 +65,7 @@
   dt = 100
 []
 
+
 [Postprocessors]
   [./c1]
     type = ElementAverageValue
@@ -85,6 +81,7 @@
     factors = '1 2'
   [../]
 []
+
 
 [Outputs]
   interval = 1

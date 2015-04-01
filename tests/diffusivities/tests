@@ -1,7 +1,12 @@
 [Tests]
-  [./diffusion]
+  [./test]
     type = 'Exodiff'
     input = 'test.i'
     exodiff = 'test_out.e'
+  [../]
+  [./no_bub_diff]
+    type = 'Exodiff'
+    input = 'no_bub_diff.i'
+    exodiff = 'no_bub_diff_out.e'
   [../]
 []

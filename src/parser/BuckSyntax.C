@@ -13,7 +13,11 @@
 
 #include "BubblesPPAction.h"
 
-#include "CoalescenceKernelsAction.h"
+#include "BubblesCoalescenceKernelsAction.h"
+#include "BubblesGrowthKernelsAction.h"
+#include "BubblesNucleationKernelsAction.h"
+
+#include "BubblesBoundsAction.h"
 
 namespace Buck
 {
@@ -42,13 +46,23 @@ namespace Buck
     syntax.registerActionSyntax("BubblesPPAction", "Bubbles/PPs/", "add_postprocessor");
     registerAction(BubblesPPAction, "add_postprocessor");
 
-    syntax.registerActionSyntax("CoalescenceKernelsAction", "Bubbles/Coalescence/", "add_kernel");
-    registerAction(CoalescenceKernelsAction, "add_kernel");
+    syntax.registerActionSyntax("BubblesGrowthKernelsAction", "Bubbles/Growth/", "add_kernel");
+    registerAction(BubblesGrowthKernelsAction, "add_kernel");
+
+    syntax.registerActionSyntax("BubblesCoalescenceKernelsAction", "Bubbles/Coalescence/", "add_kernel");
+    registerAction(BubblesCoalescenceKernelsAction, "add_kernel");
+
+    syntax.registerActionSyntax("BubblesNucleationKernelsAction", "Bubbles/Nucleation/", "add_kernel");
+    registerAction(BubblesNucleationKernelsAction, "add_kernel");
 
     syntax.registerActionSyntax("BubblesRadAuxVarsAction", "Bubbles/Rad/", "add_aux_variable");
     syntax.registerActionSyntax("BubblesRadAuxKernelAction", "Bubbles/Rad/Eq/", "add_aux_kernel");
     registerAction(BubblesRadAuxVarsAction, "add_aux_variable");
     registerAction(BubblesRadAuxKernelAction, "add_aux_kernel");
+
+    syntax.registerActionSyntax("AddBoundsVectorsAction", "Bubbles/Bounds/");
+    syntax.registerActionSyntax("BubblesBoundsAction", "Bubbles/Bounds/", "add_aux_kernel");
+    registerAction(BubblesBoundsAction, "add_aux_kernel");
   }
 
 } //end namespace

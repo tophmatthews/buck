@@ -70,11 +70,8 @@
 
   solve_type = PJFNK
 
-  petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
-  petsc_options_value = '201                hypre    boomeramg      4'
-
   num_steps = 200
-  dt = 1e3
+  dt = 1e5
 []
 
 [Postprocessors]

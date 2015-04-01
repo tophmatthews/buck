@@ -22,9 +22,9 @@ BubbleBase::BubbleBase(const std::string & name, InputParameters parameters)
   _atoms(getParam<std::vector<Real> >("coupled_atoms"))
 {
 	_G = coupledComponents("coupled_conc");
-  if (_G != coupledComponents("coupled_rad"))
+  if ( _G != coupledComponents("coupled_rad") )
     mooseError("From BubbleBase: The number of coupled concentrations does not match coupled radii.");
-  if (_G != _atoms.size())
+  if ( _G != _atoms.size() )
     mooseError("From BubbleBase: The number of coupled concentrations does not match atom sizes list.");
 
   for ( unsigned int i=0; i<_G; ++i )
@@ -46,7 +46,12 @@ BubbleBase::BubbleBase(const std::string & name, InputParameters parameters)
   if (_g == -1)
     mooseError("From BubbleBase: Variable not found in coupled_conc list. Check the list.");
 
+  for ( unsigned int i=0; i<_G-1; ++i)
+    _width.push_back(_atoms[i+1] - _atoms[i]);
+  _width.push_back(1.0);
+
   mooseDoOnce(Buck::iterateAndDisplay("avg", _atoms));
+  mooseDoOnce(Buck::iterateAndDisplay("width", _width));
 }
 
 Real
@@ -74,16 +79,3 @@ BubbleBase::computeQpJacobian()
   return -( gains - losses ) * _phi[_j][_qp] * _test[_i][_qp];
 }
 
-
-// Real
-// BubbleBase::calcLosses(bool jac)
-// {
-//   return 0;
-// }
-
-
-// Real
-// BubbleBase::calcGains(bool jac)
-// {
-//   return 0;
-// }

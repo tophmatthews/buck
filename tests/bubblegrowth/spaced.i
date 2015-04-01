@@ -1,18 +1,10 @@
-# Tests coalescence of bubbles. Total should equal 1e5 at all times.
-
-# +----------------+----------------+----------------+----------------+----------------+----------------+----------------+
-# | time           | c1             | c2             | c3             | c4             | c5             | total          |
-# +----------------+----------------+----------------+----------------+----------------+----------------+----------------+
-# |   1.000000e+02 |   9.993266e+04 |   9.993270e+04 |   6.724647e+01 |   4.896631e-02 |   3.781616e-05 |   3.000000e+05 |
-# |   2.000000e+02 |   9.986535e+04 |   9.986550e+04 |   1.343536e+02 |   1.466938e-01 |   1.510005e-04 |   3.000000e+05 |
-# |   3.000000e+02 |   9.979809e+04 |   9.979839e+04 |   2.013216e+02 |   2.929781e-01 |   3.768409e-04 |   3.000000e+05 |
-# +----------------+----------------+----------------+----------------+----------------+----------------+----------------+
+# Tests growth of bubbles. Total should equal 1e5 at all times.
 
 [GlobalParams]
   temp = temp
   coupled_conc = 'c1 c2 c3 c4 c5'
   coupled_rad = 'r1 r2 r3 r4 r5'
-  coupled_atoms = '1 2 3 4 5'
+  coupled_atoms = '1 2 3 4.5 6.75'
 []
 
 
@@ -68,24 +60,24 @@
     variable = c5
   [../]
 
-  [./c1_coalescence]
-    type = BubbleCoalescence
+  [./c1_growth]
+    type = BubbleGrowth
     variable = c1
   [../]
-  [./c2_coalescence]
-    type = BubbleCoalescence
+  [./c2_growth]
+    type = BubbleGrowth
     variable = c2
   [../]
-  [./c3_coalescence]
-    type = BubbleCoalescence
+  [./c3_growth]
+    type = BubbleGrowth
     variable = c3
   [../]
-  [./c4_coalescence]
-    type = BubbleCoalescence
+  [./c4_growth]
+    type = BubbleGrowth
     variable = c4
   [../]
-  [./c5_coalescence]
-    type = BubbleCoalescence
+  [./c5_growth]
+    type = BubbleGrowth
     variable = c5
   [../]
 []
@@ -122,12 +114,12 @@
   [./r4_aux]
     type = EquilibriumRadiusAux
     variable = r4
-    m = 4
+    m = 4.5
   [../]
   [./r5_aux]
     type = EquilibriumRadiusAux
     variable = r5
-    m = 5
+    m = 6.75
   [../]
 []
 
@@ -158,7 +150,7 @@
   petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
   petsc_options_value = '201                hypre    boomeramg      4'
 
-  num_steps = 3
+  num_steps = 10
   dt = 100
 []
 
@@ -186,7 +178,7 @@
   [./total]
     type = SumOfPostprocessors
     postprocessors = 'c1 c2 c3 c4 c5'
-    factors = '1 2 3 4 5'
+    factors = '1 2 3 4.5 6.75'
   [../]
 []
 

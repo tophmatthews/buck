@@ -1,10 +1,10 @@
-#include "CoalescenceKernelsAction.h"
+#include "BubblesCoalescenceKernelsAction.h"
 
 #include "Factory.h"
 #include "FEProblem.h"
 
 template<>
-InputParameters validParams<CoalescenceKernelsAction>()
+InputParameters validParams<BubblesCoalescenceKernelsAction>()
 {
   InputParameters params = validParams<BubblesActionBase>();
 
@@ -14,14 +14,14 @@ InputParameters validParams<CoalescenceKernelsAction>()
   return params;
 }
 
-CoalescenceKernelsAction::CoalescenceKernelsAction(const std::string & name, InputParameters params) :
+BubblesCoalescenceKernelsAction::BubblesCoalescenceKernelsAction(const std::string & name, InputParameters params) :
   BubblesActionBase(name, params)
 {
 }
 
 
 void
-CoalescenceKernelsAction::act()
+BubblesCoalescenceKernelsAction::act()
 {
   for (int g=0; g<_G; ++g)
   {

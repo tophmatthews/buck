@@ -8,6 +8,10 @@
 
 // AuxKernels
 #include "EquilibriumRadiusAux.h"
+#include "VectorBoundsAux.h"
+
+// dampers
+#include "MaxRelativeIncrement.h"
 
 // Kernels
 #include "VariableScaledSource.h"
@@ -16,6 +20,7 @@
 #include "BubbleBase.h"
 #include "BubbleNucleation.h"
 #include "BubbleCoalescence.h"
+#include "BubbleGrowth.h"
 #include "PointDefect.h"
 
 // Materials
@@ -68,6 +73,9 @@ void
 BuckApp::registerObjects(Factory & factory)
 {
   registerAux(EquilibriumRadiusAux);
+  registerAux(VectorBoundsAux);
+
+  registerDamper(MaxRelativeIncrement);
 
   registerKernel(VariableScaledSource);
   registerKernel(BasicDiffusion);
@@ -76,6 +84,7 @@ BuckApp::registerObjects(Factory & factory)
   registerKernel(BubbleBase);
   registerKernel(BubbleNucleation);
   registerKernel(BubbleCoalescence);
+  registerKernel(BubbleGrowth);
 
   registerMaterial(GasAtomDiffusivity);
   registerMaterial(BubbleDiffusivity);

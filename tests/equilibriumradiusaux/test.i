@@ -54,6 +54,8 @@
     type = PiecewiseLinear
     x = '0 10'
     y = '1000 3000'
+  [../]
+[]
 
 
 [AuxVariables]

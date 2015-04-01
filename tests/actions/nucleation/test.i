@@ -1,4 +1,5 @@
 # Tests nucleation of bubbles. Total should equal 1e5 at all times.
+# Values should be exactly the same as tests/bubblenucleation/test.i
 #
 # +----------------+----------------+----------------+----------------+
 # | time           | c1             | c2             | total          |
@@ -8,16 +9,22 @@
 # +----------------+----------------+----------------+----------------+
 
 [GlobalParams]
-  coupled_conc = 'c1 c2'
-  coupled_rad = 'c1 c2'
-  coupled_atoms = '1 2'
-  temp = 1000
+  temp = temp
 []
 
 
 [Mesh]
   type = GeneratedMesh
   dim = 1
+[]
+
+[Bubbles]
+  [./Nucleation]
+    G = 2
+    M = 2
+    s = 2
+    rad_name_base = c
+  [../]
 []
 
 
@@ -39,17 +46,21 @@
     type = TimeDerivative
     variable = c2
   [../]
+[]
 
-  [./c1_nucleation]
-    type = BubbleNucleation
-    variable = c1
-  [../]
-  [./c2_nucleation]
-    type = BubbleNucleation
-    variable = c2
+
+[AuxVariables]
+  [./temp]
   [../]
 []
 
+[AuxKernels]
+  [./temp_aux]
+    type = ConstantAux
+    variable = temp
+    value = 1000
+  [../]
+[]
 
 [Materials]
   [./diff]

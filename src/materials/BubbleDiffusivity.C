@@ -9,7 +9,7 @@ InputParameters validParams<BubbleDiffusivity>()
   params.addCoupledVar("coupled_rad", "List of coupled radius variables.");
   params.addRequiredCoupledVar("temp", "Coupled Temperature");
   params.addParam<int>("G", "If specified, total number of radius groups that will equal 0.");
-  params.addParam<Real>("D0", "Diffusion coefficient [um^2/s]");
+  params.addParam<Real>("D0", "Diffusion coefficient [cm^2/s]");
   params.addParam<Real>("Q", "Activation energy [J/mol]");
   params.addParam<Real>("R", 8.31446, "Ideal gas constant [J/(K*mo)]");
   params.addParam<Real>("factor", 1, "Scaling factor to multiply by diffusivity.");

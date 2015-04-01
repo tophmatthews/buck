@@ -1,7 +1,8 @@
 # This tests the grain_gas_flux postprocessor. Grain_gas_flux calculates the mass flux
 #  across the right side of a 1D line. Grain_gas_total linearlly adds all the values as
 #  time continues. Sum takes the sum of grain_gas_total and c1_num. Sum should equal close
-#  to the initial_condition of c1 = 100*L = 50. It is not exact due to the BC of 0.
+#  to the initial_condition of c1 = 100*L = 50. It is not exact due to the BC of 0, but
+#  but should approach 50.
 #
 # +----------------+----------------+----------------+----------------+----------------+
 # | time           | c1_num         | grain_gas_flux | grain_gas_total| sum            |

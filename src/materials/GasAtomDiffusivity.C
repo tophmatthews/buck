@@ -46,17 +46,17 @@ GasAtomDiffusivity::GasAtomDiffusivity(const std::string & name, InputParameters
 
     if ( _model == 1 )
     {
-      _D0 = 3.0e10;
+      _D0 = 0.3e8;
       _Q = 355000.0;
     }
     else if ( _model == 2 )
     {
-      _D0 = 4.6e8;
+      _D0 = 4.6e5;
       _Q = 326360.0;
     }
     else if ( _model == 3 )
     {
-      _D0 = 1.66e2;
+      _D0 = 1.66e-1;
       _Q = 221154.0;
     }
     else if ( _model == 4 )

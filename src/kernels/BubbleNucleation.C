@@ -24,10 +24,8 @@ BubbleNucleation::BubbleNucleation(const std::string & name, InputParameters par
 
   _Z11(84.0)
 {
-  // mooseDoOnce(Buck::iterateAndDisplay("max", _maxsize));
-  // mooseDoOnce(Buck::iterateAndDisplay("min", _minsize));
-  // mooseDoOnce(Buck::iterateAndDisplay("width", _width));
-  // mooseDoOnce(Buck::iterateAndDisplay("avg", _avgsize));
+  if ( _g > 1 )
+    mooseError("In BubbleNucleation: Cannont implement on non-dimer or non-single atoms.");
 }
 
 void
@@ -48,13 +46,12 @@ BubbleNucleation::calcLosses(Real & losses, bool jac)
 void
 BubbleNucleation::calcGains(Real & gains, bool jac)
 {
-  if (_g != 1)
+  if ( _g != 1 )
+    return;
+  if (jac)
     return;
 
   Real P11 = _Z11 * _omega * _Dg[_qp] * std::pow( (*_c[0])[_qp]/_a, 2.0 );
 
-  if (!jac)
-    gains += P11;
-  else
-    return;
+  gains += P11;
 }

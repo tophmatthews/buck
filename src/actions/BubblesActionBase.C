@@ -35,10 +35,24 @@ BubblesActionBase::BubblesActionBase(const std::string & name, InputParameters p
   varNamesFromG( _r, _rad_name_base, _G );
 
   for ( int j=0; j<_s; ++j )
+  {
     _atoms.push_back(j+1);
+    // _width.push_back(j+1);
+    // _avg.push_back(j+1);
+    // _max.push_back(j+1);
+    // _min.push_back(j+1);
+  }
 
+  // for ( int j=_s; j<_G; ++j )
+  // {
+  //   _width.push_back( (_width.back() + 1.0) / s + _width.back() );
+  //   _min.push_back(_min.back() + 1);
+  //   _max.push_back(_max.back() + _width.back() )
+  //   _atoms.push_back( _atoms.back() + )
+  // }
   for ( int j=_s; j<_G; ++j )
-    _atoms.push_back( _atoms.back() * _M );
+    _atoms.push_back( _M * _atoms.back() );
+    // _atoms.push_back( _atoms.back() * _M );
 }
 
 
