@@ -11,7 +11,7 @@
 #include "BubblesRadAuxVarsAction.h"
 #include "BubblesRadAuxKernelAction.h"
 
-#include "BubblesPPAction.h"
+#include "BubblesPostprocessorsAction.h"
 
 #include "BubblesCoalescenceKernelsAction.h"
 #include "BubblesGrowthKernelsAction.h"
@@ -43,8 +43,8 @@ namespace Buck
     registerAction(BubblesConcMomentVarsAction, "add_variable");
     registerAction(BubblesConcMomentTimeKernelAction, "add_kernel");
 
-    syntax.registerActionSyntax("BubblesPPAction", "Bubbles/PPs/", "add_postprocessor");
-    registerAction(BubblesPPAction, "add_postprocessor");
+    syntax.registerActionSyntax("BubblesPostprocessorsAction", "Bubbles/PPs/", "add_postprocessor");
+    registerAction(BubblesPostprocessorsAction, "add_postprocessor");
 
     syntax.registerActionSyntax("BubblesGrowthKernelsAction", "Bubbles/Growth/", "add_kernel");
     registerAction(BubblesGrowthKernelsAction, "add_kernel");

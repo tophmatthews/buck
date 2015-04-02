@@ -1,7 +1,7 @@
 [Tests]
   [./nospacing]
     type = 'Exodiff'
-    input = 'nospacing.i'
-    exodiff = 'nospacing_out.e'
+    input = 'test.i'
+    exodiff = 'test_out.e'
   [../]
 []
