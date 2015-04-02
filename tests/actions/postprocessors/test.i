@@ -36,10 +36,10 @@
     rad_name_base = c # needed to bypass radius requirement
   [../]
   [./PPs]
-    show_concentrations = 'console'
-    show_total_atoms = 'console'
-    show_total_concentrations = 'console'
-    show_swelling = 'console'
+    concentrations = 'console'
+    total_atoms = 'console'
+    total_concentrations = 'console'
+    swelling = 'console'
   [../]
   [./Rad]
     [./Eq]

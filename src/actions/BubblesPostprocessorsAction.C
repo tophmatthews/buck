@@ -8,20 +8,20 @@ InputParameters validParams<BubblesPostprocessorsAction>()
 {
   InputParameters params = validParams<BubblesActionBase>();
 
-  params.addParam<std::vector<OutputName> >("show_concentrations", "Where to output concentration postprocessors");
-  params.addParam<std::vector<OutputName> >("show_total_concentrations", "Where to output concentration postprocessor. Not calculated if empty.");
-  params.addParam<std::vector<OutputName> >("show_total_atoms", "Where to output concentration postprocessor. Not calculated if empty.");
-  params.addParam<std::vector<OutputName> >("show_swelling", "Where to output swelling postprocessor. Not calculated if empty.");
+  params.addParam<std::vector<OutputName> >("concentrations", "Where to output concentration postprocessors");
+  params.addParam<std::vector<OutputName> >("total_concentrations", "Where to output concentration postprocessor. Not calculated if empty.");
+  params.addParam<std::vector<OutputName> >("total_atoms", "Where to output concentration postprocessor. Not calculated if empty.");
+  params.addParam<std::vector<OutputName> >("swelling", "Where to output swelling postprocessor. Not calculated if empty.");
 
   return params;
 }
 
 BubblesPostprocessorsAction::BubblesPostprocessorsAction(const std::string & name, InputParameters params) :
   BubblesActionBase(name, params),
-  _conc( isParamValid("show_concentrations")? true : false),
-  _total_conc( isParamValid("show_total_concentrations")? true : false),
-  _total_atoms( isParamValid("show_total_atoms")? true : false),
-  _swelling( isParamValid("show_swelling")? true : false)
+  _conc( isParamValid("concentrations")? true : false),
+  _total_conc( isParamValid("total_concentrations")? true : false),
+  _total_atoms( isParamValid("total_atoms")? true : false),
+  _swelling( isParamValid("swelling")? true : false)
 {
 }
 
@@ -44,7 +44,7 @@ BubblesPostprocessorsAction::act()
 
       std::vector<OutputName> outs;
       if ( _conc )
-        outs = getParam<std::vector<OutputName> >("show_concentrations");
+        outs = getParam<std::vector<OutputName> >("concentrations");
       else
         outs.push_back("none");
 
@@ -63,7 +63,7 @@ BubblesPostprocessorsAction::act()
     params.set<MultiMooseEnum>("execute_on") = "timestep_end";
     params.set<std::vector<PostprocessorName> >("postprocessors") = pp_names;
 
-    std::vector<OutputName> outs(getParam<std::vector<OutputName> >("show_total_concentrations"));
+    std::vector<OutputName> outs(getParam<std::vector<OutputName> >("total_concentrations"));
     params.set<std::vector<OutputName> >("outputs") = outs;
 
     _problem->addPostprocessor(pp_to_use, this_pp_name, params);
@@ -79,7 +79,7 @@ BubblesPostprocessorsAction::act()
     params.set<std::vector<PostprocessorName> >("postprocessors") = pp_names;
     params.set<std::vector<Real> >("factors") = _atoms;
 
-    std::vector<OutputName> outs(getParam<std::vector<OutputName> >("show_total_atoms"));
+    std::vector<OutputName> outs(getParam<std::vector<OutputName> >("total_atoms"));
     params.set<std::vector<OutputName> >("outputs") = outs;
 
     _problem->addPostprocessor(pp_to_use, this_pp_name, params);
@@ -98,7 +98,7 @@ BubblesPostprocessorsAction::act()
 
     params.set<VariableName>("variable") = _c[0];
 
-    std::vector<OutputName> outs(getParam<std::vector<OutputName> >("show_swelling"));
+    std::vector<OutputName> outs(getParam<std::vector<OutputName> >("swelling"));
     params.set<std::vector<OutputName> >("outputs") = outs;
 
     _problem->addPostprocessor(pp_to_use, this_pp_name, params);
