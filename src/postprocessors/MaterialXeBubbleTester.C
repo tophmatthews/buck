@@ -9,7 +9,6 @@ InputParameters validParams<MaterialXeBubbleTester>()
 
   params.addParam<Real>("temp" , 1000, "Number of atoms.");
   params.addParam<Real>("sigma", 0, "stress");
-  params.addParam<bool>("testing", true, "testing output flag");
 
   params.addRequiredParam<PostprocessorName>("m_mag", "The postprocessor that has m order of magnitude");
 
@@ -21,7 +20,6 @@ MaterialXeBubbleTester::MaterialXeBubbleTester(const std::string & name, InputPa
 
     _temp(getParam<Real>("temp")),
     _sigma(getParam<Real>("sigma")),
-    _testing(getParam<bool>("testing")),
 
     _m_mag(getPostprocessorValueByName(getParam<PostprocessorName>("m_mag")))
 {
@@ -30,5 +28,5 @@ MaterialXeBubbleTester::MaterialXeBubbleTester(const std::string & name, InputPa
 Real
 MaterialXeBubbleTester::getValue()
 {
-	return MaterialXeBubble::VDW_MtoR(std::pow(10, _m_mag), _temp, _sigma, _testing);
+	return MaterialXeBubble::VDW_MtoR(std::pow(10, _m_mag), _temp, _sigma, 1.0, 8.5e-29, true);
 }

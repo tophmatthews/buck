@@ -22,7 +22,6 @@ public:
 protected:
 	const Real _temp;
 	const Real _sigma;
-	const bool _testing;
 
 	const PostprocessorValue & _m_mag;
 };

@@ -53,6 +53,29 @@ namespace Buck
       mooseError("In BuckUtils: Cannot take log of a negative number or 0.");
     return std::log10(x);
   }
-}
+
+
+  inline void getPartition(Real & fk1, Real & fk2, const Real Ng, const Real Nk1, const Real Nk2)
+  {
+    fk1 = Ng / Nk1 * ( Ng - Nk2) / ( Nk1 - Nk2);
+    fk2 = Ng / Nk2 * ( Nk1 - Ng) / ( Nk1 - Nk2);
+    // fk1 = (Ng - Nk2) / (Nk1 - Nk2);
+    // fk2 = (Nk1 - Ng) / (Nk1 - Nk2);
+  }
+
+  template <typename T1, typename T2>
+  inline T1 pow(T1 x, T2 p)
+  {
+    if (x < 0)
+    {
+      // mooseError("In BuckUtils: Trying to take a power of a negative number with a non-integar power");
+      return 0;
+    }
+    return std::pow(x,p);
+  }
+
+} // end namspace
+
+
 
 #endif //BUCKUTILS_H

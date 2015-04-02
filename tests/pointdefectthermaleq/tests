@@ -1,0 +1,17 @@
+[Tests]
+  [./stoich]
+    type = 'Exodiff'
+    input = 'stoich.i'
+    exodiff = 'stoich_out.e'
+  [../]
+  [./hypo]
+    type = 'Exodiff'
+    input = 'hypo.i'
+    exodiff = 'hypo_out.e'
+  [../]
+  [./hyper]
+    type = 'Exodiff'
+    input = 'hyper.i'
+    exodiff = 'hyper_out.e'
+  [../]
+[]
