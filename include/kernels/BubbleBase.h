@@ -14,12 +14,12 @@ public:
   BubbleBase(const std::string & name, InputParameters parameters);
 
 protected:
-
   virtual Real computeQpResidual();
   virtual Real computeQpJacobian();
 
   virtual void calcLosses(Real & losses, const bool jac){}
   virtual void calcGains(Real & gains, const bool jac){}
+  virtual void displayBubbleInfo();
 
   std::vector<VariableName> _names;
   const NonlinearVariableName _this_var;

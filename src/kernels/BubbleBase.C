@@ -50,8 +50,7 @@ BubbleBase::BubbleBase(const std::string & name, InputParameters parameters)
     _width.push_back(_atoms[i+1] - _atoms[i]);
   _width.push_back(1.0);
 
-  mooseDoOnce(Buck::iterateAndDisplay("avg", _atoms));
-  mooseDoOnce(Buck::iterateAndDisplay("width", _width));
+  mooseDoOnce( displayBubbleInfo() );
 }
 
 Real
@@ -77,5 +76,19 @@ BubbleBase::computeQpJacobian()
   calcGains(gains, true);
 
   return -( gains - losses ) * _phi[_j][_qp] * _test[_i][_qp];
+}
+
+void
+BubbleBase::displayBubbleInfo()
+{
+  std::cout.precision(6);
+  std::cout << std::scientific;
+  std::cout << "=======================================\n";
+  std::cout << "    --< BUCK Bubble Information >--     \n";
+  std::cout << "=======================================\n";
+  std::cout << " group \t| avg atoms\t| width\n";
+  for (int i=0; i<_G; ++i)
+    std::cout << " " << i << " \t| " << _atoms[i] << "\t| " << _width[i] << "\n";
+  std::cout << "=======================================\n" << std::endl;
 }
 
