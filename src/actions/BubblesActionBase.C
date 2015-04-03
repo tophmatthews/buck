@@ -46,11 +46,13 @@ BubblesActionBase::BubblesActionBase(const std::string & name, InputParameters p
 
   _G = _atoms.size();
 
+  for ( unsigned int i=0; i<_atoms.size()-1; ++i)
+    _widths.push_back(_atoms[i+1] - _atoms[i]);
+  _widths.push_back(1.0);
+
   varNamesFromG( _c, _conc_name_base, _G );
   varNamesFromG( _m, _conc_1stM_name_base, _G );
   varNamesFromG( _r, _rad_name_base, _G );
-
-  mooseDoOnce(Buck::iterateAndDisplay("atoms",_atoms));
 }
 
 

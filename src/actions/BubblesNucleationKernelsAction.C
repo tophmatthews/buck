@@ -39,6 +39,7 @@ BubblesNucleationKernelsAction::act()
     p.set<std::vector<VariableName> >("coupled_conc") = _c;
     p.set<std::vector<VariableName> >("coupled_rad") = _r;
     p.set<std::vector<Real> >("coupled_atoms") = _atoms;
+    p.set<std::vector<Real> >("coupled_widths") = _widths;
 
     p.addCoupledVar("temp", "");
     p.set<std::vector<VariableName> >("temp") = std::vector<VariableName>(1, getParam<VariableName>("temp"));

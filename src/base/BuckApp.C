@@ -22,7 +22,6 @@
 #include "SingleCavity.h"
 #include "BubbleBase.h"
 #include "BubbleNucleation.h"
-#include "BubbleCoalescence.h"
 #include "BubbleGrowth.h"
 #include "PointDefect.h"
 
@@ -89,7 +88,6 @@ BuckApp::registerObjects(Factory & factory)
   registerKernel(SingleCavity);
   registerKernel(BubbleBase);
   registerKernel(BubbleNucleation);
-  registerKernel(BubbleCoalescence);
   registerKernel(BubbleGrowth);
 
   registerMaterial(GasAtomDiffusivity);

@@ -96,6 +96,7 @@ BubblesPostprocessorsAction::act()
     params.set<std::vector<VariableName> >("coupled_conc") = _c;
     params.set<std::vector<VariableName> >("coupled_rad") = _r;
     params.set<std::vector<Real> >("coupled_atoms") = _atoms;
+    params.set<std::vector<Real> >("coupled_widths") = _widths;
 
     params.set<VariableName>("variable") = _c[0];
 

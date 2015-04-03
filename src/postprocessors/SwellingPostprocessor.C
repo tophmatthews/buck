@@ -8,13 +8,15 @@ InputParameters validParams<SwellingPostprocessor>()
   params.addRequiredCoupledVar("coupled_conc", "List of coupled concentration variables.");
   params.addRequiredCoupledVar("coupled_rad", "List of coupled radius variables.");
   params.addRequiredParam<std::vector<Real> >("coupled_atoms", "List of atom sizes for coupled variables.");
+  params.addRequiredParam<std::vector<Real> >("coupled_widths", "List of group widths for coupled variables.");
 
   return params;
 }
 
 SwellingPostprocessor::SwellingPostprocessor(const std::string & name, InputParameters parameters) :
   ElementAverageValue(name, parameters),
-  _atoms(getParam<std::vector<Real> >("coupled_atoms"))
+  _atoms(getParam<std::vector<Real> >("coupled_atoms")),
+  _widths(getParam<std::vector<Real> >("coupled_widths"))
 {
 	_G = coupledComponents("coupled_conc");
 
@@ -34,7 +36,7 @@ SwellingPostprocessor::computeQpIntegral()
 	Real swell(0);
 
 	for ( unsigned int i=0; i<_G; ++i)
-		swell += (*_c[i])[_qp] * 4.0/3.0 * M_PI * std::pow( (*_r[i])[_qp], 3.0 );
+		swell += (*_c[i])[_qp] * 4.0/3.0 * M_PI * std::pow( (*_r[i])[_qp], 3.0 ) * _widths[i];
 
   return swell;
 }

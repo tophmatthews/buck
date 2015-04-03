@@ -21,6 +21,7 @@ protected:
   std::vector<VariableName> _m;
   std::vector<VariableName> _r;
   std::vector<Real> _atoms;
+  std::vector<Real> _widths;
   unsigned int _G;
 
 private:

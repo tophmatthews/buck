@@ -18,7 +18,7 @@ private:
 	std::vector<VariableValue *> _c;
 	std::vector<VariableValue *> _r;
 	std::vector<Real> _atoms;
-	std::vector<Real> _width;
+	std::vector<Real> _widths;
 
 };
 

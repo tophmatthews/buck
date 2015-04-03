@@ -12,6 +12,7 @@
   coupled_conc = 'c1 c2'
   coupled_rad = 'c1 c2'
   coupled_atoms = '1 2'
+  coupled_widths = '1 2'
   temp = 1000
 []
 

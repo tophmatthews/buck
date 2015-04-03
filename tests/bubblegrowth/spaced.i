@@ -20,9 +20,10 @@
 
 [GlobalParams]
   temp = temp
-  coupled_conc = 'c1 c2 c3 c4 c5'
-  coupled_rad = 'r1 r2 r3 r4 r5'
-  coupled_atoms = '1 2 3 4.5 6.75'
+  coupled_conc   = 'c1 c2 c3  c4   c5'
+  coupled_rad    = 'r1 r2 r3  r4   r5'
+  coupled_atoms  = '1  2  3   4.5  6.75'
+  coupled_widths = '1  1  1.5 2.25 1'
   allow_loss = false
 []
 

@@ -126,6 +126,7 @@
     coupled_conc = 'c1 c2 c3'
     coupled_rad = 'r1 r2 r3'
     coupled_atoms = '1 2 3'
+    coupled_widths = '1 1 1'
   [../]
 []
 

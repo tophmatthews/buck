@@ -11,6 +11,7 @@ InputParameters validParams<BubbleBase>()
   params.addRequiredCoupledVar("coupled_conc", "List of coupled concentration variables.");
   params.addRequiredCoupledVar("coupled_rad", "List of coupled radius variables.");
   params.addRequiredParam<std::vector<Real> >("coupled_atoms", "List of atom sizes for coupled variables.");
+  params.addRequiredParam<std::vector<Real> >("coupled_widths", "List of group sizes");
 
   return params;
 }
@@ -19,7 +20,8 @@ BubbleBase::BubbleBase(const std::string & name, InputParameters parameters)
   :Kernel(name,parameters),
   _names(getParam<std::vector<VariableName> >("coupled_conc")),
   _this_var(getParam<NonlinearVariableName>("variable")),
-  _atoms(getParam<std::vector<Real> >("coupled_atoms"))
+  _atoms(getParam<std::vector<Real> >("coupled_atoms")),
+  _widths(getParam<std::vector<Real> >("coupled_widths"))
 {
 	_G = coupledComponents("coupled_conc");
   if ( _G != coupledComponents("coupled_rad") )
@@ -45,10 +47,6 @@ BubbleBase::BubbleBase(const std::string & name, InputParameters parameters)
   }
   if (_g == -1)
     mooseError("From BubbleBase: Variable not found in coupled_conc list. Check the list.");
-
-  for ( unsigned int i=0; i<_atoms.size()-1; ++i)
-    _width.push_back(_atoms[i+1] - _atoms[i]);
-  _width.push_back(1.0);
 
   mooseDoOnce( displayBubbleInfo() );
 }
@@ -89,7 +87,7 @@ BubbleBase::displayBubbleInfo()
   std::cout << " group\t| avg atoms\t| width\n";
   std::cout << "--------+---------------+--------------\n";
   for (int i=0; i<_G; ++i)
-    std::cout << " " << i << "\t| " << _atoms[i] << "\t| " << _width[i] << "\n";
+    std::cout << " " << i << "\t| " << _atoms[i] << "\t| " << _widths[i] << "\n";
   std::cout << "=======================================\n" << std::endl;
 }
 
