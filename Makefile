@@ -25,13 +25,13 @@ include $(FRAMEWORK_DIR)/moose.mk
 # ###############################################################################
 
 # ################################## MODULES ####################################
-# SOLID_MECHANICS   := no
+SOLID_MECHANICS   := yes
 # LINEAR_ELASTICITY := no
 # CONTACT           := no
 # HEAT_CONDUCTION   := no
 # WATER_STEAM_EOS   := no
 # MISC              := no
-# include           $(MOOSE_DIR)/modules/modules.mk
+include           $(MOOSE_DIR)/modules/modules.mk
 ###############################################################################
 
 APPLICATION_DIR    := $(CURDIR)

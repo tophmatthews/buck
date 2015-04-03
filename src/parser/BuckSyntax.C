@@ -2,55 +2,69 @@
 #include "ActionFactory.h"
 
 // Actions
-#include "ClustersVarsAction.h"
-#include "ClustersTimeKernelAction.h"
+#include "BubblesConcVarsAction.h"
+#include "BubblesConcTimeKernelAction.h"
 
-#include "NucleationKernelsAction.h"
-#include "GrowthKernelsAction.h"
-#include "ClustersPPAction.h"
-#include "KnockoutKernelsAction.h"
+#include "BubblesConcMomentVarsAction.h"
+#include "BubblesConcMomentTimeKernelAction.h"
 
-#include "ClustersBoundsAction.h"
-#include "ClustersBoundsVarsAction.h"
+#include "BubblesRadAuxVarsAction.h"
+#include "BubblesRadAuxKernelAction.h"
+
+#include "BubblesPostprocessorsAction.h"
+
+#include "BubblesCoalescenceKernelsAction.h"
+#include "BubblesGrowthKernelsAction.h"
+#include "BubblesNucleationKernelsAction.h"
+
+#include "BubblesBoundsAction.h"
 
 namespace Buck
 {
 
-void
-associateSyntax(Syntax & syntax, ActionFactory & action_factory)
-{
-  /**
-   * Note: the optional third parameter is used to differentiate which action_name is
-   * satisfied based on the syntax encountered for classes which are registered
-   * to satisfy more than one action_name
-   */
+  void
+  associateSyntax(Syntax & syntax, ActionFactory & action_factory)
+  {
+    /**
+     * Note: the optional third parameter is used to differentiate which action_name is
+     * satisfied based on the syntax encountered for classes which are registered
+     * to satisfy more than one action_name
+     */
 
-  syntax.registerActionSyntax("ClustersVarsAction", "Clusters", "add_variable");
-  registerAction(ClustersVarsAction, "add_variable");
+    syntax.registerActionSyntax("BubblesConcVarsAction", "Bubbles/Conc/", "add_variable");
+    syntax.registerActionSyntax("BubblesConcVarsAction", "Bubbles/Conc/", "add_ic");
+    syntax.registerActionSyntax("BubblesConcTimeKernelAction", "Bubbles/Conc/", "add_kernel");
+    registerAction(BubblesConcVarsAction, "add_variable");
+    registerAction(BubblesConcVarsAction, "add_ic");
+    registerAction(BubblesConcTimeKernelAction, "add_kernel");
 
-  syntax.registerActionSyntax("ClustersTimeKernelAction", "Clusters", "add_kernel");
-  registerAction(ClustersTimeKernelAction, "add_kernel");
+    syntax.registerActionSyntax("BubblesConcMomentVarsAction", "Bubbles/Moment/", "add_variable");
+    syntax.registerActionSyntax("BubblesConcMomentTimeKernelAction", "Bubbles/Moment/", "add_kernel");
+    registerAction(BubblesConcMomentVarsAction, "add_variable");
+    registerAction(BubblesConcMomentTimeKernelAction, "add_kernel");
 
-  syntax.registerActionSyntax("NucleationKernelsAction", "Clusters/Nucleation/", "add_kernel");
-  registerAction(NucleationKernelsAction, "add_kernel");
+    syntax.registerActionSyntax("BubblesPostprocessorsAction", "Bubbles/PPs/", "add_postprocessor");
+    registerAction(BubblesPostprocessorsAction, "add_postprocessor");
 
-  syntax.registerActionSyntax("GrowthKernelsAction", "Clusters/Growth/", "add_kernel");
-  registerAction(GrowthKernelsAction, "add_kernel");
+    syntax.registerActionSyntax("BubblesGrowthKernelsAction", "Bubbles/Growth/", "add_kernel");
+    registerAction(BubblesGrowthKernelsAction, "add_kernel");
 
-  syntax.registerActionSyntax("ClustersPPAction", "Clusters/PPs/", "add_postprocessor");
-  registerAction(ClustersPPAction, "add_postprocessor");
+    syntax.registerActionSyntax("BubblesCoalescenceKernelsAction", "Bubbles/Coalescence/", "add_kernel");
+    registerAction(BubblesCoalescenceKernelsAction, "add_kernel");
 
-  syntax.registerActionSyntax("AddBoundsVectorsAction", "Clusters/Bounds/");
-  syntax.registerActionSyntax("ClustersBoundsAction", "Clusters/Bounds/", "add_aux_kernel");
-  registerAction(ClustersBoundsAction, "add_aux_kernel");
+    syntax.registerActionSyntax("BubblesNucleationKernelsAction", "Bubbles/Nucleation/", "add_kernel");
+    registerAction(BubblesNucleationKernelsAction, "add_kernel");
 
-  syntax.registerActionSyntax("ClustersBoundsVarsAction", "Clusters/Bounds/", "add_aux_variable");
-  registerAction(ClustersBoundsVarsAction, "add_aux_variable");
+    syntax.registerActionSyntax("BubblesRadAuxVarsAction", "Bubbles/Rad/", "add_aux_variable");
+    syntax.registerActionSyntax("BubblesRadAuxKernelAction", "Bubbles/Rad/Eq/", "add_aux_kernel");
+    registerAction(BubblesRadAuxVarsAction, "add_aux_variable");
+    registerAction(BubblesRadAuxKernelAction, "add_aux_kernel");
 
-  syntax.registerActionSyntax("KnockoutKernelsAction", "Clusters/Knockout/", "add_kernel");
-  registerAction(KnockoutKernelsAction, "add_kernel");
+    syntax.registerActionSyntax("AddBoundsVectorsAction", "Bubbles/Bounds/");
+    syntax.registerActionSyntax("BubblesBoundsAction", "Bubbles/Bounds/", "add_aux_kernel");
+    syntax.registerActionSyntax("BubblesBoundsAction", "Bubbles/Bounds/", "add_aux_variable");
+    registerAction(BubblesBoundsAction, "add_aux_kernel");
+    registerAction(BubblesBoundsAction, "add_aux_variable");
+  }
 
-  ////////////////////////////////////////////////////////////////////////////////////////////
-}
-
-}
+} //end namespace

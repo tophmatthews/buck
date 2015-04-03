@@ -1,7 +1,8 @@
 # This tests the grain_gas_flux postprocessor. Grain_gas_flux calculates the mass flux
 #  across the right side of a 1D line. Grain_gas_total linearlly adds all the values as
 #  time continues. Sum takes the sum of grain_gas_total and c1_num. Sum should equal close
-#  to the initial_condition of c1 = 100*L = 50. It is not exact due to the BC of 0.
+#  to the initial_condition of c1 = 100*L = 50. It is not exact due to the BC of 0, but
+#  but should approach 50.
 #
 # +----------------+----------------+----------------+----------------+----------------+
 # | time           | c1_num         | grain_gas_flux | grain_gas_total| sum            |
@@ -23,7 +24,7 @@
   type = GeneratedMesh
   dim = 1
   nx = 20
-  xmax = 0.5
+  xmax = 5
   xmin = 0
   second_order = true
 []
@@ -31,7 +32,7 @@
 
 [Variables]
   [./c1]
-    initial_condition = 100
+    initial_condition = 1
   [../]
 []
 
@@ -42,8 +43,9 @@
     variable = c1
   [../]
   [./c1_diffusion]
-    type = AtomicDiffusion
+    type = BasicDiffusion
     variable = c1
+    diffusivity = gas_diffusivity
   [../]
 []
 
@@ -59,7 +61,7 @@
 
 [Materials]
   [./diff]
-    type = AtomicDiffusionCoef
+    type = GasAtomDiffusivity
     temp = 1000
     model = 1
     factor = 1
@@ -74,7 +76,7 @@
   solve_type = PJFNK
 
   num_steps = 5
-  dt = 2
+  dt = 2000000
 []
 
 
@@ -85,7 +87,7 @@
   [../]
   [./grain_gas_flux]
     type = SideFluxIntegral
-    diffusivity = atomic_diffusivity
+    diffusivity = gas_diffusivity
     boundary = right
     variable = c1
   [../]
