@@ -29,9 +29,8 @@
 
 [Bubbles]
   [./Growth]
-    G = 5
+    N = 5
     s = 5
-    M = 1
     allow_loss = false
   [../]
 []

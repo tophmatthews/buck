@@ -1,9 +1,9 @@
 #ifndef SWELLINGPOSTPROCESSOR_H
 #define SWELLINGPOSTPROCESSOR_H
 
-#include "ElementIntegralVariablePostprocessor.h"
+#include "ElementAverageValue.h"
 
-class SwellingPostprocessor: public ElementIntegralVariablePostprocessor
+class SwellingPostprocessor: public ElementAverageValue
 {
 
 public:
@@ -17,6 +17,8 @@ private:
 	Real _G;
 	std::vector<VariableValue *> _c;
 	std::vector<VariableValue *> _r;
+	std::vector<Real> _atoms;
+	std::vector<Real> _width;
 
 };
 

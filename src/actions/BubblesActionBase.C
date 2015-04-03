@@ -11,9 +11,8 @@ InputParameters validParams<BubblesActionBase>()
   params.addParam<std::string>("conc_name_base", "c", "Specifies the base name of the variables");
   params.addParam<std::string>("conc_1stM_name_base", "m", "Specifies the base name of the variables");
   params.addParam<std::string>("rad_name_base", "r", "Specifies the base name of the variables");
-  params.addRequiredParam<int>("G", "Total number of groups");
+  params.addRequiredParam<int>("N", "Largest group size");
   params.addRequiredParam<int>("s", "Total number of ungrouped equations");
-  params.addRequiredParam<Real>("M", "Scaling parameter");
 
   return params;
 }
@@ -23,36 +22,35 @@ BubblesActionBase::BubblesActionBase(const std::string & name, InputParameters p
   _conc_name_base(getParam<std::string>("conc_name_base")),
   _conc_1stM_name_base(getParam<std::string>("conc_1stM_name_base")),
   _rad_name_base(getParam<std::string>("rad_name_base")),
-  _G(getParam<int>("G")),
-  _s(getParam<int>("s")),
-  _M(getParam<Real>("M"))
+  _N(getParam<int>("N")),
+  _s(getParam<int>("s"))
 {
-  if ( _G < _s )
-    mooseError("From BubblesActionBase: Total number of equations must be equal or less than number of ungrouped equations.");
+  if ( _N < _s )
+    mooseError("From BubblesActionBase: N must be equal or less than s.");
+
+  for ( int j=0; j<_s; ++j )
+    _atoms.push_back(j+1);
+
+  for ( int j=_s; j<_N; ++j )
+  {
+    Real x = (_atoms.back() + 1) / _s + _atoms.back();
+
+    if ( x <= _N )
+      _atoms.push_back( x );
+    else
+    {
+      _atoms.push_back( _N );
+      break;
+    }
+  }
+
+  _G = _atoms.size();
 
   varNamesFromG( _c, _conc_name_base, _G );
   varNamesFromG( _m, _conc_1stM_name_base, _G );
   varNamesFromG( _r, _rad_name_base, _G );
 
-  for ( int j=0; j<_s; ++j )
-  {
-    _atoms.push_back(j+1);
-    // _width.push_back(j+1);
-    // _avg.push_back(j+1);
-    // _max.push_back(j+1);
-    // _min.push_back(j+1);
-  }
-
-  // for ( int j=_s; j<_G; ++j )
-  // {
-  //   _width.push_back( (_width.back() + 1.0) / s + _width.back() );
-  //   _min.push_back(_min.back() + 1);
-  //   _max.push_back(_max.back() + _width.back() )
-  //   _atoms.push_back( _atoms.back() + )
-  // }
-  for ( int j=_s; j<_G; ++j )
-    _atoms.push_back( _M * _atoms.back() );
-    // _atoms.push_back( _atoms.back() * _M );
+  mooseDoOnce(Buck::iterateAndDisplay("atoms",_atoms));
 }
 
 

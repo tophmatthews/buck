@@ -3,16 +3,18 @@
 template<>
 InputParameters validParams<SwellingPostprocessor>()
 {
-  InputParameters params = validParams<ElementIntegralVariablePostprocessor>();
+  InputParameters params = validParams<ElementAverageValue>();
 
   params.addRequiredCoupledVar("coupled_conc", "List of coupled concentration variables.");
   params.addRequiredCoupledVar("coupled_rad", "List of coupled radius variables.");
+  params.addRequiredParam<std::vector<Real> >("coupled_atoms", "List of atom sizes for coupled variables.");
 
   return params;
 }
 
 SwellingPostprocessor::SwellingPostprocessor(const std::string & name, InputParameters parameters) :
-  ElementIntegralVariablePostprocessor(name, parameters)
+  ElementAverageValue(name, parameters),
+  _atoms(getParam<std::vector<Real> >("coupled_atoms"))
 {
 	_G = coupledComponents("coupled_conc");
 

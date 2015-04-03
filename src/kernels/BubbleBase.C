@@ -46,9 +46,7 @@ BubbleBase::BubbleBase(const std::string & name, InputParameters parameters)
   if (_g == -1)
     mooseError("From BubbleBase: Variable not found in coupled_conc list. Check the list.");
 
-  for ( unsigned int i=0; i<_G-1; ++i)
-    _width.push_back(_atoms[i+1] - _atoms[i]);
-  _width.push_back(1.0);
+  Buck::calcSpacings(_atoms, _width);
 
   mooseDoOnce( displayBubbleInfo() );
 }
@@ -86,9 +84,10 @@ BubbleBase::displayBubbleInfo()
   std::cout << "=======================================\n";
   std::cout << "    --< BUCK Bubble Information >--     \n";
   std::cout << "=======================================\n";
-  std::cout << " group \t| avg atoms\t| width\n";
+  std::cout << " group\t| avg atoms\t| width\n";
+  std::cout << "--------+---------------+--------------\n";
   for (int i=0; i<_G; ++i)
-    std::cout << " " << i << " \t| " << _atoms[i] << "\t| " << _width[i] << "\n";
+    std::cout << " " << i << "\t| " << _atoms[i] << "\t| " << _width[i] << "\n";
   std::cout << "=======================================\n" << std::endl;
 }
 

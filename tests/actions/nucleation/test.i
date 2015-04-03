@@ -20,8 +20,7 @@
 
 [Bubbles]
   [./Nucleation]
-    G = 2
-    M = 2
+    N = 2
     s = 2
     rad_name_base = c
   [../]

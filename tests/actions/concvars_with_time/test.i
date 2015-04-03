@@ -24,9 +24,8 @@
 
 [Bubbles]
   [./Conc]
-    G = 2
+    N = 2
     s = 2
-    M = 1
     c1_initial_condition = 1e10
     c2_initial_condition = 0
     initial_condition = 0

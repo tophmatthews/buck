@@ -22,10 +22,8 @@
   coupled_conc = 'c1 c2 c3 c4 c5'
   coupled_rad = 'r1 r2 r3 r4 r5'
   coupled_atoms = '1 2 3 4 5'
-  G = 5
+  N = 5
   s = 5
-  M = 1
-  temp = temp
 []
 
 
