@@ -58,12 +58,4 @@ namespace Buck {
 
     return frac;
   }
-
-  void calcSpacings(const std::vector<Real> atoms, std::vector<Real> &width)
-  {
-    for ( unsigned int i=0; i<atoms.size()-1; ++i)
-      width.push_back(atoms[i+1] - atoms[i]);
-    width.push_back(1.0);
-  }
-
 }

@@ -46,7 +46,9 @@ BubbleBase::BubbleBase(const std::string & name, InputParameters parameters)
   if (_g == -1)
     mooseError("From BubbleBase: Variable not found in coupled_conc list. Check the list.");
 
-  Buck::calcSpacings(_atoms, _width);
+  for ( unsigned int i=0; i<_atoms.size()-1; ++i)
+    _width.push_back(_atoms[i+1] - _atoms[i]);
+  _width.push_back(1.0);
 
   mooseDoOnce( displayBubbleInfo() );
 }

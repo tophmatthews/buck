@@ -15,8 +15,6 @@ namespace Buck
   Real dlogEstdLeft(const Real xLeft, const Real xRight, const Real yLeft, const Real yRight, const Real x);
   Real dlogEstdRight(const Real xLeft, const Real xRight, const Real yLeft, const Real yRight, const Real x);
 
-  void calcSpacings(const std::vector<Real> atoms, std::vector<Real> & width);
-
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   template <typename T>
