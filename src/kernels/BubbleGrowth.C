@@ -59,3 +59,49 @@ BubbleGrowth::calcGains(Real & gains, bool jac)
 
   gains += 4.0 * M_PI * _Dg[_qp] * (*_r[_g-1])[_qp] * (*_c[_g-1])[_qp] * (*_c[0])[_qp];
 }
+
+
+
+// void
+// BubbleGrowth::calcLosses(Real & losses, bool jac)
+// {
+//   if ( !_allow_loss && _g==_G-1 ) // Don't allow losses if largest bubble size
+//     return;
+
+//   if (_g == 0)
+//   {
+//     for ( unsigned int i=1; i<_G; ++i )
+//     {
+//       if ( !_allow_loss && i==_G-1 )
+//         break;
+//       else if (!jac)
+//         losses += 4.0 * M_PI * _Dg[_qp] * (*_r[i])[_qp] * ((*_c[i])[_qp] + (*_c[i+1])[_qp])/2.0 * _widths[i] * _u[_qp];
+//       else
+//         losses += 4.0 * M_PI * _Dg[_qp] * (*_r[i])[_qp] * ((*_c[i])[_qp] + (*_c[i+1])[_qp])/2.0 * _widths[i];
+//     }
+//   }
+//   else
+//   {
+//     if (!jac)
+//     {
+//       if ( _g == _G-1 )
+//         losses += 4.0 * M_PI * _Dg[_qp] * (*_r[_g])[_qp] * (*_c[0])[_qp] * _u[_qp];
+//       else
+//         losses += 4.0 * M_PI * _Dg[_qp] * (*_r[_g])[_qp] * (*_c[0])[_qp] * (_u[_qp] + (*_c[_g+1])[_qp]) / 2.0;
+//     }
+//     else
+//       losses += 4.0 * M_PI * _Dg[_qp] * (*_r[_g])[_qp] * (*_c[0])[_qp] * _u[_qp] / 2.0;
+//   }
+// }
+
+
+// void
+// BubbleGrowth::calcGains(Real & gains, bool jac)
+// {
+//   if ( _g==0 || _g==1 ) // Don't count gains if single atom bubble or dimer
+//     return;
+//   if (jac)
+//     return;
+
+//   gains += 4.0 * M_PI * _Dg[_qp] * (*_r[_g-1])[_qp] * ((*_c[_g-1])[_qp] + (*_c[_g])[_qp]) / 2.0 * (*_c[0])[_qp];
+// }

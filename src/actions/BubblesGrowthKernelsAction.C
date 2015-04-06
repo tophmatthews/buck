@@ -12,12 +12,16 @@ InputParameters validParams<BubblesGrowthKernelsAction>()
   params.addParam<bool>("use_displaced_mesh", false, "Whether to use displaced mesh in the kernels");
 
   params.addParam<bool>("allow_loss", false, "Flag to allow losses from the largest bubble group.");
+  params.addParam<bool>("include_c1", true, "Flag to create growth kernel for c1");
+  params.addParam<bool>("include_c2", true, "Flag to create growth kernel for c2");
 
   return params;
 }
 
 BubblesGrowthKernelsAction::BubblesGrowthKernelsAction(const std::string & name, InputParameters params) :
-  BubblesActionBase(name, params)
+  BubblesActionBase(name, params),
+  _include_c1(getParam<bool>("include_c1")),
+  _include_c2(getParam<bool>("include_c2"))
 {
 }
 
@@ -27,6 +31,12 @@ BubblesGrowthKernelsAction::act()
 {
   for (int g=0; g<_G; ++g)
   {
+    if ( g==0 && !_include_c1 )
+      continue;
+    
+    if ( g==1 && !_include_c2 )
+      continue;
+
     std::string var_name = _c[g];
 
     InputParameters p = _factory.getValidParams("BubbleGrowth");

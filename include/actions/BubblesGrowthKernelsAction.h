@@ -10,6 +10,9 @@ public:
   BubblesGrowthKernelsAction(const std::string & name, InputParameters params);
   virtual void act();
 
+private:
+	const bool _include_c1;
+	const bool _include_c2;
 };
 
 template<>

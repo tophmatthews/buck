@@ -14,7 +14,6 @@ private:
   const std::string _order;
   const std::string _family;
 
-  std::vector<Real> _widths;
   const Real _ic;
 };
 

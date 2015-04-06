@@ -53,7 +53,7 @@ BubblesConcVarsAction::act()
         poly_params.set<Real>("value") = getParam<Real>("c2_initial_condition");
       else
       {
-        poly_params.set<Real>("value") = _ic; // / _width[i];
+        poly_params.set<Real>("value") = _ic / _widths[i];
       }
       _problem->addInitialCondition("ConstantIC", "Initialize_" + 1+i, poly_params);
     }
