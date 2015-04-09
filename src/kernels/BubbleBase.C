@@ -1,8 +1,5 @@
 #include "BubbleBase.h"
 
-#include "MaterialXeBubble.h"
-#include "BuckUtils.h"
-
 template<>
 InputParameters validParams<BubbleBase>()
 {
@@ -59,7 +56,7 @@ BubbleBase::computeQpResidual()
   calcLosses(losses, false);
   calcGains(gains, false);
 
-  // std::cout << "\tg: " << _g << " gains: " << gains << " losses: " << losses << std::endl;
+  std::cout << std::setprecision(9) << "\tg: " << _g << " gains: " << gains << " losses: " << losses << std::endl;
 
   return -( gains - losses ) * _test[_i][_qp];
 }
@@ -87,7 +84,7 @@ BubbleBase::displayBubbleInfo()
   std::cout << " group\t| avg atoms\t| width\n";
   std::cout << "--------+---------------+--------------\n";
   for (int i=0; i<_G; ++i)
-    std::cout << " " << i << "\t| " << _atoms[i] << "\t| " << _widths[i] << "\n";
+    std::cout << " " << i+1 << "\t| " << _atoms[i] << "\t| " << _widths[i] << "\n";
   std::cout << "=======================================\n" << std::endl;
 }
 

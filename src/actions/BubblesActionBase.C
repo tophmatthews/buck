@@ -11,8 +11,11 @@ InputParameters validParams<BubblesActionBase>()
   params.addParam<std::string>("conc_name_base", "c", "Specifies the base name of the variables");
   params.addParam<std::string>("conc_1stM_name_base", "m", "Specifies the base name of the variables");
   params.addParam<std::string>("rad_name_base", "r", "Specifies the base name of the variables");
-  params.addRequiredParam<int>("N", "Largest group size");
+  params.addParam<int>("N", "Largest group size");
+  params.addParam<Real>("logN", "Log10 of largest group size");
   params.addRequiredParam<int>("s", "Total number of ungrouped equations");
+
+  params.addParam<bool>("experimental", false, "Flag to use experimental kernel");
 
   return params;
 }
@@ -22,26 +25,61 @@ BubblesActionBase::BubblesActionBase(const std::string & name, InputParameters p
   _conc_name_base(getParam<std::string>("conc_name_base")),
   _conc_1stM_name_base(getParam<std::string>("conc_1stM_name_base")),
   _rad_name_base(getParam<std::string>("rad_name_base")),
-  _N(getParam<int>("N")),
-  _s(getParam<int>("s"))
+  _s(getParam<int>("s")),
+  _exp(getParam<bool>("experimental"))
 {
-  if ( _N < _s )
-    mooseError("From BubblesActionBase: N must be equal or less than s.");
+  if ( !isParamValid("N") && !isParamValid("logN") )
+    mooseError("From BubblesActionBase: N or logN must be specified");
+  else if ( isParamValid("N") && isParamValid("logN") )
+    mooseError("From BubblesActionBase: Either N or logN must be specified");
 
-  for ( int j=0; j<_s; ++j )
-    _atoms.push_back(j+1);
-
-  for ( int j=_s; j<_N; ++j )
+  if ( isParamValid("N") )
   {
-    Real x = (_atoms.back() + 1) / _s + _atoms.back();
+    if ( isParamValid("logN") )
+      mooseError("From BubblesActionBase: Either N or logN must be specified, not both.");
+    _N = getParam<int>("N");
+  }
+  else if ( !isParamValid("logN"))
+    mooseError("From BubblesActionBase: N or log N must be specified");
+  else
+    _N = std::pow(10.0, getParam<Real>("logN"));
 
-    if ( x <= _N )
-      _atoms.push_back( x );
-    else
+
+  if (!_exp)
+  {
+    for ( int j=0; j<_s; ++j )
+      _atoms.push_back(j+1);
+
+    for ( int j=_s; j<_N; ++j )
     {
-      _atoms.push_back( _N );
-      break;
+      Real x = (_atoms.back() + 1) / _s + _atoms.back();
+
+      if ( x <= _N )
+        _atoms.push_back( x );
+      else
+      {
+        _atoms.push_back( _N );
+        break;
+      }
     }
+  }
+  else
+  {
+    for ( int j=0; j<_s; ++j )
+      _atoms.push_back(j+1);
+
+    _atoms.push_back( _N-18 );
+    _atoms.push_back( _N-16 );
+    _atoms.push_back( _N-14 );
+    _atoms.push_back( _N-12 );
+    _atoms.push_back( _N-10 );
+    _atoms.push_back( _N-8 );
+    _atoms.push_back( _N-6 );
+    _atoms.push_back( _N-4 );
+    _atoms.push_back( _N-3 );
+    _atoms.push_back( _N-2 );
+    _atoms.push_back( _N-1 );
+    _atoms.push_back( _N );
   }
 
   _G = _atoms.size();
