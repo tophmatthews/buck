@@ -3,6 +3,8 @@
 
 #include "Kernel.h"
 
+#include "BuckUtils.h"
+
 class BubbleBase;
 
 template<>

@@ -13,6 +13,7 @@ InputParameters validParams<SwellingPostprocessor>()
   return params;
 }
 
+
 SwellingPostprocessor::SwellingPostprocessor(const std::string & name, InputParameters parameters) :
   ElementAverageValue(name, parameters),
   _atoms(getParam<std::vector<Real> >("coupled_atoms")),
@@ -29,6 +30,7 @@ SwellingPostprocessor::SwellingPostprocessor(const std::string & name, InputPara
     _r.push_back( &coupledValue("coupled_rad", i) );
   }
 }
+
 
 Real
 SwellingPostprocessor::computeQpIntegral()
