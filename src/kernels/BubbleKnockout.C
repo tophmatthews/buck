@@ -6,8 +6,8 @@ InputParameters validParams<BubbleKnockout>()
   InputParameters params = validParams<BubbleBase>();
 
   params.addParam<Real>("factor", 1.0, "Number multiplied scaling variable.");
-  params.addCoupledVar("fission_rate", 0, "Variable for fission rate density");
-  params.addParam<bool>("constant_b", false, "Flag to hold b at constant value");
+  params.addCoupledVar("fission_rate", 0, "Variable for fission rate density.");
+  params.addParam<Real>("b", -1, "Value to set constant knockout parameter. B is automatically calculated if not given");
 
   return params;
 }
@@ -17,7 +17,7 @@ BubbleKnockout::BubbleKnockout(const std::string & name, InputParameters paramet
   :BubbleBase(name,parameters),
   _factor(getParam<Real>("factor")),
   _fsn_rate_den(coupledValue("fission_rate")),
-  _constant_b(getParam<bool>("constant_b"))
+  _b(getParam<Real>("b"))
 {
 }
 
@@ -73,7 +73,8 @@ BubbleKnockout::calcKnockoutRate(int i)
 Real
 BubbleKnockout::calcB(const Real r)
 {
-  if (_constant_b) return 2e-25;
+  if ( _b >= 0 )
+    return _b;
 
   Real a = 0.02831;
   Real b =-0.0803;

@@ -37,23 +37,26 @@ BubblesGrowthKernelsAction::act()
     if ( g==1 && !_include_c2 )
       continue;
 
-    std::string var_name = _c[g];
+    std::string base_kernel = "BubbleGrowth";
 
-    InputParameters p = _factory.getValidParams("BubbleGrowth");
+    InputParameters p = _factory.getValidParams(base_kernel);
+    std::string var_name = _c[g];
+    std::string kernel_name = var_name;
+    kernel_name.append(base_kernel);
+
+    // BubbleBase
     p.set<NonlinearVariableName>("variable") = var_name;
-    p.set<bool>("allow_loss") = getParam<bool>("allow_loss");
-    p.set<bool>("experimental") = _exp;
     p.set<std::vector<VariableName> >("coupled_conc") = _c;
     p.set<std::vector<VariableName> >("coupled_rad") = _r;
     p.set<std::vector<Real> >("coupled_atoms") = _atoms;
     p.set<std::vector<Real> >("coupled_widths") = _widths;
 
+    // BubbleGrowth
+    p.set<bool>("allow_loss") = getParam<bool>("allow_loss");
+    p.set<bool>("experimental") = _exp;
     p.addCoupledVar("temp", "");
     p.set<std::vector<VariableName> >("temp") = std::vector<VariableName>(1, getParam<VariableName>("temp"));
 
-    std::string kernel_name = var_name;
-    kernel_name.append("_growth");
-
-    _problem->addKernel("BubbleGrowth", kernel_name, p);
+    _problem->addKernel(base_kernel, kernel_name, p);
   }
 }

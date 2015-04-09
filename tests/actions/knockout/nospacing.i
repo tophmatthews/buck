@@ -1,4 +1,5 @@
 # Tests Knockout of bubbles. Total should equal 5 at all times.
+#  This test should be exactly the same as tests/bubbleknockout/nospacing.i
 #
 # +----------------+----------------+----------------+----------------+----------------+----------------+----------------+
 # | time           | c1             | c2             | c3             | c4             | c5             | total          |
@@ -15,18 +16,18 @@
 # |   1.000000e+06 |   2.529949e+00 |   2.909262e-01 |   3.185921e-01 |   1.804926e-01 |   4.209033e-02 |   5.000000e+00 |
 # +----------------+----------------+----------------+----------------+----------------+----------------+----------------+
 
-[GlobalParams]
-  coupled_conc = 'c1 c2 c3 c4 c5'
-  coupled_rad = 'r1 r2 r3 r4 r5'
-  coupled_atoms = '1 2 3 4 5'
-  coupled_widths = '1 1 1 1 1'
-  fission_rate = 10
-[]
-
 
 [Mesh]
   type = GeneratedMesh
   dim = 1
+[]
+
+[Bubbles]
+  [./Knockout]
+    N = 5
+    s = 5
+    fission_rate = fsn_rate
+  [../]
 []
 
 
@@ -66,30 +67,11 @@
     type = TimeDerivative
     variable = c5
   [../]
-
-  [./c1_Knockout]
-    type = BubbleKnockout
-    variable = c1
-  [../]
-  [./c2_Knockout]
-    type = BubbleKnockout
-    variable = c2
-  [../]
-  [./c3_Knockout]
-    type = BubbleKnockout
-    variable = c3
-  [../]
-  [./c4_Knockout]
-    type = BubbleKnockout
-    variable = c4
-  [../]
-  [./c5_Knockout]
-    type = BubbleKnockout
-    variable = c5
-  [../]
 []
 
 [AuxVariables]
+  [./fsn_rate]
+  [../]
   [./r1]
   [../]
   [./r2]
@@ -103,6 +85,11 @@
 []
 
 [AuxKernels]
+  [./fsn_rate_aux]
+    type = ConstantAux
+    variable = fsn_rate
+    value = 10
+  [../]
   [./r1_aux]
     type = ConstantAux
     variable = r1

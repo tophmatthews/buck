@@ -2,27 +2,24 @@
 
 #include "Factory.h"
 #include "FEProblem.h"
+#include "BuckUtils.h"
 
 template<>
 InputParameters validParams<BubblesKnockoutKernelsAction>()
 {
   InputParameters params = validParams<BubblesActionBase>();
 
-  params.addRequiredParam<VariableName>("fission_rate", "The fission_rate variable name");
-  params.addParam<Real>("factor", 1, "Scaling factor");
   params.addParam<bool>("use_displaced_mesh", false, "Whether to use displaced mesh in the kernels");
 
-  params.addParam<bool>("include_c1", true, "Flag to create growth kernel for c1");
-  params.addParam<bool>("include_c2", true, "Flag to create growth kernel for c2");
-  params.addParam<bool>("constant_b", false, "Flag to hold b at constant value");
+  params.addRequiredParam<VariableName>("fission_rate", "The fission_rate variable name");
+  params.addParam<Real>("factor", 1, "Scaling factor");
+  params.addParam<Real>("b", -1, "Value to set constant knockout parameter. B is automatically calculated if not given.");
 
   return params;
 }
 
 BubblesKnockoutKernelsAction::BubblesKnockoutKernelsAction(const std::string & name, InputParameters params) :
-  BubblesActionBase(name, params),
-  _include_c1(getParam<bool>("include_c1")),
-  _include_c2(getParam<bool>("include_c2"))
+  BubblesActionBase(name, params)
 {
 }
 
@@ -32,29 +29,27 @@ BubblesKnockoutKernelsAction::act()
 {
   for (int g=0; g<_G; ++g)
   {
-    if ( g==0 && !_include_c1 )
-      continue;
+    std::string base_kernel = "BubbleKnockout";
 
-    if ( g==1 && !_include_c2 )
-      continue;
-
+    InputParameters p = _factory.getValidParams(base_kernel);
     std::string var_name = _c[g];
+    std::string kernel_name = var_name;
+    kernel_name.append(base_kernel);
 
-    InputParameters p = _factory.getValidParams("BubbleKnockout");
+    // BubbleBase
     p.set<NonlinearVariableName>("variable") = var_name;
-    p.set<Real>("factor") = getParam<Real>("factor");
-    p.set<bool>("constant_b") = getParam<bool>("constant_b");
     p.set<std::vector<VariableName> >("coupled_conc") = _c;
     p.set<std::vector<VariableName> >("coupled_rad") = _r;
     p.set<std::vector<Real> >("coupled_atoms") = _atoms;
     p.set<std::vector<Real> >("coupled_widths") = _widths;
 
+    // BubbleKnockout
+    p.set<Real>("factor") = getParam<Real>("factor");
+    p.set<Real>("b") = getParam<Real>("b");
     p.addCoupledVar("fission_rate", "");
-    p.set<std::vector<VariableName> >("fission_Rate") = std::vector<VariableName>(1, getParam<VariableName>("fission_rate"));
+    p.set<std::vector<VariableName> >("fission_rate") = std::vector<VariableName>(1, getParam<VariableName>("fission_rate"));
 
-    std::string kernel_name = var_name;
-    kernel_name.append("_knockout");
 
-    _problem->addKernel("BubbleKnockout", kernel_name, p);
+    _problem->addKernel(base_kernel, kernel_name, p);
   }
 }

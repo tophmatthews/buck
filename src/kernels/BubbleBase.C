@@ -56,7 +56,7 @@ BubbleBase::computeQpResidual()
   calcLosses(losses, false);
   calcGains(gains, false);
 
-  std::cout << std::setprecision(9) << "\tg: " << _g << " gains: " << gains << " losses: " << losses << std::endl;
+  // std::cout << std::setprecision(9) << "\tg: " << _g << " gains: " << gains << " losses: " << losses << std::endl;
 
   return -( gains - losses ) * _test[_i][_qp];
 }

@@ -13,8 +13,6 @@ class BubbleKnockout : public BubbleBase
 public:
   BubbleKnockout(const std::string & name, InputParameters parameters);
 
-  // FEProblem & _fe_problem;
-
 protected:
   virtual void calcLosses(Real & losses, const bool jac);
   virtual void calcGains(Real & gains, const bool jac);
@@ -25,7 +23,7 @@ private:
 
 	const Real _factor;
   VariableValue  & _fsn_rate_den;
-  const bool _constant_b;
+  Real _b;
 };
 
 #endif

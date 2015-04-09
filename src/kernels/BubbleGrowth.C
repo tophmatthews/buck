@@ -36,7 +36,7 @@ BubbleGrowth::calcLosses(Real & losses, bool jac)
     for ( unsigned int i=1; i<_G; ++i )
     {
       if ( !_allow_loss && i==_G-1 ) break;
-      
+
       Real k = 4.0 * M_PI * _Dg[_qp] * (*_r[i])[_qp] * (*_c[i])[_qp] * _widths[i];
       if (!jac)
         losses += k * _u[_qp];

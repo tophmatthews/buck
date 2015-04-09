@@ -1,5 +1,5 @@
 clear
-prefix = '../problems/grouping/limit/';
+prefix = '../problems/grouping/knock/';
 
 % files = {'hard/x5', 'avg/x5', 'hard/x10', 'avg/x10'};
 % filesa = {'1e9x5-1000', '1e9x5-1200', '1e9x5-1400', '1e9x5-1600', '1e9x5-1800', '1e9x5-2000'};
@@ -7,20 +7,21 @@ prefix = '../problems/grouping/limit/';
 % filesb = {'1e9x5-1000-x0.1', '1e9x5-1200-x0.1', '1e9x5-1400-x0.1', '1e9x5-1600-x0.1', '1e9x5-1800-x0.1', '1e9x5-2000-x0.1'};
 % filesb = {'1e9x5-1000-x10', '1e9x5-1200-x10', '1e9x5-1400-x10', '1e9x5-1600-x10', '1e9x5-1800-x10', '1e9x5-2000-x10'};
 % filesb = {'1e9x5-1000-x100', '1e9x5-1200-x100', '1e9x5-1400-x100', '1e9x5-1600-x100', '1e9x5-1800-x100', '1e9x5-2000-x100'};
-%filesb = {'1e9x10-1000', '1e9x10-1100', '1e9x10-1200', '1e9x10-1300', '1e9x10-1400', '1e9x10-1500', '1e9x10-1600', '1e9x10-1700', '1e9x10-1800', '1e9x10-1900', '1e9x10-2000'};
-% filesa = {'1e9x5-1000', '1e9x5-1050', '1e9x5-1100', '1e9x5-1150', '1e9x5-1200'};
-% filesa = {'1e9x5-1000-f0.1', '1e9x5-1050-f0.1', '1e9x5-1100-f0.1', '1e9x5-1150-f0.1', '1e9x5-1200-f0.1'};
-filesa = {'1e9x5-1000-f10', '1e9x5-1050-f10', '1e9x5-1100-f10', '1e9x5-1150-f10', '1e9x5-1200-f10'};
+% filesb = {'1e9x10-1000', '1e9x10-1100', '1e9x10-1200', '1e9x10-1300', '1e9x10-1400', '1e9x10-1500', '1e9x10-1600', '1e9x10-1700', '1e9x10-1800', '1e9x10-1900', '1e9x10-2000'};
+filesa = {'1e9x5-1000', '1e9x5-1050', '1e9x5-1100', '1e9x5-1150', '1e9x5-1200'};
+% filesb = {'1e9x5-1000-f0.1', '1e9x5-1050-f0.1', '1e9x5-1100-f0.1', '1e9x5-1150-f0.1', '1e9x5-1200-f0.1'};
+filesb = {'1e9x5-1000-f10', '1e9x5-1050-f10', '1e9x5-1100-f10', '1e9x5-1150-f10', '1e9x5-1200-f10'};
 % filesb = {'1e9x10-1000', '1e9x10-1050', '1e9x10-1100', '1e9x10-1150', '1e9x10-1200'};
 % filesb = {'1e9x10-1000-f0.1', '1e9x10-1050-f0.1', '1e9x10-1100-f0.1', '1e9x10-1150-f0.1', '1e9x10-1200-f0.1'};
-filesb = {'1e9x10-1000-f10', '1e9x10-1050-f10', '1e9x10-1100-f10', '1e9x10-1150-f10', '1e9x10-1200-f10'};
+% filesb = {'1e9x10-1000-f10', '1e9x10-1050-f10', '1e9x10-1100-f10', '1e9x10-1150-f10', '1e9x10-1200-f10'};
 % filesa = {'knock/1e9x5-1000', 'knock/1e9x5-1200', 'knock/1e9x5-1400', 'knock/1e9x5-1600', 'knock/1e9x5-1800', 'knock/1e9x5-2000'};
 % filesb = {'constantb/1e9x5-1000', 'constantb/1e9x5-1200', 'constantb/1e9x5-1400', 'constantb/1e9x5-1600', 'constantb/1e9x5-1800', 'constantb/1e9x5-2000'};
 N = 1e9;
 sa = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5];
 sb = sa;
+% filesb = filesa;
 % sb = [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10];
-tempa = [1000, 1200, 1400, 1600, 1800, 2000];
+tempa = [1000, 1050, 1100, 1150, 1200];
 tempb = tempa;
 postfix = '.csv';
 
@@ -97,14 +98,14 @@ end
 legend(allfiles, 'location', 'northwest')
 xlabel('Time [s]')
 ylabel('Fractional Swelling')
-xlim([1e5 1e10])
+% xlim([1e5 1e10])
 set(gca,'xscale', 'log', 'yscale', 'log')
 
 
 % figure('units','normalized','outerposition',[0 0 1 1])
 % 
 % 
-% num = size(files,2);
+% num = size(filesa,2);
 % 
 % subplot(2,3,1)
 % title('Swelling')

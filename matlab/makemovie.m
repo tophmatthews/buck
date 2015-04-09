@@ -1,8 +1,8 @@
 % set name here:
 clear
-prefix = '../problems/grouping/constantb/';
+prefix = '../problems/grouping/knock/';
 
-file = '1e9x5-2000';
+file = '1e9x5-1200-f0.1';
 N = 1e9;
 s = 5;
 postfix = '.csv';
@@ -24,7 +24,7 @@ set(gcf,'Renderer','zbuffer')
 mov(1:a.col)= struct('cdata',[],'colormap',[]);
 
 
-for k=1:1:a.rows
+for k=1:10:a.rows
   plot(a.atoms(1,:),x(k,:),'.')
   timetext = strcat('time:', 32, num2str(a.time(k),'%10.5e\n'));
   swelltext = strcat('swelling:', 32, num2str(a.swell(k),'%10.5e\n'));
