@@ -21,6 +21,7 @@
   coupled_atoms = '1 2 3 4 5'
   coupled_widths = '1 1 1 1 1'
   fission_rate = 10
+  max_relative = 1000
 []
 
 
@@ -127,6 +128,29 @@
     type = ConstantAux
     variable = r5
     value = 5
+  [../]
+[]
+
+[Dampers]
+  [./c1_damp]
+    type = MaxRelativeIncrement
+    variable = c1
+  [../]
+  [./c2_damp]
+    type = MaxRelativeIncrement
+    variable = c2
+  [../]
+  [./c3_damp]
+    type = MaxRelativeIncrement
+    variable = c3
+  [../]
+  [./c4_damp]
+    type = MaxRelativeIncrement
+    variable = c4
+  [../]
+  [./c5_damp]
+    type = MaxRelativeIncrement
+    variable = c5
   [../]
 []
 

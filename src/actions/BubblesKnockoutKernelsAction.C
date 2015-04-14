@@ -44,6 +44,7 @@ BubblesKnockoutKernelsAction::act()
     p.set<std::vector<Real> >("coupled_widths") = _widths;
 
     // BubbleKnockout
+    p.set<bool>("experimental") = _exp;
     p.set<Real>("factor") = getParam<Real>("factor");
     p.set<Real>("b") = getParam<Real>("b");
     p.addCoupledVar("fission_rate", "");

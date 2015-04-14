@@ -12,6 +12,7 @@ InputParameters validParams<BubblesPostprocessorsAction>()
   params.addParam<std::vector<OutputName> >("total_concentrations", "Where to output concentration postprocessor. Not calculated if empty.");
   params.addParam<std::vector<OutputName> >("total_atoms", "Where to output concentration postprocessor. Not calculated if empty.");
   params.addParam<std::vector<OutputName> >("swelling", "Where to output swelling postprocessor. Not calculated if empty.");
+  params.addParam<std::vector<OutputName> >("total_swelling", "Where to output swelling postprocessor. Not calculated if empty.");
 
   return params;
 }
@@ -21,7 +22,8 @@ BubblesPostprocessorsAction::BubblesPostprocessorsAction(const std::string & nam
   _conc( isParamValid("concentrations")? true : false),
   _total_conc( isParamValid("total_concentrations")? true : false),
   _total_atoms( isParamValid("total_atoms")? true : false),
-  _swelling( isParamValid("swelling")? true : false)
+  _swelling( isParamValid("swelling")? true : false),
+  _total_swelling( isParamValid("total_swelling")? true : false)
 {
 }
 
@@ -29,6 +31,7 @@ void
 BubblesPostprocessorsAction::act()
 {
   std::vector<PostprocessorName> pp_names;
+  std::vector<PostprocessorName> swelling_pp_names;
 
   if ( _conc || _total_conc || _total_atoms )
   {
@@ -85,24 +88,47 @@ BubblesPostprocessorsAction::act()
     _problem->addPostprocessor(pp_to_use, this_pp_name, params);
   }
 
-  if (_swelling)
+  if (_swelling || _total_swelling)
   {
-    std::string pp_to_use = "SwellingPostprocessor";
-    std::string this_pp_name = "gas_swelling";
+    for ( int i=0; i<_G; ++i )
+    {
+      std::string pp_to_use = "SwellingPostprocessor";
+      swelling_pp_names.push_back(_c[i] + "_swelling");
+
+      InputParameters params = _factory.getValidParams(pp_to_use);
+      params.set<MultiMooseEnum>("execute_on") = "timestep_end";
+      params.set<VariableName>("variable") = _c[i];
+
+      params.addCoupledVar("r", "");
+      params.set<std::vector<VariableName> >("r") = std::vector<VariableName>(1, _r[i]);
+
+      params.set<Real>("width") = _widths[i];
+
+      std::vector<OutputName> outs;
+      if ( _swelling )
+        outs = getParam<std::vector<OutputName> >("concentrations");
+      else
+        outs.push_back("none");
+
+      params.set<std::vector<OutputName> >("outputs") = outs;
+
+      _problem->addPostprocessor(pp_to_use, swelling_pp_names[i], params);
+    }
+  }
+
+  if (_total_swelling)
+  {
+    std::string pp_to_use = "SumOfPostprocessors";
+    std::string this_pp_name = "total_swelling";
 
     InputParameters params = _factory.getValidParams(pp_to_use);
     params.set<MultiMooseEnum>("execute_on") = "timestep_end";
+    params.set<std::vector<PostprocessorName> >("postprocessors") = swelling_pp_names;
 
-    params.set<std::vector<VariableName> >("coupled_conc") = _c;
-    params.set<std::vector<VariableName> >("coupled_rad") = _r;
-    params.set<std::vector<Real> >("coupled_atoms") = _atoms;
-    params.set<std::vector<Real> >("coupled_widths") = _widths;
-
-    params.set<VariableName>("variable") = _c[0];
-
-    std::vector<OutputName> outs(getParam<std::vector<OutputName> >("swelling"));
+    std::vector<OutputName> outs(getParam<std::vector<OutputName> >("total_swelling"));
     params.set<std::vector<OutputName> >("outputs") = outs;
 
     _problem->addPostprocessor(pp_to_use, this_pp_name, params);
   }
+
 }

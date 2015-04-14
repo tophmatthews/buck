@@ -45,7 +45,7 @@ BubblesActionBase::BubblesActionBase(const std::string & name, InputParameters p
     _N = std::pow(10.0, getParam<Real>("logN"));
 
 
-  if (!_exp)
+  // if (!_exp)
   {
     for ( int j=0; j<_s; ++j )
       _atoms.push_back(j+1);
@@ -63,24 +63,24 @@ BubblesActionBase::BubblesActionBase(const std::string & name, InputParameters p
       }
     }
   }
-  else
-  {
-    for ( int j=0; j<_s; ++j )
-      _atoms.push_back(j+1);
+  // else
+  // {
+  //   for ( int j=0; j<_s; ++j )
+  //     _atoms.push_back(j+1);
 
-    _atoms.push_back( _N-18 );
-    _atoms.push_back( _N-16 );
-    _atoms.push_back( _N-14 );
-    _atoms.push_back( _N-12 );
-    _atoms.push_back( _N-10 );
-    _atoms.push_back( _N-8 );
-    _atoms.push_back( _N-6 );
-    _atoms.push_back( _N-4 );
-    _atoms.push_back( _N-3 );
-    _atoms.push_back( _N-2 );
-    _atoms.push_back( _N-1 );
-    _atoms.push_back( _N );
-  }
+  //   _atoms.push_back( _N-18 );
+  //   _atoms.push_back( _N-16 );
+  //   _atoms.push_back( _N-14 );
+  //   _atoms.push_back( _N-12 );
+  //   _atoms.push_back( _N-10 );
+  //   _atoms.push_back( _N-8 );
+  //   _atoms.push_back( _N-6 );
+  //   _atoms.push_back( _N-4 );
+  //   _atoms.push_back( _N-3 );
+  //   _atoms.push_back( _N-2 );
+  //   _atoms.push_back( _N-1 );
+  //   _atoms.push_back( _N );
+  // }
 
   _G = _atoms.size();
 

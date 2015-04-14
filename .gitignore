@@ -1,4 +1,4 @@
-*.avi
+matlab/*
 problems/*
 syntax/*
 .libs

@@ -15,6 +15,7 @@
 
 // dampers
 #include "MaxRelativeIncrement.h"
+#include "PositiveDamper.h"
 
 // Kernels
 #include "VariableScaledSource.h"
@@ -76,6 +77,7 @@ BuckApp::registerObjects(Factory & factory)
   registerAux(VectorBoundsAux);
 
   registerDamper(MaxRelativeIncrement);
+  registerDamper(PositiveDamper);
 
   registerKernel(VariableScaledSource);
   registerKernel(BasicDiffusion);

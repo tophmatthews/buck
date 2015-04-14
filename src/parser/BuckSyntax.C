@@ -17,6 +17,8 @@
 
 #include "BubblesBoundsAction.h"
 
+#include "BubblesDampersAction.h"
+
 namespace Buck
 {
 
@@ -50,6 +52,9 @@ namespace Buck
 
     syntax.registerActionSyntax("BubblesNucleationKernelsAction", "Bubbles/Nucleation/", "add_kernel");
     registerAction(BubblesNucleationKernelsAction, "add_kernel");
+
+    syntax.registerActionSyntax("BubblesDampersAction", "Bubbles/Dampers/", "add_damper");
+    registerAction(BubblesDampersAction, "add_damper");
 
     syntax.registerActionSyntax("BubblesRadAuxVarsAction", "Bubbles/Rad/", "add_aux_variable");
     syntax.registerActionSyntax("BubblesRadAuxKernelAction", "Bubbles/Rad/Eq/", "add_aux_kernel");

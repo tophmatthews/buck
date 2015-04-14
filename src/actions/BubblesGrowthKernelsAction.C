@@ -1,6 +1,5 @@
 #include "BubblesGrowthKernelsAction.h"
 
-#include "Factory.h"
 #include "FEProblem.h"
 
 template<>
@@ -9,7 +8,6 @@ InputParameters validParams<BubblesGrowthKernelsAction>()
   InputParameters params = validParams<BubblesActionBase>();
 
   params.addRequiredParam<VariableName>("temp", "The temperature variable name");
-  params.addParam<bool>("use_displaced_mesh", false, "Whether to use displaced mesh in the kernels");
 
   params.addParam<bool>("allow_loss", false, "Flag to allow losses from the largest bubble group.");
   params.addParam<bool>("include_c1", true, "Flag to create growth kernel for c1");

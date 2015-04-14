@@ -21,7 +21,6 @@ MaxRelativeIncrement::~MaxRelativeIncrement()
 Real
 MaxRelativeIncrement::computeQpDamping()
 {
-
   Real relative = _u_increment[_qp] / _u[_qp];
   if (std::abs(relative) > _max_relative)
   {
