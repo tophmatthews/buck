@@ -15,6 +15,7 @@ private:
   const bool _total_atoms;
   const bool _swelling;
   const bool _total_swelling;
+  const bool _c1_loss;
 };
 
 template<>

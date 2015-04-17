@@ -36,6 +36,7 @@
 #include "BoundedElementAverage.h"
 #include "SwellingPostprocessor.h"
 #include "PostprocessorTerminator.h"
+#include "C1LossPostprocessor.h"
 
 
 template<>
@@ -95,6 +96,7 @@ BuckApp::registerObjects(Factory & factory)
   registerPostprocessor(BoundedElementAverage);
   registerPostprocessor(SwellingPostprocessor);
   registerPostprocessor(PostprocessorTerminator);
+  registerPostprocessor(C1LossPostprocessor);
 }
 
 void

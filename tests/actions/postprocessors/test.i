@@ -35,6 +35,7 @@
     total_atoms = 'console'
     total_concentrations = 'console'
     total_swelling = 'console'
+    fission_rate = 0
   [../]
   [./Rad]
     [./Eq]

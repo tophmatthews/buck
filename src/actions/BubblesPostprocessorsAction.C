@@ -8,11 +8,14 @@ InputParameters validParams<BubblesPostprocessorsAction>()
 {
   InputParameters params = validParams<BubblesActionBase>();
 
+  params.addRequiredParam<VariableName>("fission_rate", "fission rate density");
+
   params.addParam<std::vector<OutputName> >("concentrations", "Where to output concentration postprocessors");
   params.addParam<std::vector<OutputName> >("total_concentrations", "Where to output concentration postprocessor. Not calculated if empty.");
   params.addParam<std::vector<OutputName> >("total_atoms", "Where to output concentration postprocessor. Not calculated if empty.");
   params.addParam<std::vector<OutputName> >("swelling", "Where to output swelling postprocessor. Not calculated if empty.");
-  params.addParam<std::vector<OutputName> >("total_swelling", "Where to output swelling postprocessor. Not calculated if empty.");
+  params.addParam<std::vector<OutputName> >("total_swelling", "Where to output total swelling postprocessor. Not calculated if empty.");
+  params.addParam<std::vector<OutputName> >("c1_loss", "Where to output c1 loss postprocessor. Not calculated if empty.");
 
   return params;
 }
@@ -23,7 +26,8 @@ BubblesPostprocessorsAction::BubblesPostprocessorsAction(const std::string & nam
   _total_conc( isParamValid("total_concentrations")? true : false),
   _total_atoms( isParamValid("total_atoms")? true : false),
   _swelling( isParamValid("swelling")? true : false),
-  _total_swelling( isParamValid("total_swelling")? true : false)
+  _total_swelling( isParamValid("total_swelling")? true : false),
+  _c1_loss ( isParamValid("c1_loss")? true : false)
 {
 }
 
@@ -32,6 +36,7 @@ BubblesPostprocessorsAction::act()
 {
   std::vector<PostprocessorName> pp_names;
   std::vector<PostprocessorName> swelling_pp_names;
+  std::vector<PostprocessorName> c1_pp_names;
 
   if ( _conc || _total_conc || _total_atoms )
   {
@@ -106,7 +111,7 @@ BubblesPostprocessorsAction::act()
 
       std::vector<OutputName> outs;
       if ( _swelling )
-        outs = getParam<std::vector<OutputName> >("concentrations");
+        outs = getParam<std::vector<OutputName> >("swelling");
       else
         outs.push_back("none");
 
@@ -119,7 +124,7 @@ BubblesPostprocessorsAction::act()
   if (_total_swelling)
   {
     std::string pp_to_use = "SumOfPostprocessors";
-    std::string this_pp_name = "total_swelling";
+    std::string this_pp_name = "gas_swelling";
 
     InputParameters params = _factory.getValidParams(pp_to_use);
     params.set<MultiMooseEnum>("execute_on") = "timestep_end";
@@ -129,6 +134,35 @@ BubblesPostprocessorsAction::act()
     params.set<std::vector<OutputName> >("outputs") = outs;
 
     _problem->addPostprocessor(pp_to_use, this_pp_name, params);
+  }
+
+  if (_c1_loss)
+  {
+    for ( int i=0; i<_G; ++i )
+    {
+      std::string pp_to_use = "C1LossPostprocessor";
+      c1_pp_names.push_back(_c[i] + "_c1_loss");
+
+      InputParameters params = _factory.getValidParams(pp_to_use);
+      params.set<MultiMooseEnum>("execute_on") = "timestep_end";
+      params.set<VariableName>("variable") = _c[i];
+
+      params.addCoupledVar("r", "");
+      params.set<std::vector<VariableName> >("r") = std::vector<VariableName>(1, _r[i]);
+
+      params.addCoupledVar("c1", "");
+      params.set<std::vector<VariableName> >("c1") = std::vector<VariableName>(1, _c[0]);
+
+      params.addCoupledVar("fission_rate", "");
+      params.set<std::vector<VariableName> >("fission_rate") = std::vector<VariableName>(1, getParam<VariableName>("fission_rate"));
+
+      params.set<Real>("width") = _widths[i];
+      params.set<Real>("atoms") = _atoms[i];
+
+      params.set<std::vector<OutputName> >("outputs") = getParam<std::vector<OutputName> >("c1_loss");
+
+      _problem->addPostprocessor(pp_to_use, c1_pp_names[i], params);
+    }
   }
 
 }

@@ -15,7 +15,7 @@ InputParameters validParams<GasAtomDiffusivity>()
   params.addParam<Real>("Qf", 0, "Fission enhanced activation energy [J/mol]");
   params.addParam<Real>("R", 8.31446, "Ideal gas constant [J/(K*mo)]");
   params.addParam<Real>("factor", 1, "Scaling factor to multiply by diffusivity.");
-  params.addParam<int>("model", 1, "Switch for diffusion coefficient model (0=user input, 1=UC Matzke, 2=UC Madrid, 3=UC Eyre, 4=UO2 Griesmeyer");
+  params.addParam<int>("model", 1, "Switch for diffusion coefficient model (0=user input, 1=UC Matzke, 2=UC Madrid, 3=UC Eyre, 4=Ronchi, 5=UO2 Griesmeyer");
 
   return params;
 }
@@ -60,6 +60,12 @@ GasAtomDiffusivity::GasAtomDiffusivity(const std::string & name, InputParameters
       _Q = 221154.0;
     }
     else if ( _model == 4 )
+    {
+      _D0 = 1500.0;
+      _Q = 231142.0;
+      _D0f = 1.3e-22;
+    }
+    else if ( _model == 5 )
     {
       _D0 = 2.1e4;
       _Q = 381000.0;
