@@ -4,9 +4,9 @@
     input = 'nospacing.i'
     exodiff = 'nospacing_out.e'
   [../]
-  [./spaced]
+  [./exact]
     type = 'Exodiff'
-    input = 'spaced.i'
-    exodiff = 'spaced_out.e'
+    input = 'exact.i'
+    exodiff = 'exact_out.e'
   [../]
 []

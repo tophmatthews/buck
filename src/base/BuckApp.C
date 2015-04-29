@@ -37,6 +37,8 @@
 #include "SwellingPostprocessor.h"
 #include "PostprocessorTerminator.h"
 #include "C1LossPostprocessor.h"
+#include "GainRatePostprocessor.h"
+#include "KnockoutRatePostprocessor.h"
 
 
 template<>
@@ -97,6 +99,8 @@ BuckApp::registerObjects(Factory & factory)
   registerPostprocessor(SwellingPostprocessor);
   registerPostprocessor(PostprocessorTerminator);
   registerPostprocessor(C1LossPostprocessor);
+  registerPostprocessor(GainRatePostprocessor);
+  registerPostprocessor(KnockoutRatePostprocessor);
 }
 
 void

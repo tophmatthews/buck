@@ -66,6 +66,8 @@ BubbleKnockout::calcKnockoutRate(int i)
   Real b = calcB( (*_r[i])[_qp] );
   Real frd = _fsn_rate_den[_qp] * 1.0e18;
 
+  // std::cout <<  _atoms[i] << " " << b << " " << _factor * b * frd * _atoms[i] << std::endl;
+
   return _factor * b * frd * _atoms[i];
 }
 
