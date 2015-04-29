@@ -14,10 +14,10 @@ protected:
   const std::string _conc_name_base;
   const std::string _conc_1stM_name_base;
   const std::string _rad_name_base;
-  const unsigned int _s;
   const bool _exp;
 
   unsigned int _N;
+  unsigned int _s;
   std::vector<VariableName> _c;
   std::vector<VariableName> _m;
   std::vector<VariableName> _r;

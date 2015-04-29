@@ -12,8 +12,8 @@ InputParameters validParams<BubblesActionBase>()
   params.addParam<std::string>("conc_1stM_name_base", "m", "Specifies the base name of the variables");
   params.addParam<std::string>("rad_name_base", "r", "Specifies the base name of the variables");
   params.addParam<int>("N", "Largest group size");
-  params.addParam<Real>("logN", "Log10 of largest group size");
-  params.addRequiredParam<int>("s", "Total number of ungrouped equations");
+  params.addParam<int>("logN", "Log10 of largest group size");
+  params.addParam<int>("s", "Total number of ungrouped equations");
 
   params.addParam<bool>("experimental", false, "Flag to use experimental kernel");
 
@@ -25,7 +25,6 @@ BubblesActionBase::BubblesActionBase(const std::string & name, InputParameters p
   _conc_name_base(getParam<std::string>("conc_name_base")),
   _conc_1stM_name_base(getParam<std::string>("conc_1stM_name_base")),
   _rad_name_base(getParam<std::string>("rad_name_base")),
-  _s(getParam<int>("s")),
   _exp(getParam<bool>("experimental"))
 {
   if ( !isParamValid("N") && !isParamValid("logN") )
@@ -42,7 +41,12 @@ BubblesActionBase::BubblesActionBase(const std::string & name, InputParameters p
   else if ( !isParamValid("logN"))
     mooseError("From BubblesActionBase: N or log N must be specified");
   else
-    _N = std::pow(10.0, getParam<Real>("logN"));
+    _N = std::pow(10.0, getParam<int>("logN"));
+
+  if ( isParamValid("s") )
+    _s = getParam<int>("s");
+  else
+    _s = _N;
 
 
   // if (!_exp)
