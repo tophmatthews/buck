@@ -27,7 +27,8 @@ KnockoutRatePostprocessor::KnockoutRatePostprocessor(const std::string & name, I
   _atoms(getParam<Real>("atoms")),
   _b(getParam<Real>("b")),
   _factor(getParam<Real>("factor"))
-{}
+{
+}
 
 
 Real
@@ -38,6 +39,7 @@ KnockoutRatePostprocessor::computeQpIntegral()
 
   return knockout;
 }
+
 
 Real
 KnockoutRatePostprocessor::calcKnockoutRate()

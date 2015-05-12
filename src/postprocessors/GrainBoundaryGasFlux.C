@@ -7,11 +7,13 @@ InputParameters validParams<GrainBoundaryGasFlux>()
   return params;
 }
 
+
 GrainBoundaryGasFlux::GrainBoundaryGasFlux(const std::string & name, InputParameters parameters) :
     SideIntegralVariablePostprocessor(name, parameters),
     _diffusivity(getMaterialProperty<Real>("atomic_diffusivity"))
 {
 }
+
 
 Real
 GrainBoundaryGasFlux::computeQpIntegral()

@@ -14,7 +14,6 @@ InputParameters validParams<BubblesActionBase>()
   params.addParam<int>("N", "Largest group size");
   params.addParam<int>("logN", "Log10 of largest group size");
   params.addParam<int>("s", "Total number of ungrouped equations");
-
   params.addParam<bool>("experimental", false, "Flag to use experimental kernel");
 
   return params;
@@ -48,43 +47,21 @@ BubblesActionBase::BubblesActionBase(const std::string & name, InputParameters p
   else
     _s = _N;
 
+  for ( int j=0; j<_s; ++j )
+    _atoms.push_back(j+1);
 
-  // if (!_exp)
+  for ( int j=_s; j<_N; ++j )
   {
-    for ( int j=0; j<_s; ++j )
-      _atoms.push_back(j+1);
+    Real x = (_atoms.back() + 1) / _s + _atoms.back();
 
-    for ( int j=_s; j<_N; ++j )
+    if ( x <= _N )
+      _atoms.push_back( x );
+    else
     {
-      Real x = (_atoms.back() + 1) / _s + _atoms.back();
-
-      if ( x <= _N )
-        _atoms.push_back( x );
-      else
-      {
-        _atoms.push_back( _N );
-        break;
-      }
+      _atoms.push_back( _N );
+      break;
     }
   }
-  // else
-  // {
-  //   for ( int j=0; j<_s; ++j )
-  //     _atoms.push_back(j+1);
-
-  //   _atoms.push_back( _N-18 );
-  //   _atoms.push_back( _N-16 );
-  //   _atoms.push_back( _N-14 );
-  //   _atoms.push_back( _N-12 );
-  //   _atoms.push_back( _N-10 );
-  //   _atoms.push_back( _N-8 );
-  //   _atoms.push_back( _N-6 );
-  //   _atoms.push_back( _N-4 );
-  //   _atoms.push_back( _N-3 );
-  //   _atoms.push_back( _N-2 );
-  //   _atoms.push_back( _N-1 );
-  //   _atoms.push_back( _N );
-  // }
 
   _G = _atoms.size();
 

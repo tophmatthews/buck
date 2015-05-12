@@ -8,7 +8,6 @@ InputParameters validParams<GasAtomDiffusivity>()
 
   params.addRequiredCoupledVar("temp", "Coupled Temperature");
   params.addCoupledVar("fission_rate", 0, "Coupled fission rate");
-
   params.addParam<Real>("D0", "Diffusion coefficient [um^2/s]");
   params.addParam<Real>("Q", "Activation energy [J/mol]");
   params.addParam<Real>("D0f", 0, "Fission enhanced diffusion coefficient [um^2/s]");
@@ -19,6 +18,7 @@ InputParameters validParams<GasAtomDiffusivity>()
 
   return params;
 }
+
 
 GasAtomDiffusivity::GasAtomDiffusivity(const std::string & name, InputParameters parameters) :
   Material(name, parameters),
@@ -77,13 +77,12 @@ GasAtomDiffusivity::GasAtomDiffusivity(const std::string & name, InputParameters
   }
 }
 
+
 void
 GasAtomDiffusivity::computeQpProperties()
 {
   Real diff_thermal = _D0 *  std::exp( -_Q  / _R / _temp[_qp] );
   Real diff_fission = _D0f * std::exp( -_Qf / _R / _temp[_qp] ) * _fission_rate[_qp];
-
-  // std::cout << "Diff: " << _gas_diffusivity[_qp] << std::endl;
 
   _gas_diffusivity[_qp] = (diff_thermal + diff_fission) * _factor;
 }

@@ -3,19 +3,15 @@
 
 #include "GeneralPostprocessor.h"
 
-//Forward Declarations
 class PostprocessorTerminator;
 
 template<>
 InputParameters validParams<PostprocessorTerminator>();
 
-class PostprocessorTerminator :
-  public GeneralPostprocessor
+class PostprocessorTerminator : public GeneralPostprocessor
 {
 public:
-
   PostprocessorTerminator(const std::string & name, InputParameters parameters);
-
   virtual void initialize() {};
   virtual void execute();
   virtual Real getValue() { return 0; }

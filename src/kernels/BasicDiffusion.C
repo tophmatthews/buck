@@ -10,17 +10,20 @@ InputParameters validParams<BasicDiffusion>()
   return params;
 }
 
+
 BasicDiffusion::BasicDiffusion( const std::string & name, InputParameters parameters ) :
     Diffusion( name, parameters ),
     _diffusivity(getMaterialProperty<Real>(getParam<std::string>("diffusivity")))
 {
 }
 
+
 Real
 BasicDiffusion::computeQpResidual()
 {
   return _diffusivity[_qp] * Diffusion::computeQpResidual();
 }
+
 
 Real
 BasicDiffusion::computeQpJacobian()

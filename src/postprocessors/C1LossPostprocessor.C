@@ -27,7 +27,8 @@ C1LossPostprocessor::C1LossPostprocessor(const std::string & name, InputParamete
   _atoms(getParam<Real>("atoms")),
   _b(getParam<Real>("b")),
   _factor(getParam<Real>("factor"))
-{}
+{
+}
 
 
 Real
@@ -40,6 +41,7 @@ C1LossPostprocessor::computeQpIntegral()
 
   return std::abs(growth) + std::abs(knockout);
 }
+
 
 Real
 C1LossPostprocessor::calcKnockoutRate()

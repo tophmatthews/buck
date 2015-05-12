@@ -20,5 +20,4 @@ private:
 template<>
 InputParameters validParams<BubblesConcVarsAction>();
 
-
 #endif //BUBBLESCONCVARSACTION_H

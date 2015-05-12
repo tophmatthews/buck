@@ -42,14 +42,14 @@ BubblesGrowthKernelsAction::act()
     std::string kernel_name = var_name;
     kernel_name.append(base_kernel);
 
-    // BubbleBase
+    // BubbleBase variables
     p.set<NonlinearVariableName>("variable") = var_name;
     p.set<std::vector<VariableName> >("coupled_conc") = _c;
     p.set<std::vector<VariableName> >("coupled_rad") = _r;
     p.set<std::vector<Real> >("coupled_atoms") = _atoms;
     p.set<std::vector<Real> >("coupled_widths") = _widths;
 
-    // BubbleGrowth
+    // BubbleGrowth variables
     p.set<bool>("allow_loss") = getParam<bool>("allow_loss");
     p.set<bool>("experimental") = _exp;
     p.addCoupledVar("temp", "");

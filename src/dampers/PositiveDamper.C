@@ -14,10 +14,6 @@ PositiveDamper::PositiveDamper(std::string name, InputParameters parameters) :
 {
 }
 
-PositiveDamper::~PositiveDamper()
-{
-}
-
 Real
 PositiveDamper::computeQpDamping()
 {

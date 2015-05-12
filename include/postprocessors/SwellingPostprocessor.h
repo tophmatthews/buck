@@ -5,7 +5,6 @@
 
 class SwellingPostprocessor: public ElementAverageValue
 {
-
 public:
   SwellingPostprocessor(const std::string & name, InputParameters parameters);
 
@@ -15,7 +14,6 @@ protected:
 private:
 	VariableValue & _r;
 	const Real _width;
-
 };
 
 template<>

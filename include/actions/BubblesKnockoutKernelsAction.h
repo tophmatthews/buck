@@ -5,11 +5,9 @@
 
 class BubblesKnockoutKernelsAction: public BubblesActionBase
 {
-
 public:
   BubblesKnockoutKernelsAction(const std::string & name, InputParameters params);
   virtual void act();
-
 };
 
 template<>

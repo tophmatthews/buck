@@ -3,14 +3,8 @@
 
 #include "BubblesActionBase.h"
 
-class BubblesDampersAction;
-
-template<>
-InputParameters validParams<BubblesDampersAction>();
-
 class BubblesDampersAction : public BubblesActionBase
 {
-
 public:
   BubblesDampersAction(const std::string & name, InputParameters params);
   virtual void act();
@@ -18,5 +12,8 @@ public:
 private:
 	const int _index;
 };
+
+template<>
+InputParameters validParams<BubblesDampersAction>();
 
 #endif

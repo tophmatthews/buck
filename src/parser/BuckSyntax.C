@@ -15,8 +15,6 @@
 #include "BubblesNucleationKernelsAction.h"
 #include "BubblesKnockoutKernelsAction.h"
 
-#include "BubblesBoundsAction.h"
-
 #include "BubblesDampersAction.h"
 
 namespace Buck
@@ -25,12 +23,6 @@ namespace Buck
   void
   associateSyntax(Syntax & syntax, ActionFactory & action_factory)
   {
-    /**
-     * Note: the optional third parameter is used to differentiate which action_name is
-     * satisfied based on the syntax encountered for classes which are registered
-     * to satisfy more than one action_name
-     */
-
     syntax.registerActionSyntax("BubblesConcVarsAction", "Bubbles/Conc/", "add_variable");
     syntax.registerActionSyntax("BubblesConcVarsAction", "Bubbles/Conc/", "add_ic");
     syntax.registerActionSyntax("BubblesConcTimeKernelAction", "Bubbles/Conc/", "add_kernel");
@@ -60,12 +52,6 @@ namespace Buck
     syntax.registerActionSyntax("BubblesRadAuxKernelAction", "Bubbles/Rad/Eq/", "add_aux_kernel");
     registerAction(BubblesRadAuxVarsAction, "add_aux_variable");
     registerAction(BubblesRadAuxKernelAction, "add_aux_kernel");
-
-    syntax.registerActionSyntax("AddBoundsVectorsAction", "Bubbles/Bounds/");
-    syntax.registerActionSyntax("BubblesBoundsAction", "Bubbles/Bounds/", "add_aux_kernel");
-    syntax.registerActionSyntax("BubblesBoundsAction", "Bubbles/Bounds/", "add_aux_variable");
-    registerAction(BubblesBoundsAction, "add_aux_kernel");
-    registerAction(BubblesBoundsAction, "add_aux_variable");
   }
 
 } //end namespace

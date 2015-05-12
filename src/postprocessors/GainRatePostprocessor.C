@@ -19,7 +19,8 @@ GainRatePostprocessor::GainRatePostprocessor(const std::string & name, InputPara
   _c1(coupledValue("c1")),
   _Dg(getMaterialProperty<Real>("gas_diffusivity")),
   _width(getParam<Real>("width"))
-{}
+{
+}
 
 
 Real

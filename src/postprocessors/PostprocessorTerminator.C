@@ -1,5 +1,4 @@
 #include "PostprocessorTerminator.h"
-// #include "PostprocessorInterface.h"
 
 template<>
 InputParameters validParams<PostprocessorTerminator>()
@@ -12,12 +11,14 @@ InputParameters validParams<PostprocessorTerminator>()
   return params;
 }
 
+
 PostprocessorTerminator::PostprocessorTerminator(const std::string & name, InputParameters parameters) :
     GeneralPostprocessor(name, parameters),
     _threshold(getParam<Real>("threshold")),
     _value(getPostprocessorValue("postprocessor"))
 {
 }
+
 
 void
 PostprocessorTerminator::execute()

@@ -16,7 +16,8 @@ SwellingPostprocessor::SwellingPostprocessor(const std::string & name, InputPara
   ElementAverageValue(name, parameters),
   _r(coupledValue("r")),
   _width(getParam<Real>("width"))
-{}
+{
+}
 
 
 Real
@@ -24,7 +25,7 @@ SwellingPostprocessor::computeQpIntegral()
 {
 	Real swell(0);
 
-	swell += _u[_qp] * 4.0/3.0 * M_PI * std::pow( _r[_qp], 3.0 ); // * _width;
+	swell += _u[_qp] * 4.0/3.0 * M_PI * std::pow( _r[_qp], 3.0 );
 
   return swell;
 }

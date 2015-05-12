@@ -13,6 +13,7 @@ InputParameters validParams<BubbleBase>()
   return params;
 }
 
+
 BubbleBase::BubbleBase(const std::string & name, InputParameters parameters)
   :Kernel(name,parameters),
   _names(getParam<std::vector<VariableName> >("coupled_conc")),
@@ -48,6 +49,7 @@ BubbleBase::BubbleBase(const std::string & name, InputParameters parameters)
   mooseDoOnce( displayBubbleInfo() );
 }
 
+
 Real
 BubbleBase::computeQpResidual()
 {
@@ -55,8 +57,6 @@ BubbleBase::computeQpResidual()
   Real gains(0);
   calcLosses(losses, false);
   calcGains(gains, false);
-
-  // std::cout << std::setprecision(9) << "\tg: " << _g << " gains: " << gains << " losses: " << losses << std::endl;
 
   return -( gains - losses ) * _test[_i][_qp];
 }
@@ -73,6 +73,7 @@ BubbleBase::computeQpJacobian()
   return -( gains - losses ) * _phi[_j][_qp] * _test[_i][_qp];
 }
 
+
 void
 BubbleBase::displayBubbleInfo()
 {
@@ -87,4 +88,3 @@ BubbleBase::displayBubbleInfo()
     std::cout << " " << i+1 << "\t| " << _atoms[i] << "\t| " << _widths[i] << "\n";
   std::cout << "=======================================\n" << std::endl;
 }
-

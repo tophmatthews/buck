@@ -3,14 +3,12 @@
 
 #include "GeneralPostprocessor.h"
 
-//Forward Declarations
 class SumOfPostprocessors;
 
 template<>
 InputParameters validParams<SumOfPostprocessors>();
 
-class SumOfPostprocessors :
-  public GeneralPostprocessor
+class SumOfPostprocessors : public GeneralPostprocessor
 {
 public:
 

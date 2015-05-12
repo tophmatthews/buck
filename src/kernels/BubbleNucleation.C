@@ -14,6 +14,7 @@ InputParameters validParams<BubbleNucleation>()
   return params;
 }
 
+
 BubbleNucleation::BubbleNucleation(const std::string & name, InputParameters parameters)
   :BubbleBase(name,parameters),
   _temp(coupledValue("temp")),
@@ -28,6 +29,7 @@ BubbleNucleation::BubbleNucleation(const std::string & name, InputParameters par
     mooseError("In BubbleNucleation: Cannont implement on non-dimer or non-single atoms.");
 }
 
+
 void
 BubbleNucleation::calcLosses(Real & losses, bool jac)
 {
@@ -35,7 +37,6 @@ BubbleNucleation::calcLosses(Real & losses, bool jac)
     return;
 
   Real P11 = _Z11 * _omega * _Dg[_qp] * _u[_qp] / std::pow(_a, 2.0);
-  // std::cout << P11/_u[_qp] << "," << _Dg[_qp] << std::endl;
 
   if (!jac)
     losses += 2.0 * P11 * _u[_qp];
@@ -53,7 +54,6 @@ BubbleNucleation::calcGains(Real & gains, bool jac)
     return;
 
   Real R = _Z11 * _omega * _Dg[_qp] * std::pow( (*_c[0])[_qp]/_a, 2.0 );
-  // std::cout << R << std::endl;
 
   gains += R;
 }

@@ -23,7 +23,6 @@ private:
 	const Real _atoms;
 	Real _b;
 	const Real _factor;
-
 };
 
 template<>

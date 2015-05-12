@@ -3,7 +3,7 @@
 
 #include "ElementAverageValue.h"
 
-class GainRatePostprocessor: public ElementAverageValue
+class GainRatePostprocessor : public ElementAverageValue
 {
 
 public:
@@ -17,7 +17,6 @@ private:
 	VariableValue & _c1;
 	MaterialProperty<Real> & _Dg;
 	const Real _width;
-
 };
 
 template<>
