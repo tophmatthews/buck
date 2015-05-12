@@ -22,6 +22,7 @@
   coupled_conc = 'c1 c2 c3 c4 c5'
   coupled_rad = 'r1 r2 r3 r4 r5'
   coupled_atoms = '1 2 3 4 5'
+  coupled_widths = '1 1 1 1 1'
   N = 5
   s = 5
 []

@@ -10,8 +10,8 @@
 # +----------------+----------------+----------------+----------------+----------------+----------------+
 
 [GlobalParams]
-  N = 2
-  s = 2
+  N = 3
+  s = 3
   temp = temp
   block = 0
 []
@@ -24,18 +24,18 @@
 
 [Bubbles]
   [./Conc]
-    c1_initial_condition = 1e10
-    c2_initial_condition = 0
+    c1_initial_condition = 1e5
+    c2_initial_condition = 1e5
     initial_condition = 0
   [../]
-  [./Nucleation]
-    rad_name_base = c # needed to bypass radius requirement
+  [./Growth]
   [../]
   [./PPs]
     concentrations = 'console'
     total_atoms = 'console'
     total_concentrations = 'console'
-    swelling = 'console'
+    total_swelling = 'console'
+    fission_rate = 0
   [../]
   [./Rad]
     [./Eq]
@@ -74,12 +74,12 @@
 
   solve_type = PJFNK
 
-  end_time = 200
-  dt = 100
+  num_steps = 100
+  dt = 100000
 []
 
 
 [Outputs]
-  interval = 1
+  interval = 10
   exodus = true
 []

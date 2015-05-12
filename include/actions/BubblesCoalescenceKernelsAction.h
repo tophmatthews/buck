@@ -7,7 +7,6 @@ class BubblesCoalescenceKernelsAction: public BubblesActionBase
 {
 public:
   BubblesCoalescenceKernelsAction(const std::string & name, InputParameters params);
-
   virtual void act();
 };
 

@@ -8,11 +8,12 @@ InputParameters validParams<BubbleNucleation>()
   InputParameters params = validParams<BubbleBase>();
 
   params.addRequiredCoupledVar("temp", "Temperature");
-  params.addParam<Real>("a", 5.0e-4, "Lattice Parameter [um]");
-  params.addParam<Real>("omega", 4.09e-11, " Atomic volume [um^3]");
+  params.addParam<Real>("a", 4.96e-4, "Lattice Parameter [um]");
+  params.addParam<Real>("omega", 1.53e-11, " Atomic volume [um^3]");
 
   return params;
 }
+
 
 BubbleNucleation::BubbleNucleation(const std::string & name, InputParameters parameters)
   :BubbleBase(name,parameters),
@@ -22,11 +23,12 @@ BubbleNucleation::BubbleNucleation(const std::string & name, InputParameters par
 
   _Dg(getMaterialProperty<Real>("gas_diffusivity")),
 
-  _Z11(84.0)
+  _Z11(168.0)
 {
   if ( _g > 1 )
     mooseError("In BubbleNucleation: Cannont implement on non-dimer or non-single atoms.");
 }
+
 
 void
 BubbleNucleation::calcLosses(Real & losses, bool jac)
@@ -51,7 +53,7 @@ BubbleNucleation::calcGains(Real & gains, bool jac)
   if (jac)
     return;
 
-  Real P11 = _Z11 * _omega * _Dg[_qp] * std::pow( (*_c[0])[_qp]/_a, 2.0 );
+  Real R = _Z11 * _omega * _Dg[_qp] * std::pow( (*_c[0])[_qp]/_a, 2.0 );
 
-  gains += P11;
+  gains += R;
 }

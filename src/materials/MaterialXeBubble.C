@@ -31,43 +31,6 @@ namespace MaterialXeBubble{
 
   ////////////////////////////////////////////////////////////////////////
 
-  // double VDW_RtoP(double rad, double T, double m)
-  // {
-  //   // Calculates the bubble preessure in a bubble based on Van der Waal's EOS
-  //   //
-  //   // p = RT/(V/n - b) - a(n/V)^2
-  //   //
-  //   // T = Temperature, [K]
-  //   // rad = bubble radius, [m]
-  //   // m = number of atoms
-  //   // R = Ideal Gas constant, [J/mol/K]
-  //   // V = Bubble volume, [m]
-  //   // n = number of mols, [mol]
-  //   // a = 0.4306 [Pa*m6 / mol^2 ]
-  //   // b = 5.11e−5 [m^3 / mol]
-  //   // k = boltzmann constant, [J/K]
-
-  //   double R = 8.314;
-  //   double a = 0.4306;
-  //   double b = 5.11e-5;
-  //   double n = m / 6.022e23;
-  //   double V = 4.0/3.0 * M_PI * std::pow(rad,3);
-
-  //   double left = R*T/( V/n - b );
-  //   double right = a*std::pow(n/V, 2.0);
-
-  //   double p = left - right;
-
-  //   if (p<0)
-  //   {
-  //     std::cout << "rad: " << rad << " T: " << T << " m: " << m << " VDW pressure: " << p << std::endl;
-  //     mooseError("In MaterialXeBubble: Negative bubble pressure calculated");
-  //   }
-
-  //   // std::cout << "rad: " << rad << " T: " << T << " m: " << m << " VDW pressure: " << p << std::endl;
-  //   return p;
-  // }
-
   double VDW_RtoP(double rad, double T, double m)
   {
     // Calculates the bubble preessure in a bubble based on Van der Waal's EOS
@@ -95,7 +58,6 @@ namespace MaterialXeBubble{
       mooseError("In MaterialXeBubble: Negative bubble pressure calculated");
     }
 
-    // std::cout << "rad: " << rad << " T: " << T << " m: " << m << " VDW pressure: " << p << std::endl;
     return p;
   }
 
@@ -174,8 +136,5 @@ namespace MaterialXeBubble{
     }
 
     return R;
-    // return m*1e-9;
-    // return 7.0e-11*sqrt(m);
   }
-  /////////////////////////////////////////////////////////
 }

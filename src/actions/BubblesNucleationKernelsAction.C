@@ -10,8 +10,8 @@ InputParameters validParams<BubblesNucleationKernelsAction>()
 
   params.addRequiredParam<VariableName>("temp", "The temperature variable name");
   params.addParam<bool>("use_displaced_mesh", false, "Whether to use displaced mesh in the kernels");
-  params.addParam<Real>("a", 5.0e-4, "Lattice Parameter [um]");
-  params.addParam<Real>("omega", 4.09e-11, " Atomic volume [um^3]");
+  params.addParam<Real>("a", 4.96e-4, "Lattice Parameter [um]");
+  params.addParam<Real>("omega", 1.53e-11, " Atomic volume [um^3]");
 
   return params;
 }
@@ -39,6 +39,7 @@ BubblesNucleationKernelsAction::act()
     p.set<std::vector<VariableName> >("coupled_conc") = _c;
     p.set<std::vector<VariableName> >("coupled_rad") = _r;
     p.set<std::vector<Real> >("coupled_atoms") = _atoms;
+    p.set<std::vector<Real> >("coupled_widths") = _widths;
 
     p.addCoupledVar("temp", "");
     p.set<std::vector<VariableName> >("temp") = std::vector<VariableName>(1, getParam<VariableName>("temp"));

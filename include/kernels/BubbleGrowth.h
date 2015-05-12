@@ -19,9 +19,13 @@ protected:
   virtual void calcGains(Real & gains, const bool jac);
 
 private:
+	void calcLossesExperimental(Real & losses, const bool jac);
+  void calcGainsExperimental(Real & gains, const bool jac);
+
 	bool _allow_loss;
 	MaterialProperty<Real> & _Dg;
 
+  const bool _exp;
 };
 
 #endif //BUBBLEGROWTH_H

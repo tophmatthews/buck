@@ -12,6 +12,7 @@ InputParameters validParams<SumOfPostprocessors>()
   return params;
 }
 
+
 SumOfPostprocessors::SumOfPostprocessors(const std::string & name, InputParameters parameters) :
     GeneralPostprocessor(name, parameters),
     _factors(getParam<std::vector<Real> >("factors"))
@@ -38,6 +39,7 @@ SumOfPostprocessors::SumOfPostprocessors(const std::string & name, InputParamete
     mooseError("In SumOfPostprocessors: Size of factors does not match number of postprocessors.");
   }
 }
+
 
 Real
 SumOfPostprocessors::getValue()

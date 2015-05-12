@@ -7,7 +7,6 @@ class BubblesNucleationKernelsAction: public BubblesActionBase
 {
 public:
   BubblesNucleationKernelsAction(const std::string & name, InputParameters params);
-
   virtual void act();
 };
 

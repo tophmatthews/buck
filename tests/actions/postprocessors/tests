@@ -1,5 +1,5 @@
 [Tests]
-  [./nospacing]
+  [./test]
     type = 'Exodiff'
     input = 'test.i'
     exodiff = 'test_out.e'

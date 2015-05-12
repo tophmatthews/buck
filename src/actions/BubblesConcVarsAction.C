@@ -22,7 +22,8 @@ BubblesConcVarsAction::BubblesConcVarsAction(const std::string & name,
                                                    InputParameters params) :
   BubblesActionBase(name, params),
   _order(getParam<std::string>("order")),
-  _family(getParam<std::string>("family"))
+  _family(getParam<std::string>("family")),
+  _ic(getParam<Real>("initial_condition"))
 {
 }
 
@@ -52,10 +53,7 @@ BubblesConcVarsAction::act()
         poly_params.set<Real>("value") = getParam<Real>("c2_initial_condition");
       else
       {
-        // Real a = -5.6870e-10;
-        // Real b = 3.873e-9;
-        // Real val = a * std::log(_atoms[i]) + b;
-        poly_params.set<Real>("value") = getParam<Real>("initial_condition");
+        poly_params.set<Real>("value") = _ic / _widths[i];
       }
       _problem->addInitialCondition("ConstantIC", "Initialize_" + 1+i, poly_params);
     }

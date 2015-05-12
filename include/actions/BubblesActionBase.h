@@ -7,20 +7,21 @@ class BubblesActionBase: public Action
 {
 public:
   BubblesActionBase(const std::string & name, InputParameters params);
-
   virtual void act(){}
 
 protected:
   const std::string _conc_name_base;
   const std::string _conc_1stM_name_base;
   const std::string _rad_name_base;
-  const unsigned int _N;
-  const unsigned int _s;
+  const bool _exp;
 
+  unsigned int _N;
+  unsigned int _s;
   std::vector<VariableName> _c;
   std::vector<VariableName> _m;
   std::vector<VariableName> _r;
   std::vector<Real> _atoms;
+  std::vector<Real> _widths;
   unsigned int _G;
 
 private:

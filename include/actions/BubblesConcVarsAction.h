@@ -13,10 +13,11 @@ public:
 private:
   const std::string _order;
   const std::string _family;
+
+  const Real _ic;
 };
 
 template<>
 InputParameters validParams<BubblesConcVarsAction>();
-
 
 #endif //BUBBLESCONCVARSACTION_H
