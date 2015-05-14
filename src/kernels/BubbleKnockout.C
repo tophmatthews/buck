@@ -5,7 +5,7 @@ InputParameters validParams<BubbleKnockout>()
 {
   InputParameters params = validParams<BubbleBase>();
 
-  params.addParam<Real>("factor", 1.0, "Number multiplied scaling variable.");
+  params.addParam<Real>("factor", 1.0, "User supplied multiplier.");
   params.addCoupledVar("fission_rate", 0, "Variable for fission rate density.");
   params.addParam<Real>("b", -1, "Value to set constant knockout parameter. B is automatically calculated if not given");
 

@@ -23,6 +23,7 @@ private:
 	VariableValue & _temp;
 	const Real _a;
 	const Real _omega;
+	const Real _factor;
 
 	MaterialProperty<Real> & _Dg;
 

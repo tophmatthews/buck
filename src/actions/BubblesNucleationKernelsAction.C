@@ -12,6 +12,7 @@ InputParameters validParams<BubblesNucleationKernelsAction>()
   params.addParam<bool>("use_displaced_mesh", false, "Whether to use displaced mesh in the kernels");
   params.addParam<Real>("a", 4.96e-4, "Lattice Parameter [um]");
   params.addParam<Real>("omega", 1.53e-11, " Atomic volume [um^3]");
+  params.addParam<Real>("factor", 1.0, "User supplied multiplier.");
 
   return params;
 }
@@ -34,6 +35,7 @@ BubblesNucleationKernelsAction::act()
     p.set<bool>("use_displaced_mesh") = getParam<bool>("use_displaced_mesh");
     p.set<Real>("a") = getParam<Real>("a");
     p.set<Real>("omega") = getParam<Real>("omega");
+    p.set<Real>("factor") = getParam<Real>("factor");
 
     p.set<NonlinearVariableName>("variable") = var_name;
     p.set<std::vector<VariableName> >("coupled_conc") = _c;

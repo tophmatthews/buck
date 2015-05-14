@@ -10,6 +10,7 @@ InputParameters validParams<BubbleNucleation>()
   params.addRequiredCoupledVar("temp", "Temperature");
   params.addParam<Real>("a", 4.96e-4, "Lattice Parameter [um]");
   params.addParam<Real>("omega", 1.53e-11, " Atomic volume [um^3]");
+  params.addParam<Real>("factor", 1.0, "User supplied multiplier.");
 
   return params;
 }
@@ -20,6 +21,7 @@ BubbleNucleation::BubbleNucleation(const std::string & name, InputParameters par
   _temp(coupledValue("temp")),
   _a(getParam<Real>("a")),
   _omega(getParam<Real>("omega")),
+  _factor(getParam<Real>("factor")),
 
   _Dg(getMaterialProperty<Real>("gas_diffusivity")),
 
@@ -36,7 +38,7 @@ BubbleNucleation::calcLosses(Real & losses, bool jac)
   if (_g != 0)
     return;
 
-  Real P11 = _Z11 * _omega * _Dg[_qp] * _u[_qp] / std::pow(_a, 2.0);
+  Real P11 = _factor * _Z11 * _omega * _Dg[_qp] * _u[_qp] / std::pow(_a, 2.0);
 
   if (!jac)
     losses += 2.0 * P11 * _u[_qp];
@@ -53,7 +55,7 @@ BubbleNucleation::calcGains(Real & gains, bool jac)
   if (jac)
     return;
 
-  Real R = _Z11 * _omega * _Dg[_qp] * std::pow( (*_c[0])[_qp]/_a, 2.0 );
+  Real R = _factor * _Z11 * _omega * _Dg[_qp] * std::pow( (*_c[0])[_qp]/_a, 2.0 );
 
   gains += R;
 }
