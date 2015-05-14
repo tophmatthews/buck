@@ -4,7 +4,7 @@ template<>
 InputParameters validParams<PositiveDamper>()
 {
   InputParameters params = validParams<Damper>();
-  params.addRequiredParam<Real>("damping", "Damping to use if increment results in a negative value");
+  params.addRequiredParam<Real>("damping", "Damping coefficient to use if increment results in a negative value");
   return params;
 }
 

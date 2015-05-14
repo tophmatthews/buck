@@ -1,0 +1,7 @@
+[Tests]
+  [./exact]
+    type = 'Exodiff'
+    input = 'exact.i'
+    exodiff = 'exact_out.e'
+  [../]
+[]
