@@ -29,7 +29,6 @@ GasAtomDiffusivity::GasAtomDiffusivity(const std::string & name, InputParameters
   _model(getParam<int>("model")),
   _gas_diffusivity(declareProperty<Real>("gas_diffusivity"))
 {
-
   if ( _model == 0 )
   {
     if ( !isParamValid("D0") || !isParamValid("Q") )
