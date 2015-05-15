@@ -34,7 +34,12 @@ BubbleFFNucleation::calcLosses(Real & losses, bool jac)
   if (jac)
     return;
   if ( (*_c[0])[_qp] < 1e7 )
-    return;
+  {
+    if ( (*_c[_size-1])[_qp] == 0 )
+      return;
+    else if ( (*_c[0])[_qp] < 1e6 )
+      return;
+  }
 
   losses += _factor * _num * _size * _frd[_qp];
 }
