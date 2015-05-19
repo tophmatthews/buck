@@ -11,6 +11,8 @@ InputParameters validParams<BubbleFFNucleation>()
   params.addParam<Real>("factor", 1.0, "User supplied multiplier.");
   params.addParam<int>("number", 5, "Number of bubbles created per fission");
   params.addParam<int>("size", 4, "Size of bubbles created");
+  params.addParam<Real>("upper", 1e7, "Upper deadband limit");
+  params.addParam<Real>("lower", 1e6, "Lower deadband limit");
 
   return params;
 }
@@ -21,7 +23,9 @@ BubbleFFNucleation::BubbleFFNucleation(const std::string & name, InputParameters
   _frd(coupledValue("fission_rate")),
   _factor(getParam<Real>("factor")),
   _num(getParam<int>("number")),
-  _size(getParam<int>("size"))
+  _size(getParam<int>("size")),
+  _upper(getParam<Real>("upper")),
+  _lower(getParam<Real>("lower"))
 {
 }
 
@@ -33,11 +37,11 @@ BubbleFFNucleation::calcLosses(Real & losses, bool jac)
     return;
   if (jac)
     return;
-  if ( (*_c[0])[_qp] < 1e7 )
+  if ( (*_c[0])[_qp] < _upper )
   {
     if ( (*_c[_size-1])[_qp] == 0 )
       return;
-    else if ( (*_c[0])[_qp] < 1e6 )
+    else if ( (*_c[0])[_qp] < _lower )
       return;
   }
 
@@ -52,11 +56,11 @@ BubbleFFNucleation::calcGains(Real & gains, bool jac)
     return;
   if (jac)
     return;
-  if ( (*_c[0])[_qp] < 1e7 )
+  if ( (*_c[0])[_qp] < _upper )
   {
     if ( (*_c[_size-1])[_qp] == 0 )
       return;
-    else if ( (*_c[0])[_qp] < 1e6 )
+    else if ( (*_c[0])[_qp] < _lower )
       return;
   }
 

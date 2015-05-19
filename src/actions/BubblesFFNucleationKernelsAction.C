@@ -13,6 +13,8 @@ InputParameters validParams<BubblesFFNucleationKernelsAction>()
   params.addParam<int>("number", 5, "Number of bubbles created per fission");
   params.addParam<int>("size", 4, "Size of bubbles created");
   params.addParam<Real>("factor", 1.0, "User supplied multiplier.");
+  params.addParam<Real>("upper", 1e7, "Upper dead-band limit");
+  params.addParam<Real>("lower", 1e6, "Lower dead-band limit");
 
   return params;
 }
@@ -37,6 +39,8 @@ BubblesFFNucleationKernelsAction::act()
     p.set<Real>("factor") = getParam<Real>("factor");
     p.set<int>("number") = getParam<int>("number");
     p.set<int>("size") = getParam<int>("size");
+    p.set<Real>("upper") = getParam<Real>("upper");
+    p.set<Real>("lower") = getParam<Real>("lower");
 
     p.set<NonlinearVariableName>("variable") = var_name;
     p.set<std::vector<VariableName> >("coupled_conc") = _c;

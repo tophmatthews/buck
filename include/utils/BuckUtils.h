@@ -15,7 +15,7 @@ namespace Buck
   Real dlogEstdLeft(const Real xLeft, const Real xRight, const Real yLeft, const Real yRight, const Real x);
   Real dlogEstdRight(const Real xLeft, const Real xRight, const Real yLeft, const Real yRight, const Real x);
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////
 
   template <typename T>
   inline void iterateAndDisplay(std::string name, std::vector<T> &show, std::string banner="")
@@ -29,7 +29,7 @@ namespace Buck
     std::cout << "==========================\n" << std::endl;
   }
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////
 
   inline int numDigits(int x)
   {
@@ -59,8 +59,7 @@ namespace Buck
   {
     fk1 = Ng / Nk1 * ( Ng - Nk2) / ( Nk1 - Nk2);
     fk2 = Ng / Nk2 * ( Nk1 - Ng) / ( Nk1 - Nk2);
-    // fk1 = (Ng - Nk2) / (Nk1 - Nk2);
-    // fk2 = (Nk1 - Ng) / (Nk1 - Nk2);
+;
   }
 
   template <typename T1, typename T2>
@@ -68,7 +67,7 @@ namespace Buck
   {
     if (x < 0)
     {
-      // mooseError("In BuckUtils: Trying to take a power of a negative number with a non-integar power");
+      mooseError("In BuckUtils: Trying to take a power of a negative number with a non-integar power");
       return 0;
     }
     return std::pow(x,p);

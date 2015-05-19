@@ -22,6 +22,8 @@ private:
 	const Real _factor;
 	const int _num;
 	const int _size;
+	const Real _upper;
+	const Real _lower;
 };
 
 #endif
