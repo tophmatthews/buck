@@ -14,11 +14,13 @@ InputParameters validParams<BubblesConcTimeKernelAction>()
   return params;
 }
 
+
 BubblesConcTimeKernelAction::BubblesConcTimeKernelAction(const std::string & name,
                                                              InputParameters params) :
 BubblesActionBase(name, params)
 {
 }
+
 
 void
 BubblesConcTimeKernelAction::act()

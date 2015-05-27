@@ -14,11 +14,13 @@ InputParameters validParams<BubblesRadAuxKernelAction>()
   return params;
 }
 
+
 BubblesRadAuxKernelAction::BubblesRadAuxKernelAction(const std::string & name, InputParameters params) :
   BubblesActionBase(name, params),
   _blocks(getParam<std::vector<SubdomainName> >("block"))
 {
 }
+
 
 void
 BubblesRadAuxKernelAction::act()

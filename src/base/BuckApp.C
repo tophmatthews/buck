@@ -17,6 +17,7 @@
 #include "BasicDiffusion.h"
 #include "BubbleBase.h"
 #include "BubbleNucleation.h"
+#include "BubbleFFNucleation.h"
 #include "BubbleGrowth.h"
 #include "BubbleKnockout.h"
 
@@ -75,6 +76,7 @@ BuckApp::registerObjects(Factory & factory)
   registerKernel(BasicDiffusion);
   registerKernel(BubbleBase);
   registerKernel(BubbleNucleation);
+  registerKernel(BubbleFFNucleation);
   registerKernel(BubbleGrowth);
   registerKernel(BubbleKnockout);
 

@@ -13,6 +13,7 @@
 #include "BubblesCoalescenceKernelsAction.h"
 #include "BubblesGrowthKernelsAction.h"
 #include "BubblesNucleationKernelsAction.h"
+#include "BubblesFFNucleationKernelsAction.h"
 #include "BubblesKnockoutKernelsAction.h"
 
 #include "BubblesDampersAction.h"
@@ -44,6 +45,9 @@ namespace Buck
 
     syntax.registerActionSyntax("BubblesNucleationKernelsAction", "Bubbles/Nucleation/", "add_kernel");
     registerAction(BubblesNucleationKernelsAction, "add_kernel");
+
+    syntax.registerActionSyntax("BubblesFFNucleationKernelsAction", "Bubbles/FFNucleation/", "add_kernel");
+    registerAction(BubblesFFNucleationKernelsAction, "add_kernel");
 
     syntax.registerActionSyntax("BubblesDampersAction", "Bubbles/Dampers/", "add_damper");
     registerAction(BubblesDampersAction, "add_damper");
