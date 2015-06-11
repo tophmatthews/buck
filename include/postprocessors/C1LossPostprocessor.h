@@ -18,7 +18,7 @@ private:
 	VariableValue & _r;
 	VariableValue & _c1;
 	VariableValue & _frd;
-	MaterialProperty<Real> & _Dg;
+	const MaterialProperty<Real> & _Dg;
 	const Real _width;
 	const Real _atoms;
 	Real _b;

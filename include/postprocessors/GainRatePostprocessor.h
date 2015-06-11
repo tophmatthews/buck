@@ -15,7 +15,7 @@ protected:
 private:
 	VariableValue & _r;
 	VariableValue & _c1;
-	MaterialProperty<Real> & _Dg;
+	const MaterialProperty<Real> & _Dg;
 	const Real _width;
 };
 

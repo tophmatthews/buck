@@ -25,7 +25,7 @@ private:
 	const Real _omega;
 	const Real _factor;
 
-	MaterialProperty<Real> & _Dg;
+	const MaterialProperty<Real> & _Dg;
 
 	const Real _Z11;
 };
