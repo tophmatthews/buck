@@ -23,7 +23,7 @@ private:
   void calcGainsExperimental(Real & gains, const bool jac);
 
 	bool _allow_loss;
-	MaterialProperty<Real> & _Dg;
+	const MaterialProperty<Real> & _Dg;
 
   const bool _exp;
 };
