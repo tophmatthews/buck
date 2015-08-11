@@ -11,7 +11,7 @@ InputParameters validParams<BubbleKnockout>();
 class BubbleKnockout : public BubbleBase
 {
 public:
-  BubbleKnockout(const std::string & name, InputParameters parameters);
+  BubbleKnockout(const InputParameters & parameters);
 
 protected:
   virtual void calcLosses(Real & losses, const bool jac);

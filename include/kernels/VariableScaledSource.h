@@ -13,7 +13,7 @@ class VariableScaledSource : public Kernel
 {
 public:
 
-  VariableScaledSource(const std::string & name, InputParameters parameters);
+  VariableScaledSource(const InputParameters & parameters);
 
 protected:
   virtual Real computeQpResidual();

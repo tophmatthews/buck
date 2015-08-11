@@ -11,8 +11,8 @@ InputParameters validParams<BasicDiffusion>()
 }
 
 
-BasicDiffusion::BasicDiffusion( const std::string & name, InputParameters parameters ) :
-    Diffusion( name, parameters ),
+BasicDiffusion::BasicDiffusion(const InputParameters & parameters) :
+    Diffusion(parameters),
     _diffusivity(getMaterialProperty<Real>(getParam<std::string>("diffusivity")))
 {
 }

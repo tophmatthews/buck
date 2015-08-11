@@ -6,7 +6,7 @@
 class PositiveDamper : public Damper
 {
 public:
-  PositiveDamper(std::string name, InputParameters parameters);
+  PositiveDamper(InputParameters parameters);
   virtual ~PositiveDamper() {}
 
 protected:

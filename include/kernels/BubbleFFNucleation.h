@@ -11,7 +11,7 @@ InputParameters validParams<BubbleFFNucleation>();
 class BubbleFFNucleation : public BubbleBase
 {
 public:
-  BubbleFFNucleation(const std::string & name, InputParameters parameters);
+  BubbleFFNucleation(const InputParameters & parameters);
 
 protected:
   virtual void calcLosses(Real & losses, const bool jac);

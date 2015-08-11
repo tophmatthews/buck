@@ -19,8 +19,8 @@ InputParameters validParams<BubblesActionBase>()
   return params;
 }
 
-BubblesActionBase::BubblesActionBase(const std::string & name, InputParameters params) :
-  Action(name, params),
+BubblesActionBase::BubblesActionBase(InputParameters params) :
+  Action(params),
   _conc_name_base(getParam<std::string>("conc_name_base")),
   _conc_1stM_name_base(getParam<std::string>("conc_1stM_name_base")),
   _rad_name_base(getParam<std::string>("rad_name_base")),

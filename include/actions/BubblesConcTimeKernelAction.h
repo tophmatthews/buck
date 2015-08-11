@@ -6,7 +6,7 @@
 class BubblesConcTimeKernelAction: public BubblesActionBase
 {
 public:
-  BubblesConcTimeKernelAction(const std::string & name, InputParameters params);
+  BubblesConcTimeKernelAction(InputParameters params);
 
   virtual void act();
 };

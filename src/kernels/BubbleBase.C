@@ -14,8 +14,8 @@ InputParameters validParams<BubbleBase>()
 }
 
 
-BubbleBase::BubbleBase(const std::string & name, InputParameters parameters)
-  :Kernel(name,parameters),
+BubbleBase::BubbleBase(const InputParameters & parameters)
+  :Kernel(parameters),
   _names(getParam<std::vector<VariableName> >("coupled_conc")),
   _this_var(getParam<NonlinearVariableName>("variable")),
   _atoms(getParam<std::vector<Real> >("coupled_atoms")),

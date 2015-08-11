@@ -15,9 +15,8 @@ InputParameters validParams<BubblesConcTimeKernelAction>()
 }
 
 
-BubblesConcTimeKernelAction::BubblesConcTimeKernelAction(const std::string & name,
-                                                             InputParameters params) :
-BubblesActionBase(name, params)
+BubblesConcTimeKernelAction::BubblesConcTimeKernelAction(InputParameters params) :
+BubblesActionBase(params)
 {
 }
 

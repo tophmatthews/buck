@@ -18,8 +18,8 @@ InputParameters validParams<BubbleFFNucleation>()
 }
 
 
-BubbleFFNucleation::BubbleFFNucleation(const std::string & name, InputParameters parameters)
-  :BubbleBase(name,parameters),
+BubbleFFNucleation::BubbleFFNucleation(const InputParameters & parameters)
+  :BubbleBase(parameters),
   _frd(coupledValue("fission_rate")),
   _factor(getParam<Real>("factor")),
   _num(getParam<int>("number")),

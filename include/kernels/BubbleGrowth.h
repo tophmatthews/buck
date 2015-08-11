@@ -12,7 +12,7 @@ class BubbleGrowth : public BubbleBase
 {
 
 public:
-  BubbleGrowth(const std::string & name, InputParameters parameters);
+  BubbleGrowth(const InputParameters & parameters);
 
 protected:
   virtual void calcLosses(Real & losses, const bool jac);

@@ -16,8 +16,8 @@ InputParameters validParams<EquilibriumRadiusAux>()
   return params;
 }
 
-EquilibriumRadiusAux::EquilibriumRadiusAux(const std::string & name, InputParameters parameters)
-  :AuxKernel(name, parameters),
+EquilibriumRadiusAux::EquilibriumRadiusAux(const InputParameters & parameters)
+  :AuxKernel(parameters),
   _temp(coupledValue("temp")),
   _sigma(coupledValue("sigma")),
   _m(getParam<Real>("m")),

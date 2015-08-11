@@ -15,9 +15,8 @@ InputParameters validParams<BubblesRadAuxVarsAction>()
   return params;
 }
 
-BubblesRadAuxVarsAction::BubblesRadAuxVarsAction(const std::string & name,
-                                                   InputParameters params) :
-  BubblesActionBase(name, params),
+BubblesRadAuxVarsAction::BubblesRadAuxVarsAction(InputParameters params) :
+  BubblesActionBase(params),
   _order(getParam<std::string>("order")),
   _family(getParam<std::string>("family"))
 {

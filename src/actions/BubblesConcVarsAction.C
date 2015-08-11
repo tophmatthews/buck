@@ -18,9 +18,8 @@ InputParameters validParams<BubblesConcVarsAction>()
   return params;
 }
 
-BubblesConcVarsAction::BubblesConcVarsAction(const std::string & name,
-                                                   InputParameters params) :
-  BubblesActionBase(name, params),
+BubblesConcVarsAction::BubblesConcVarsAction(InputParameters params) :
+  BubblesActionBase(params),
   _order(getParam<std::string>("order")),
   _family(getParam<std::string>("family")),
   _ic(getParam<Real>("initial_condition"))

@@ -6,7 +6,7 @@
 class BasicDiffusion : public Diffusion
 {
 public:
-  BasicDiffusion( const std::string & name, InputParameters parameters );
+  BasicDiffusion(const InputParameters & parameters);
 
 protected:
   virtual Real computeQpResidual();

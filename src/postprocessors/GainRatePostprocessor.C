@@ -13,8 +13,8 @@ InputParameters validParams<GainRatePostprocessor>()
 }
 
 
-GainRatePostprocessor::GainRatePostprocessor(const std::string & name, InputParameters parameters) :
-  ElementAverageValue(name, parameters),
+GainRatePostprocessor::GainRatePostprocessor(const InputParameters & parameters) :
+  ElementAverageValue(parameters),
   _r(coupledValue("r")),
   _c1(coupledValue("c1")),
   _Dg(getMaterialProperty<Real>("gas_diffusivity")),

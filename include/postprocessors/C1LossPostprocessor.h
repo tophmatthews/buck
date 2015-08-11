@@ -7,7 +7,7 @@ class C1LossPostprocessor: public ElementAverageValue
 {
 
 public:
-  C1LossPostprocessor(const std::string & name, InputParameters parameters);
+  C1LossPostprocessor(const InputParameters & parameters);
 
 protected:
   virtual Real computeQpIntegral();

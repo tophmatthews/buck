@@ -17,8 +17,8 @@ InputParameters validParams<C1LossPostprocessor>()
 }
 
 
-C1LossPostprocessor::C1LossPostprocessor(const std::string & name, InputParameters parameters) :
-  ElementAverageValue(name, parameters),
+C1LossPostprocessor::C1LossPostprocessor(const InputParameters & parameters) :
+  ElementAverageValue(parameters),
   _r(coupledValue("r")),
   _c1(coupledValue("c1")),
   _frd(coupledValue("fission_rate")),

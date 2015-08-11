@@ -11,8 +11,7 @@ InputParameters validParams<GasAtomDiffusivity>();
 class GasAtomDiffusivity : public Material
 {
 public:
-  GasAtomDiffusivity(const std::string & name,
-                         InputParameters parameters);
+  GasAtomDiffusivity(const InputParameters & parameters);
 
 protected:
   virtual void computeQpProperties();

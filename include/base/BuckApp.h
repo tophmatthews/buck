@@ -11,7 +11,7 @@ InputParameters validParams<BuckApp>();
 class BuckApp : public MooseApp
 {
 public:
-  BuckApp(const std::string & name, InputParameters parameters);
+  BuckApp(InputParameters parameters);
   virtual ~BuckApp();
 
   virtual void runInputFile();

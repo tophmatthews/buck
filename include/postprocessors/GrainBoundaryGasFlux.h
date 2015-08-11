@@ -11,7 +11,7 @@ InputParameters validParams<GrainBoundaryGasFlux>();
 class GrainBoundaryGasFlux : public SideIntegralVariablePostprocessor
 {
 public:
-  GrainBoundaryGasFlux(const std::string & name, InputParameters parameters);
+  GrainBoundaryGasFlux(const InputParameters & parameters);
 
 protected:
   virtual Real computeQpIntegral();

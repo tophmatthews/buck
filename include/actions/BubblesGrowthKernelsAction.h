@@ -6,7 +6,7 @@
 class BubblesGrowthKernelsAction: public BubblesActionBase
 {
 public:
-  BubblesGrowthKernelsAction(const std::string & name, InputParameters params);
+  BubblesGrowthKernelsAction(InputParameters params);
   virtual void act();
 
 private:

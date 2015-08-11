@@ -16,8 +16,8 @@ InputParameters validParams<BubblesGrowthKernelsAction>()
   return params;
 }
 
-BubblesGrowthKernelsAction::BubblesGrowthKernelsAction(const std::string & name, InputParameters params) :
-  BubblesActionBase(name, params),
+BubblesGrowthKernelsAction::BubblesGrowthKernelsAction(InputParameters params) :
+  BubblesActionBase(params),
   _include_c1(getParam<bool>("include_c1")),
   _include_c2(getParam<bool>("include_c2"))
 {

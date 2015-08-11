@@ -12,8 +12,8 @@ InputParameters validParams<VariableScaledSource>()
 }
 
 
-VariableScaledSource::VariableScaledSource(const std::string & name, InputParameters parameters) :
-    Kernel(name, parameters),
+VariableScaledSource::VariableScaledSource(const InputParameters & parameters) :
+    Kernel(parameters),
     _factor(getParam<Real>("factor")),
     _var(coupledValue("scaling_variable"))
 {

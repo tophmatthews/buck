@@ -12,8 +12,8 @@ InputParameters validParams<PostprocessorTerminator>()
 }
 
 
-PostprocessorTerminator::PostprocessorTerminator(const std::string & name, InputParameters parameters) :
-    GeneralPostprocessor(name, parameters),
+PostprocessorTerminator::PostprocessorTerminator(const InputParameters & parameters) :
+    GeneralPostprocessor(parameters),
     _threshold(getParam<Real>("threshold")),
     _value(getPostprocessorValue("postprocessor"))
 {

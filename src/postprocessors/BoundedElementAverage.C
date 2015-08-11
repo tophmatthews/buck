@@ -11,8 +11,8 @@ InputParameters validParams<BoundedElementAverage>()
   return params;
 }
 
-BoundedElementAverage::BoundedElementAverage(const std::string & name, InputParameters parameters) :
-	ElementAverageValue(name, parameters)
+BoundedElementAverage::BoundedElementAverage(const InputParameters & parameters) :
+	ElementAverageValue(parameters)
 {}
 
 void

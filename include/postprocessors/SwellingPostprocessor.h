@@ -6,7 +6,7 @@
 class SwellingPostprocessor: public ElementAverageValue
 {
 public:
-  SwellingPostprocessor(const std::string & name, InputParameters parameters);
+  SwellingPostprocessor(const InputParameters & parameters);
 
 protected:
   virtual Real computeQpIntegral();

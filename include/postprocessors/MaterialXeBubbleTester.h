@@ -11,7 +11,7 @@ InputParameters validParams<MaterialXeBubbleTester>();
 class MaterialXeBubbleTester : public GeneralPostprocessor
 {
 public:
-  MaterialXeBubbleTester(const std::string & name, InputParameters parameters);
+  MaterialXeBubbleTester(const InputParameters & parameters);
 
 	virtual ~MaterialXeBubbleTester() {};
 	virtual void initialize() {};

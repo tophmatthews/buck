@@ -11,7 +11,7 @@ InputParameters validParams<BoundedElementAverage>();
 class BoundedElementAverage : public ElementAverageValue
 {
 public:
-  BoundedElementAverage(const std::string & name, InputParameters parameters);
+  BoundedElementAverage(const InputParameters & parameters);
 
   virtual void execute();
 

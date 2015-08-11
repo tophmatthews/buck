@@ -13,8 +13,8 @@ InputParameters validParams<BubblesDampersAction>()
   return params;
 }
 
-BubblesDampersAction::BubblesDampersAction(const std::string & name, InputParameters params) :
-  BubblesActionBase(name, params),
+BubblesDampersAction::BubblesDampersAction(InputParameters params) :
+  BubblesActionBase(params),
   _index(getParam<int>("starting_index"))
 {
   if (_index > _G)

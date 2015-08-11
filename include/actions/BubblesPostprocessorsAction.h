@@ -6,7 +6,7 @@
 class BubblesPostprocessorsAction: public BubblesActionBase
 {
 public:
-  BubblesPostprocessorsAction(const std::string & name, InputParameters params);
+  BubblesPostprocessorsAction(InputParameters params);
   virtual void act();
 
 private:

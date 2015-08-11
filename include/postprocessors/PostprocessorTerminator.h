@@ -11,7 +11,7 @@ InputParameters validParams<PostprocessorTerminator>();
 class PostprocessorTerminator : public GeneralPostprocessor
 {
 public:
-  PostprocessorTerminator(const std::string & name, InputParameters parameters);
+  PostprocessorTerminator(const InputParameters & parameters);
   virtual void initialize() {};
   virtual void execute();
   virtual Real getValue() { return 0; }

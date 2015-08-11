@@ -11,8 +11,8 @@ InputParameters validParams<BubbleGrowth>()
   return params;
 }
 
-BubbleGrowth::BubbleGrowth(const std::string & name, InputParameters parameters)
-  :BubbleBase(name,parameters),
+BubbleGrowth::BubbleGrowth(const InputParameters & parameters)
+  :BubbleBase(parameters),
   _allow_loss(getParam<bool>("allow_loss")),
   _Dg(getMaterialProperty<Real>("gas_diffusivity")),
   _exp(getParam<bool>("experimental"))

@@ -11,7 +11,7 @@ InputParameters validParams<BubbleNucleation>();
 class BubbleNucleation : public BubbleBase
 {
 public:
-  BubbleNucleation(const std::string & name, InputParameters parameters);
+  BubbleNucleation(const InputParameters & parameters);
 
 protected:
 

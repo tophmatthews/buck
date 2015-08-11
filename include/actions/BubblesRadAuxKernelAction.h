@@ -11,7 +11,7 @@ InputParameters validParams<BubblesRadAuxKernelAction>();
 class BubblesRadAuxKernelAction : public BubblesActionBase
 {
 public:
-  BubblesRadAuxKernelAction(const std::string & name, InputParameters params);
+  BubblesRadAuxKernelAction(InputParameters params);
 
   virtual void act();
 

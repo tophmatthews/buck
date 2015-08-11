@@ -18,8 +18,8 @@ InputParameters validParams<BubblesKnockoutKernelsAction>()
   return params;
 }
 
-BubblesKnockoutKernelsAction::BubblesKnockoutKernelsAction(const std::string & name, InputParameters params) :
-  BubblesActionBase(name, params)
+BubblesKnockoutKernelsAction::BubblesKnockoutKernelsAction(InputParameters params) :
+  BubblesActionBase(params)
 {
 }
 

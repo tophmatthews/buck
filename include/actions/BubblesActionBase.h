@@ -6,7 +6,7 @@
 class BubblesActionBase: public Action
 {
 public:
-  BubblesActionBase(const std::string & name, InputParameters params);
+  BubblesActionBase(InputParameters params);
   virtual void act(){}
 
 protected:

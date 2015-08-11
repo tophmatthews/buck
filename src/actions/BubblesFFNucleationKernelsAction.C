@@ -19,9 +19,8 @@ InputParameters validParams<BubblesFFNucleationKernelsAction>()
   return params;
 }
 
-BubblesFFNucleationKernelsAction::BubblesFFNucleationKernelsAction(const std::string & name,
-                                                             InputParameters params) :
-  BubblesActionBase(name, params)
+BubblesFFNucleationKernelsAction::BubblesFFNucleationKernelsAction(InputParameters params) :
+  BubblesActionBase(params)
 {
 }
 

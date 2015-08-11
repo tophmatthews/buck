@@ -13,8 +13,8 @@ InputParameters validParams<SumOfPostprocessors>()
 }
 
 
-SumOfPostprocessors::SumOfPostprocessors(const std::string & name, InputParameters parameters) :
-    GeneralPostprocessor(name, parameters),
+SumOfPostprocessors::SumOfPostprocessors(const InputParameters & parameters) :
+    GeneralPostprocessor(parameters),
     _factors(getParam<std::vector<Real> >("factors"))
 {
   std::vector<PostprocessorName> pps_names(getParam<std::vector<PostprocessorName> >("postprocessors"));

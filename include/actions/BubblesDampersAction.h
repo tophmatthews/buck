@@ -6,7 +6,7 @@
 class BubblesDampersAction : public BubblesActionBase
 {
 public:
-  BubblesDampersAction(const std::string & name, InputParameters params);
+  BubblesDampersAction(InputParameters params);
   virtual void act();
 
 private:

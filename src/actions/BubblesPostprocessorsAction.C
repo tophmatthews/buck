@@ -22,8 +22,8 @@ InputParameters validParams<BubblesPostprocessorsAction>()
   return params;
 }
 
-BubblesPostprocessorsAction::BubblesPostprocessorsAction(const std::string & name, InputParameters params) :
-  BubblesActionBase(name, params),
+BubblesPostprocessorsAction::BubblesPostprocessorsAction(InputParameters params) :
+  BubblesActionBase(params),
   _conc(isParamValid("concentrations") ? true : false),
   _total_conc(isParamValid("total_concentrations") ? true : false),
   _total_atoms(isParamValid("total_atoms") ? true : false),
@@ -50,7 +50,7 @@ BubblesPostprocessorsAction::act()
 
       InputParameters params = _factory.getValidParams(pp_to_use);
       params.set<MultiMooseEnum>("execute_on") = "timestep_end";
-      params.set<VariableName>("variable") = _c[i];
+      params.set<std::vector<VariableName> >("variable") = std::vector<VariableName>(1, _c[i]);
       params.set<Real>("lower") = 0;
 
       std::vector<OutputName> outs;
@@ -105,7 +105,7 @@ BubblesPostprocessorsAction::act()
 
       InputParameters params = _factory.getValidParams(pp_to_use);
       params.set<MultiMooseEnum>("execute_on") = "timestep_end";
-      params.set<VariableName>("variable") = _c[i];
+      params.set<std::vector<VariableName> >("variable") = std::vector<VariableName>(1, _c[i]);
 
       params.addCoupledVar("r", "");
       params.set<std::vector<VariableName> >("r") = std::vector<VariableName>(1, _r[i]);
@@ -149,7 +149,7 @@ BubblesPostprocessorsAction::act()
 
       InputParameters params = _factory.getValidParams(pp_to_use);
       params.set<MultiMooseEnum>("execute_on") = "timestep_end";
-      params.set<VariableName>("variable") = _c[i];
+      params.set<std::vector<VariableName> >("variable") = std::vector<VariableName>(1, _c[i]);
 
       params.addCoupledVar("r", "");
       params.set<std::vector<VariableName> >("r") = std::vector<VariableName>(1, _r[i]);
@@ -179,7 +179,7 @@ BubblesPostprocessorsAction::act()
 
       InputParameters params = _factory.getValidParams(pp_to_use);
       params.set<MultiMooseEnum>("execute_on") = "timestep_end";
-      params.set<VariableName>("variable") = _c[i];
+      params.set<std::vector<VariableName> >("variable") = std::vector<VariableName>(1, _c[i]);
 
       params.addCoupledVar("r", "");
       params.set<std::vector<VariableName> >("r") = std::vector<VariableName>(1, _r[i]);
@@ -205,7 +205,7 @@ BubblesPostprocessorsAction::act()
 
       InputParameters params = _factory.getValidParams(pp_to_use);
       params.set<MultiMooseEnum>("execute_on") = "timestep_end";
-      params.set<VariableName>("variable") = _c[i];
+      params.set<std::vector<VariableName> >("variable") = std::vector<VariableName>(1, _c[i]);
 
       params.addCoupledVar("r", "");
       params.set<std::vector<VariableName> >("r") = std::vector<VariableName>(1, _r[i]);

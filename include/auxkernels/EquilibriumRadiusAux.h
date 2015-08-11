@@ -6,7 +6,7 @@
 class EquilibriumRadiusAux : public AuxKernel
 {
 public:
-  EquilibriumRadiusAux(const std::string & name, InputParameters parameters);
+  EquilibriumRadiusAux(const InputParameters & parameters);
   virtual ~EquilibriumRadiusAux() {}
 
 protected:

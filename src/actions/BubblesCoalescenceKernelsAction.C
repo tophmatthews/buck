@@ -14,8 +14,8 @@ InputParameters validParams<BubblesCoalescenceKernelsAction>()
   return params;
 }
 
-BubblesCoalescenceKernelsAction::BubblesCoalescenceKernelsAction(const std::string & name, InputParameters params) :
-  BubblesActionBase(name, params)
+BubblesCoalescenceKernelsAction::BubblesCoalescenceKernelsAction(InputParameters params) :
+  BubblesActionBase(params)
 {
 }
 

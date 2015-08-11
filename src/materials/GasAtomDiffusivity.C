@@ -20,8 +20,8 @@ InputParameters validParams<GasAtomDiffusivity>()
 }
 
 
-GasAtomDiffusivity::GasAtomDiffusivity(const std::string & name, InputParameters parameters) :
-  Material(name, parameters),
+GasAtomDiffusivity::GasAtomDiffusivity(const InputParameters & parameters) :
+  Material(parameters),
   _temp(coupledValue("temp")),
   _fission_rate(coupledValue("fission_rate")),
   _R(getParam<Real>("R")),

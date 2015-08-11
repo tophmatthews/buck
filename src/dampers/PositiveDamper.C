@@ -8,8 +8,8 @@ InputParameters validParams<PositiveDamper>()
   return params;
 }
 
-PositiveDamper::PositiveDamper(std::string name, InputParameters parameters) :
-    Damper(name, parameters),
+PositiveDamper::PositiveDamper(InputParameters parameters) :
+    Damper(parameters),
     _damping(parameters.get<Real>("damping"))
 {
 }

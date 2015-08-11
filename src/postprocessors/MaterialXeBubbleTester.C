@@ -16,8 +16,8 @@ InputParameters validParams<MaterialXeBubbleTester>()
 }
 
 
-MaterialXeBubbleTester::MaterialXeBubbleTester(const std::string & name, InputParameters parameters) :
-    GeneralPostprocessor(name, parameters),
+MaterialXeBubbleTester::MaterialXeBubbleTester(const InputParameters & parameters) :
+    GeneralPostprocessor(parameters),
     _temp(getParam<Real>("temp")),
     _sigma(getParam<Real>("sigma")),
     _m_mag(getPostprocessorValueByName(getParam<PostprocessorName>("m_mag")))

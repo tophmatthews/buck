@@ -7,7 +7,7 @@ class KnockoutRatePostprocessor: public ElementAverageValue
 {
 
 public:
-  KnockoutRatePostprocessor(const std::string & name, InputParameters parameters);
+  KnockoutRatePostprocessor(const InputParameters & parameters);
 
 protected:
   virtual Real computeQpIntegral();

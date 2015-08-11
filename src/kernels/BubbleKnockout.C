@@ -13,8 +13,8 @@ InputParameters validParams<BubbleKnockout>()
 }
 
 
-BubbleKnockout::BubbleKnockout(const std::string & name, InputParameters parameters)
-  :BubbleBase(name,parameters),
+BubbleKnockout::BubbleKnockout(const InputParameters & parameters)
+  :BubbleBase(parameters),
   _factor(getParam<Real>("factor")),
   _fsn_rate_den(coupledValue("fission_rate")),
   _b(getParam<Real>("b"))

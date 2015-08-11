@@ -12,7 +12,7 @@ class SumOfPostprocessors : public GeneralPostprocessor
 {
 public:
 
-  SumOfPostprocessors(const std::string & name, InputParameters parameters);
+  SumOfPostprocessors(const InputParameters & parameters);
 
   virtual void initialize() {};
   virtual void execute() {};

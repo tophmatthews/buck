@@ -13,7 +13,7 @@ InputParameters validParams<BubbleBase>();
 class BubbleBase : public Kernel
 {
 public:
-  BubbleBase(const std::string & name, InputParameters parameters);
+  BubbleBase(const InputParameters & parameters);
 
 protected:
   virtual Real computeQpResidual();

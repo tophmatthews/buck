@@ -6,7 +6,7 @@
 class BubblesConcVarsAction : public BubblesActionBase
 {
 public:
-  BubblesConcVarsAction(const std::string & name, InputParameters params);
+  BubblesConcVarsAction(InputParameters params);
   virtual ~BubblesConcVarsAction(){}
   virtual void act();
 

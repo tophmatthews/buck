@@ -7,7 +7,7 @@ class GainRatePostprocessor : public ElementAverageValue
 {
 
 public:
-  GainRatePostprocessor(const std::string & name, InputParameters parameters);
+  GainRatePostprocessor(const InputParameters & parameters);
 
 protected:
   virtual Real computeQpIntegral();

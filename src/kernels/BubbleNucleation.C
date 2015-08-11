@@ -16,8 +16,8 @@ InputParameters validParams<BubbleNucleation>()
 }
 
 
-BubbleNucleation::BubbleNucleation(const std::string & name, InputParameters parameters)
-  :BubbleBase(name,parameters),
+BubbleNucleation::BubbleNucleation(const InputParameters & parameters)
+  :BubbleBase(parameters),
   _temp(coupledValue("temp")),
   _a(getParam<Real>("a")),
   _omega(getParam<Real>("omega")),

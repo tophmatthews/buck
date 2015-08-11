@@ -12,8 +12,8 @@ InputParameters validParams<SwellingPostprocessor>()
 }
 
 
-SwellingPostprocessor::SwellingPostprocessor(const std::string & name, InputParameters parameters) :
-  ElementAverageValue(name, parameters),
+SwellingPostprocessor::SwellingPostprocessor(const InputParameters & parameters) :
+  ElementAverageValue(parameters),
   _r(coupledValue("r")),
   _width(getParam<Real>("width"))
 {

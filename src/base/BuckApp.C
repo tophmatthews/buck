@@ -42,8 +42,8 @@ InputParameters validParams<BuckApp>()
   return params;
 }
 
-BuckApp::BuckApp(const std::string & name, InputParameters parameters) :
-    MooseApp(name, parameters)
+BuckApp::BuckApp(InputParameters parameters) :
+    MooseApp(parameters)
 {
   srand(processor_id());
 

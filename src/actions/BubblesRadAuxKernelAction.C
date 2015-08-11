@@ -15,8 +15,8 @@ InputParameters validParams<BubblesRadAuxKernelAction>()
 }
 
 
-BubblesRadAuxKernelAction::BubblesRadAuxKernelAction(const std::string & name, InputParameters params) :
-  BubblesActionBase(name, params),
+BubblesRadAuxKernelAction::BubblesRadAuxKernelAction(InputParameters params) :
+  BubblesActionBase(params),
   _blocks(getParam<std::vector<SubdomainName> >("block"))
 {
 }
