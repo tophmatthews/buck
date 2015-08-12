@@ -2,11 +2,11 @@
   [./upper]
     type = 'RunException'
     input = 'upper.i'
-    expect_err = 'From Postprocessor avg: value is'
+    expect_err = 'From Postprocessor Postprocessors/avg: value is'
   [../]
   [./lower]
     type = 'RunException'
     input = 'lower.i'
-    expect_err = 'From Postprocessor avg: value is'
+    expect_err = 'From Postprocessor Postprocessors/avg: value is'
   [../]
 []
