@@ -14,14 +14,11 @@ public:
   BuckApp(InputParameters parameters);
   virtual ~BuckApp();
 
-  virtual void runInputFile();
+  virtual std::string header() const;
 
   static void registerApps();
   static void registerObjects(Factory & factory);
   // static void associateSyntax(Syntax & syntax, ActionFactory & action_factory);
-
-protected:
-  void printHeader();
 
 };
 

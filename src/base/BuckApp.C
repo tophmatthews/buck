@@ -45,7 +45,6 @@ InputParameters validParams<BuckApp>()
 BuckApp::BuckApp(InputParameters parameters) :
     MooseApp(parameters)
 {
-  srand(processor_id());
 
   Moose::registerObjects(_factory);
   BuckApp::registerObjects(_factory);
@@ -93,36 +92,31 @@ BuckApp::registerObjects(Factory & factory)
   registerPostprocessor(KnockoutRatePostprocessor);
 }
 
-void
-BuckApp::runInputFile()
+std::string
+BuckApp::header() const
 {
-  printHeader();
-  MooseApp::runInputFile();
-}
+  std::ostringstream oss;
+  oss << "\n"
+      << "\n"
+      << "     ______  _     _  ______ _    _      \n"
+      << "    (____  \\| |   | |/ _____) |  / )    \n"
+      << "     ____)  | |   | | /     | | / /      \n"
+      << "    |  __  (| |   | | |     | |< <       \n"
+      << "    | |__)  | |___| | \\_____| | \\ \\   \n"
+      << "    |______/ \\______|\\______)_|  \\_)  \n"
 
-void
-BuckApp::printHeader()
-{
-  Moose::out  << "\n"
-              << "\n"
-              << "     ______  _     _  ______ _    _      \n"
-              << "    (____  \\| |   | |/ _____) |  / )    \n"
-              << "     ____)  | |   | | /     | | / /      \n"
-              << "    |  __  (| |   | | |     | |< <       \n"
-              << "    | |__)  | |___| | \\_____| | \\ \\   \n"
-              << "    |______/ \\______|\\______)_|  \\_)  \n"
+      << "\n"
+      << "\n"
+      << "      Bubble and Cluster Kinetics \n"
+      << "        Oregon State University   \n"
+      << "             Corvallis, OR        \n"
+      << "\n"
+      << "\n";
 
-              << "\n"
-              << "\n"
-              << "      Bubble and Cluster Kinetics \n"
-              << "        Oregon State University   \n"
-              << "             Corvallis, OR        \n"
-              << "\n"
-              << "\n";
-
-  Moose::out << "Input file:   " << _input_filename << "\n"
-             << "Input units:  micrometer, gram, second, kelvin, mole\n"
-             << "\n"
-             << "BUCK version: " << BUCK_REVISION << std::endl
-             << std::endl;
+  oss << "Input file:   " << _input_filename << "\n"
+      << "Input units:  micrometer, gram, second, kelvin, mole\n"
+      << "\n"
+      << "BUCK version: " << BUCK_REVISION << std::endl
+      << std::endl;
+  return oss.str();
 }
